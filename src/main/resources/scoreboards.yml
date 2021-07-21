@@ -1,0 +1,23 @@
+####
+# Formats for scoreboards (not leaderboards)
+# PlaceholderAPI is supported
+# maximum of 15 lines per scoreboard
+# You can use \n for a new line, for example "line1\nline2" is interpreted as 2 scoreboard lines, "line1" and "line2"
+####
+
+# Format used when players are in a game
+in-game:
+  - "&4Time Remaining: &7%warzone_time_remaining%"
+  - "&4Players Left: &7%warzone_players_remaining%"
+  - "&4Kills: &7%warzone_kill_count%"
+  - "&2&lParty:\n &7%warzone_party_members_gameformat%"
+
+# Format used when players are in the lobby
+lobby:
+  - "&4&lK/DR: &7%warzone_kdr%"
+  - "&4&lW/LR: &7%warzone_wlr%"
+  - "&4&lLevel: &7%warzone_level%"
+  - "&4&lXP to next level: &7%warzone_xp_required%"
+  - "&4Global Ranking: &7%warzone_global_ranking%"
+  - "&2&lParty:\n &7%warzone_party_members%"
+
