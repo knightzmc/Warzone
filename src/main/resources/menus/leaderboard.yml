@@ -1,0 +1,68 @@
+####
+# Configuration for the Leaderboard menu
+# The global page defines "default" settings that will be used for a page, but will be overridden by any specific page section
+#
+# Page specific items will also inherit from the global page, so you don't have to copy paste everything
+#
+# Context specific placeholders:
+# {page_number} - the page number
+# {gui_opener} - the name of the player that opened the gui
+#
+# For this menu, any free slots will be filled with player skulls of the players in the leaderboard.
+# if you want a slot to be empty, just define an item with type AIR
+
+
+pages:
+  global:
+    title: 'Leaderboard Page {page_number}'
+    size: 54
+    items:
+      background:
+        type: RED_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 0, 1, 2, 6, 7, 8,
+
+                 46, 47, 51, 52 ]
+      background2:
+        type: DARK_GRAY_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 3, 4, 5,
+                 8, 17,
+                 18, 26,
+                 27, 35,
+                 36, 44 ]
+      back:
+        type: PAPER
+        name: '&9Back'
+        slots: [ 45 ]
+        action: PAGE_BACK
+      next:
+        type: PAPER
+        name: '&9Next'
+        slots: [ 53 ]
+        action: PAGE_NEXT
+      player-head:
+        type: PLAYER_HEAD
+        name: '{gui_opener}'
+        head-owner: { gui_opener }
+        slots: [ 49 ]
+      barrier:
+        type: BARRIER
+        name: ''
+        slots: [ 48, 50 ]
+  '1':
+    # title and size inherited from global
+    items:
+      background:
+        slots: [ 0, 1, 2, 6, 7, 8,
+                 9, 10, 16, 17,
+                 18, 26,
+                 36, 44,
+                 46, 47, 51, 52 ]
+      background2:
+        slots: [ 3, 5,
+                 11, 15,
+                 19, 25,
+                 27, 34,
+                 37, 38, 39, 40, 41, 42, 43 ]
+
