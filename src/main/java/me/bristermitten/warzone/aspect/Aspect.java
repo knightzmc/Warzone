@@ -12,5 +12,6 @@ import com.google.inject.Module;
 public interface Aspect {
     Module generateModule() throws IllegalStateException;
 
-    void finalizeInjections(Injector injector);
+    default void finalizeInjections(Injector injector) {
+    }
 }

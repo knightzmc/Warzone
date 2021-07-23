@@ -3,6 +3,8 @@ package me.bristermitten.warzone.config;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.config.loading.ConfigLoadException;
 import me.bristermitten.warzone.config.loading.ConfigurationLoader;
+import me.bristermitten.warzone.file.FileWatcher;
+import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.util.Cached;
 import org.bukkit.plugin.Plugin;
 
@@ -19,10 +21,16 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
     }
 
     @Inject
-    public void init(Plugin plugin, ConfigurationLoader loader) {
-
+    public void init(Plugin plugin, ConfigurationLoader loader, FileWatcherService service) {
+        if (this.cached != null) {
+            throw new IllegalStateException("Already initialized!");
+        }
+        var realizedPath = plugin.getDataFolder().toPath().resolve(source.path());
+        service.add(new FileWatcher(
+                realizedPath,
+                ignored -> cached.invalidate()
+        ));
         this.cached = new Cached<>(() -> {
-            var realizedPath = plugin.getDataFolder().toPath().resolve(source.path());
             if (!Files.exists(realizedPath)) {
                 var inJar = Option.of(plugin.getResource(source.path()))
                         .getOrElseThrow(() -> new IllegalStateException("No resource named " + source.path() + " in jar!"));
@@ -41,11 +49,6 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
             }
             return loaded.get();
         });
-    }
-
-    @Override
-    public void invalidate() {
-        cached.invalidate();
     }
 
     @Override

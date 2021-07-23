@@ -3,6 +3,7 @@ package me.bristermitten.warzone;
 import com.google.inject.Guice;
 import me.bristermitten.warzone.aspect.Aspect;
 import me.bristermitten.warzone.config.ConfigurationAspect;
+import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +22,8 @@ public class Warzone extends JavaPlugin {
                     )
             );
 
-            var aspects = List.of(configAspect, new ScoreboardAspect(), new PluginAspect(this));
+            var aspects = List.of(configAspect, new ScoreboardAspect(), new PluginAspect(this)
+                    , new FileWatcherAspect());
 
             var modules = aspects.stream().map(Aspect::generateModule)
                     .toList();
@@ -31,7 +33,7 @@ public class Warzone extends JavaPlugin {
             );
 
             aspects.forEach(it -> it.finalizeInjections(injector));
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

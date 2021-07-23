@@ -1,6 +1,5 @@
 package me.bristermitten.warzone.config;
 
-import com.google.inject.Injector;
 import com.google.inject.Module;
 import me.bristermitten.warzone.aspect.Aspect;
 
@@ -16,7 +15,6 @@ public class ConfigurationAspect implements Aspect {
         for (Configuration<?> configuration : configurations) {
             binds.put(configuration.type(), new SimpleConfigurationProvider<>(configuration));
         }
-
     }
 
 
@@ -25,10 +23,4 @@ public class ConfigurationAspect implements Aspect {
         return new ConfigModule(binds);
     }
 
-    @Override
-    public void finalizeInjections(Injector injector) {
-        for (ConfigurationProvider<?> value : binds.values()) {
-            injector.injectMembers(value);
-        }
-    }
 }

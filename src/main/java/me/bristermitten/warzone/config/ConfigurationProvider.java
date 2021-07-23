@@ -9,9 +9,4 @@ import com.google.inject.Provider;
  * @param <T> The type being provided
  */
 public interface ConfigurationProvider<T> extends Provider<T> {
-    /**
-     * Invalidate the cached value, if present
-     * Otherwise, do nothing
-     */
-    void invalidate();
 }

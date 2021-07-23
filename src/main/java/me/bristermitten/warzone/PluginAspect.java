@@ -17,8 +17,5 @@ public class PluginAspect implements Aspect {
         return new PluginModule(plugin);
     }
 
-    @Override
-    public void finalizeInjections(Injector injector) {
-        // nothing to finalize
-    }
+
 }

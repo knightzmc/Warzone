@@ -29,6 +29,8 @@ public class ConfigModule extends AbstractModule {
             //noinspection unchecked
             var configProvider = (Provider<? super Object>) provider;
             bind(clazz).toProvider(configProvider);
+
         });
+
     }
 }
