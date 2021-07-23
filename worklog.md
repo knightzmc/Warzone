@@ -13,3 +13,20 @@ dates are in yyyy-mm-dd format and times are in UTC + 1 (or whatever the timezon
 - 21:15 - pause
 - 22:05 - resume
 - 22:40 - pause
+
+Config formats finished
+
+1 hour 5 minutes of work
+
+## 2021-07-22
+- 17:00 - Start
+- 17:20 - Pause 
+
+## 2021-07-23
+- 15:10 - Start work
+- 16:25 - Pause
+- 17:35 - Resume
+- 18:10 - Pause
+- 18:55 - Resume
+- 19:10 - pause
+- 19:50 - resume
