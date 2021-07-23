@@ -19,12 +19,15 @@ repositories {
     maven("https://repo.codemc.org/repository/maven-public/") // for qualityarmory
     maven("https://repo.viaversion.com") // for qualityarmory
     maven("https://repo.citizensnpcs.co") // also for qualityarmory
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
     compileOnly("me.zombie_striker:QualityArmory:1.1.169")
     compileOnly("org.jetbrains:annotations:21.0.1")
+
+    compileOnly("me.clip:placeholderapi:2.10.10")
 
     implementation("com.google.inject:guice:5.0.1")
     implementation("com.google.code.gson:gson:2.8.7")
