@@ -1,6 +1,5 @@
 package me.bristermitten.warzone;
 
-import com.google.inject.Injector;
 import com.google.inject.Module;
 import me.bristermitten.warzone.aspect.Aspect;
 import org.bukkit.plugin.Plugin;
