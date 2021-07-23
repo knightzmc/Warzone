@@ -22,6 +22,8 @@ Config formats finished
 - 17:00 - Start
 - 17:20 - Pause 
 
+20 minutes of work
+
 ## 2021-07-23
 - 15:10 - Start work
 - 16:25 - Pause
@@ -30,3 +32,7 @@ Config formats finished
 - 18:55 - Resume
 - 19:10 - pause
 - 19:50 - resume
+- 22:30 - config loading and saving with file watchers working
+- 22:40 - pause
+
+4 hours 25 minutes of work
