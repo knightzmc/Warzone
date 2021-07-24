@@ -3,10 +3,12 @@
 dates are in yyyy-mm-dd format and times are in UTC + 1 (or whatever the timezone of the UK is)
 
 ## 2021-07-20
+
 - Created Github repo and project to keep track of work done
 - No "work" hours spent
 
 ## 2021-07-21
+
 - 20:30 - Start work
 - 20:50 - pause
 - 21:05 - resume
@@ -19,12 +21,14 @@ Config formats finished
 1 hour 5 minutes of work
 
 ## 2021-07-22
+
 - 17:00 - Start
-- 17:20 - Pause 
+- 17:20 - Pause
 
 20 minutes of work
 
 ## 2021-07-23
+
 - 15:10 - Start work
 - 16:25 - Pause
 - 17:35 - Resume
@@ -38,7 +42,17 @@ Config formats finished
 4 hours 25 minutes of work
 
 ## 2021-07-24
+
 - 14:50 - Start work
 - 17:10 - Database storage seems to be working
 - 17:45 - Pause
 - 22:50 - Resume
+- 23:30 - finish for the night
+
+done today:
+
+- stuff can now be saved in a mysql or sqlite database,
+- add listener for player deaths
+- add xp with sounds and levelling up
+
+3 hours 35 minutes
