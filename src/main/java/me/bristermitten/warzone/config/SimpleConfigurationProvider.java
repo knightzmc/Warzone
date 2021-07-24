@@ -11,10 +11,15 @@ import org.bukkit.plugin.Plugin;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> {
     private final Configuration<T> source;
+    private final Set<Consumer<T>> invalidationHooks = ConcurrentHashMap.newKeySet();
     private Cached<T> cached;
+
 
     public SimpleConfigurationProvider(Configuration<T> source) {
         this.source = source;
@@ -28,7 +33,10 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
         var realizedPath = plugin.getDataFolder().toPath().resolve(source.path());
         service.add(new FileWatcher(
                 realizedPath,
-                ignored -> cached.invalidate()
+                ignored -> {
+                    invalidationHooks.forEach(it -> it.accept(get()));
+                    cached.invalidate();
+                }
         ));
         this.cached = new Cached<>(() -> {
             if (!Files.exists(realizedPath)) {
@@ -54,5 +62,10 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
     @Override
     public T get() {
         return cached.get();
+    }
+
+    @Override
+    public void addInvalidationHook(Consumer<T> onInvalidation) {
+        this.invalidationHooks.add(onInvalidation);
     }
 }

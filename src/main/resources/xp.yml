@@ -4,10 +4,10 @@
 
 # Calculates how much XP is needed to reach a certain level
 # Variables:
-# $1 - The player's current level
-# $2 - The player's current xp
+# level - The player's current level
+# xp - The player's current xp
 # Full documentation on what expressions are supported: https://github.com/redempt/crunch
-level-algorithm: "4^($1-1)"
+level-algorithm: "4^(level-1)"
 
 # How much XP is given when a player gets a kill
 kill: 3
@@ -17,3 +17,12 @@ win: 200
 
 # How much XP is given when a player is top 3 in a game
 top-3: 15
+
+# List of sounds can be found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+
+# Sound played when a player gains XP. Set to null to disable
+xp-gain-sound: ENTITY_EXPERIENCE_ORB_PICKUP
+
+# Sound played when a player levels up. Set to null to disable
+level-up-sound: UI_TOAST_CHALLENGE_COMPLETE
+

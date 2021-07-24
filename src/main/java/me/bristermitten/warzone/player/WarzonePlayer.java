@@ -1,6 +1,9 @@
 package me.bristermitten.warzone.player;
 
+import io.vavr.control.Option;
 import me.bristermitten.warzone.data.Ratio;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -25,6 +28,10 @@ public class WarzonePlayer {
 
     public UUID getPlayerId() {
         return playerId;
+    }
+
+    public Option<Player> getPlayer() {
+        return Option.of(Bukkit.getPlayer(playerId));
     }
 
     public int getKills() {
