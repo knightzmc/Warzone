@@ -1,0 +1,9 @@
+# sqlite or mysql
+type: sqlite
+
+# You don't need to touch any of these if you're using sqlite
+host: "127.0.0.1"
+database: "warzone"
+username: ""
+password: ""
+port: 3306
