@@ -9,6 +9,7 @@ public record DatabaseConfig(DatabaseType type,
                              String username,
                              String password,
                              int port) {
+
     public static final Configuration<DatabaseConfig> CONFIG = new Configuration<>(
             DatabaseConfig.class,
             "database.yml"
@@ -18,17 +19,17 @@ public record DatabaseConfig(DatabaseType type,
     public enum DatabaseType {
         @SerializedName("sqlite") SQLITE {
             @Override
-            public String createJDBCUrl(DatabaseConfig config) {
+            public String createJdbcUrl(DatabaseConfig config) {
                 return "jdbc:sqlite:plugins/Warzone/warzone.db";
             }
         },
         @SerializedName("mysql") MYSQL {
             @Override
-            public String createJDBCUrl(DatabaseConfig config) {
+            public String createJdbcUrl(DatabaseConfig config) {
                 return "jdbc:mysql://%s:%d/%s".formatted(config.host(), config.port(), config.database());
             }
         };
 
-        public abstract String createJDBCUrl(DatabaseConfig config);
+        public abstract String createJdbcUrl(DatabaseConfig config);
     }
 }

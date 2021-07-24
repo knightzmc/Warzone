@@ -16,7 +16,7 @@ public record HikariConfigurationProvider(
     public HikariConfig get() {
         DatabaseConfig config = configurationProvider.get();
         var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(config.type().createJDBCUrl(config));
+        hikariConfig.setJdbcUrl(config.type().createJdbcUrl(config));
         hikariConfig.setUsername(config.username());
         hikariConfig.setPassword(config.password());
         return hikariConfig;
