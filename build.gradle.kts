@@ -20,6 +20,7 @@ repositories {
     maven("https://repo.viaversion.com") // for qualityarmory
     maven("https://repo.citizensnpcs.co") // also for qualityarmory
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -33,6 +34,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.7")
     implementation("io.vavr:vavr:0.9.0")
     implementation("com.zaxxer:HikariCP:5.0.0")
+    implementation("com.github.Redempt:Crunch:master")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")

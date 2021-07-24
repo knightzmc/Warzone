@@ -1,0 +1,19 @@
+##
+# Controls algorithms and rates of XP and levelling
+##
+
+# Calculates how much XP is needed to reach a certain level
+# Variables:
+# $1 - The player's current level
+# $2 - The player's current xp
+# Full documentation on what expressions are supported: https://github.com/redempt/crunch
+level-algorithm: "4^($1-1)"
+
+# How much XP is given when a player gets a kill
+kill: 3
+
+# How much XP is given when a player wins a game
+win: 200
+
+# How much XP is given when a player is top 3 in a game
+top-3: 15

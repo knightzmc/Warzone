@@ -40,3 +40,5 @@ Config formats finished
 ## 2021-07-24
 - 14:50 - Start work
 - 17:10 - Database storage seems to be working
+- 17:45 - Pause
+- 22:50 - Resume

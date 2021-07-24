@@ -1,5 +1,7 @@
 package me.bristermitten.warzone.player;
 
+import me.bristermitten.warzone.data.Ratio;
+
 import java.util.UUID;
 
 public class WarzonePlayer {
@@ -29,15 +31,35 @@ public class WarzonePlayer {
         return kills;
     }
 
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
     public int getDeaths() {
         return deaths;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
     }
 
     public int getLevel() {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public long getXp() {
         return xp;
+    }
+
+    public void setXp(long xp) {
+        this.xp = xp;
+    }
+
+    public Ratio getKDR() {
+        return new Ratio(kills, deaths);
     }
 }

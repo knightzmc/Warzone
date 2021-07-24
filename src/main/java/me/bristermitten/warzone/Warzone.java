@@ -7,6 +7,7 @@ import me.bristermitten.warzone.database.DatabaseAspect;
 import me.bristermitten.warzone.database.DatabaseConfig;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.player.PlayerAspect;
+import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +22,8 @@ public class Warzone extends JavaPlugin {
         try {
             var configAspect = new ConfigurationAspect(Set.of(
                     ScoreboardConfig.CONFIG,
-                    DatabaseConfig.CONFIG
+                    DatabaseConfig.CONFIG,
+                    XPConfig.CONFIG
             ));
 
             var aspects = List.of(
