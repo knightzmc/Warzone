@@ -28,7 +28,7 @@ public class ScoreboardUpdateJoinQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        if (Bukkit.getOnlinePlayers().isEmpty()) {
+        if (Bukkit.getOnlinePlayers().size() == 1) { // will be empty after the event, bukkit dumb
             task.pause();
         }
     }
