@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class WarzonePlayer {
@@ -98,5 +99,17 @@ public class WarzonePlayer {
         this.currentState.onStateLeave(this);
         this.currentState = currentState;
         this.currentState.onStateJoin(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof WarzonePlayer that)) return false;
+        return getPlayerId().equals(that.getPlayerId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPlayerId());
     }
 }

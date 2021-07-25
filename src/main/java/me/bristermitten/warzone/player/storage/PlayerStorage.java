@@ -6,6 +6,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
+import me.bristermitten.warzone.player.PlayerLeaderboard;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +22,12 @@ public class PlayerStorage implements Persistence {
     private final Cache<UUID, WarzonePlayer> playerCache = CacheBuilder.newBuilder().build();
 
     private final PlayerPersistence delegate;
+    private final PlayerLeaderboard leaderboard;
 
     @Inject
-    public PlayerStorage(PlayerPersistence delegate) {
+    public PlayerStorage(PlayerPersistence delegate, PlayerLeaderboard leaderboard) {
         this.delegate = delegate;
+        this.leaderboard = leaderboard;
     }
 
     public Future<WarzonePlayer> load(@NotNull UUID id) {
@@ -32,6 +35,12 @@ public class PlayerStorage implements Persistence {
         if (cached != null) {
             return Future.successful(cached);
         }
+        return lookup(id)
+                .onSuccess(leaderboard::add) // I don't really like this being here but it means that the leaderboard will stay up to date without any external intervention
+                ;
+    }
+
+    private Future<WarzonePlayer> lookup(@NotNull UUID id) {
         return delegate.load(id)
                 .onSuccess(loaded -> playerCache.put(id, loaded));
     }
