@@ -3,6 +3,7 @@ package me.bristermitten.warzone.chat;
 import io.vavr.Function2;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.Map;
+import io.vavr.control.Option;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.entity.Player;
@@ -29,10 +30,12 @@ public class MiniMessagePlaceholders implements Provider<Map<String, Function<@N
     public Map<String, Function<@Nullable Player, ComponentLike>> get() {
         var config = configProvider.get();
         return HashMap.of(
-                "player_name_hover_stats", player -> config.statsHoverMessage()
-                        .stream()
-                        .map(Function2.of(chatManager::format).reversed().apply(player))
-                        .collect(toComponent(newline()))
+                "player_name_hover_stats", player ->
+                        Component.text(Option.of(player).map(Player::getName).getOrElse("[Server]")) // throw an exception?
+                                .hoverEvent(config.statsHoverMessage()
+                                        .stream()
+                                        .map(Function2.of(chatManager::format).reversed().apply(player))
+                                        .collect(toComponent(newline())).asHoverEvent())
         );
     }
 }
