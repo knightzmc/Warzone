@@ -12,4 +12,6 @@ public interface Database {
 
     Future<Void> update(@Language("SQL") String query, CheckedConsumer<PreparedStatement> initializer);
 
+    Future<Void> execute(@Language("SQL") String query, CheckedConsumer<PreparedStatement> initializer);
+
 }

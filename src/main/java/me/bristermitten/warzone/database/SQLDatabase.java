@@ -38,4 +38,13 @@ public class SQLDatabase implements Database {
     }
 
 
+    @Override
+    public @NotNull Future<Void> execute(String query, CheckedConsumer<PreparedStatement> initializer) {
+        return Future.run(() -> Try.withResources(dataSource::getConnection)
+                .of(con -> con.prepareStatement(query))
+                .andThenTry(initializer)
+                .mapTry(PreparedStatement::execute)
+                .get());
+    }
+
 }

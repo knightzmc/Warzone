@@ -49,7 +49,7 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
 
     @Override
     public Future<Void> initialise() {
-        return database.update("""
+        return database.execute("""
                 CREATE TABLE IF NOT EXISTS players
                 (
                     uuid   VARCHAR (36) UNIQUE PRIMARY KEY,
