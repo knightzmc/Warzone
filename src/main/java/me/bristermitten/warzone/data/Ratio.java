@@ -8,4 +8,8 @@ public record Ratio(int numerator, int denominator) {
         }
         return (double) numerator / denominator;
     }
+
+    public String format() {
+        return "%d:%d".formatted(numerator, denominator);
+    }
 }

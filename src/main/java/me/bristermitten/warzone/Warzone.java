@@ -12,6 +12,7 @@ import me.bristermitten.warzone.database.DatabaseConfig;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
+import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
 import me.bristermitten.warzone.player.xp.XPConfig;
@@ -62,6 +63,8 @@ public class Warzone extends JavaPlugin {
                     })
                     .onSuccess(v -> getSLF4JLogger().info("Successfully loaded all data!"));
 
+            injector.getInstance(WarzoneExpansion.class)
+                    .register();
         } catch (Exception e) {
             e.printStackTrace();
         }

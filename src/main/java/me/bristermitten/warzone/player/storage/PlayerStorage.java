@@ -9,6 +9,7 @@ import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,6 +48,15 @@ public class PlayerStorage implements Persistence {
     @Override
     public @NotNull Future<Void> initialise() {
         return Future.run(NoOp.runnable());
+    }
+
+    /**
+     * Retrieve a cached player if it exists, otherwise null.
+     * This method should <b>NOT</b> perform any database queries or file operations
+     */
+    @Nullable
+    public WarzonePlayer fetch(UUID id) {
+        return playerCache.getIfPresent(id);
     }
 
     @Override
