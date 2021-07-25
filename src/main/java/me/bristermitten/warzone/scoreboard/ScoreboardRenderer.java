@@ -40,7 +40,11 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
         objective.displayName(title);
 
         for (int i = 0; i < 15; i++) {
-            var team = board.registerNewTeam("team" + i);
+            var teamName = "team" + i;
+            var team = board.getTeam(teamName);
+            if (team == null) {
+                team = board.registerNewTeam(teamName);
+            }
             team.addEntry(" ".repeat(i));
         }
         updateScores(template, board, objective, player);
