@@ -3,6 +3,7 @@ package me.bristermitten.warzone;
 import com.google.inject.Guice;
 import me.bristermitten.warzone.aspect.Aspect;
 import me.bristermitten.warzone.chat.ChatAspect;
+import me.bristermitten.warzone.chat.ChatConfig;
 import me.bristermitten.warzone.config.ConfigurationAspect;
 import me.bristermitten.warzone.database.DatabaseAspect;
 import me.bristermitten.warzone.database.DatabaseConfig;
@@ -22,9 +23,10 @@ public class Warzone extends JavaPlugin {
     public void onEnable() {
         try {
             var configAspect = new ConfigurationAspect(Set.of(
-                    ScoreboardConfig.CONFIG,
-                    DatabaseConfig.CONFIG,
-                    XPConfig.CONFIG
+                    ScoreboardConfig.CONFIG
+                    , DatabaseConfig.CONFIG
+                    , XPConfig.CONFIG
+                    , ChatConfig.CONFIG
             ));
 
             var aspects = List.of(
