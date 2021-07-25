@@ -5,7 +5,6 @@
 # Calculates how much XP is needed to reach a certain level
 # Variables:
 # level - The player's current level
-# xp - The player's current xp
 # Full documentation on what expressions are supported: https://github.com/redempt/crunch
 level-algorithm: "4^(level-1)"
 

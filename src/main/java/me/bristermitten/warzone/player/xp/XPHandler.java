@@ -29,9 +29,14 @@ public class XPHandler {
         xpConfig.addInvalidationHook(ignored -> levelAlgorithm.invalidate());
     }
 
+    public long xpRequiredForLevel(int level) {
+        return (long) levelAlgorithm.get().evaluate(level);
+    }
+
+
     public void addXP(@NotNull WarzonePlayer player, int xp) {
         player.setXp(player.getXp() + xp);
-        var xpToNextLevel = levelAlgorithm.get().evaluate(player.getLevel(), player.getXp());
+        var xpToNextLevel = xpRequiredForLevel(player.getLevel() + 1);
         if (player.getXp() >= xpToNextLevel) {
             levelUp(player);
         }
