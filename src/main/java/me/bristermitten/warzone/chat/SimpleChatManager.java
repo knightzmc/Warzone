@@ -33,7 +33,7 @@ public class SimpleChatManager implements ChatManager {
                 .filter(Option::isDefined)
                 .map(Option::get)
                 .forEach(player -> player.sendMessage(
-                        formatter.format(message, sender)
+                        formatter.format(channel.format().replace("{message}", message), sender)
                 )));
     }
 }
