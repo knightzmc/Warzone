@@ -3,3 +3,5 @@ author: BristerMitten
 version: 1.0
 main: me.bristermitten.warzone.Warzone
 api-version: 1.17
+depend:
+  - PlaceholderAPI
