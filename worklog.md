@@ -65,3 +65,16 @@ done today:
 - 16:30 - Resume
 - 17:10 - pause for more research into chat formatting
 - 19:20 - resume
+- 21:50 - pause
+- 22:00 - resume
+- 23:30 - finish for the night
+
+done today:
+- add state system that encapsulates all the different states a player can be in
+- add chat formatting with minimessage and papi
+- make scoreboards work and update
+- add wins and deaths 
+- add many papi placeholders
+- many bugfixes
+
+5 hours 50 minutes spent today
