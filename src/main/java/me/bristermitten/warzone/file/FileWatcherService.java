@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.file;
 
 import com.google.inject.Singleton;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -26,7 +27,7 @@ public class FileWatcherService implements Runnable {
         thread.start();
     }
 
-    public void add(FileWatcher watcher) {
+    public void add(@NotNull FileWatcher watcher) {
         System.out.println("add called");
         var mutableList = new HashSet<>(watchers.getOrDefault(watcher.watching(), Set.of()));
         mutableList.add(watcher);
@@ -50,13 +51,13 @@ public class FileWatcherService implements Runnable {
                     poll = pollEvents(watchService);
                 }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (@NotNull IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
     }
 
-    private boolean pollEvents(WatchService watchService) throws InterruptedException {
+    private boolean pollEvents(@NotNull WatchService watchService) throws InterruptedException {
         WatchKey key = watchService.take();
         Path at = (Path) key.watchable();
 

@@ -31,6 +31,7 @@ public class Cached<@NotNull T> implements Supplier<T> {
     }
 
     @Override
+    @NotNull
     public T get() {
         if (t == null) {
             update();

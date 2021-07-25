@@ -4,16 +4,17 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import me.bristermitten.warzone.aspect.Aspect;
+import org.jetbrains.annotations.NotNull;
 
 public class FileWatcherAspect implements Aspect {
     @Override
-    public Module generateModule() throws IllegalStateException {
+    public @NotNull Module generateModule() throws IllegalStateException {
         return new AbstractModule() {
         };
     }
 
     @Override
-    public void finalizeInjections(Injector injector) {
+    public void finalizeInjections(@NotNull Injector injector) {
         injector.getInstance(FileWatcherService.class).watch();
     }
 }

@@ -7,17 +7,21 @@
 
 # Format used when players are in a game
 in-game:
-  - "&4Time Remaining: &7%warzone_time_remaining%"
-  - "&4Players Left: &7%warzone_players_remaining%"
-  - "&4Kills: &7%warzone_kill_count%"
-  - "&2&lParty:\n &7%warzone_party_members_gameformat%"
+  title: '&4&lIn Game'
+  lines:
+    - "&4Time Remaining: &7%warzone_time_remaining%"
+    - "&4Players Left: &7%warzone_players_remaining%"
+    - "&4Kills: &7%warzone_kill_count%"
+    - "&2&lParty:\n &7%warzone_party_members_gameformat%"
 
 # Format used when players are in the lobby
 lobby:
-  - "&4&lK/DR: &7%warzone_kdr%"
-  - "&4&lW/LR: &7%warzone_wlr%"
-  - "&4&lLevel: &7%warzone_level%"
-  - "&4&lXP to next level: &7%warzone_xp_required%"
-  - "&4Global Ranking: &7%warzone_global_ranking%"
-  - "&2&lParty:\n &7%warzone_party_members%"
+  title: '&6&lLobby'
+  lines:
+    - "&4&lK/DR: &7%warzone_kdr%"
+    - "&4&lW/LR: &7%warzone_wlr%"
+    - "&4&lLevel: &7%warzone_level%"
+    - "&4&lXP to next level: &7%warzone_xp_required%"
+    - "&4Global Ranking: &7%warzone_global_ranking%"
+    - "&2&lParty:\n &7%warzone_party_members%"
 

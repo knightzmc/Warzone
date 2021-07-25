@@ -1,11 +1,13 @@
-package me.bristermitten.warzone.player;
+package me.bristermitten.warzone.player.storage;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.vavr.collection.HashMap;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Persistence;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.NoOp;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,7 +24,7 @@ public class PlayerStorage implements Persistence {
         this.delegate = delegate;
     }
 
-    public Future<WarzonePlayer> load(UUID id) {
+    public Future<WarzonePlayer> load(@NotNull UUID id) {
         WarzonePlayer cached = playerCache.getIfPresent(id);
         if (cached != null) {
             return Future.successful(cached);
@@ -32,7 +34,7 @@ public class PlayerStorage implements Persistence {
     }
 
     @Override
-    public Future<Void> initialise() {
+    public @NotNull Future<Void> initialise() {
         return Future.run(NoOp.runnable());
     }
 

@@ -7,6 +7,8 @@ import me.bristermitten.warzone.file.FileWatcher;
 import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.util.Cached;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -26,7 +28,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
     }
 
     @Inject
-    public void init(Plugin plugin, ConfigurationLoader loader, FileWatcherService service) {
+    public void init(@NotNull Plugin plugin, @NotNull ConfigurationLoader loader, @NotNull FileWatcherService service) {
         if (this.cached != null) {
             throw new IllegalStateException("Already initialized!");
         }
@@ -60,7 +62,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
     }
 
     @Override
-    public T get() {
+    public @Nullable T get() {
         return cached.get();
     }
 

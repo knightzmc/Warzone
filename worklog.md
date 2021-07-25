@@ -56,3 +56,8 @@ done today:
 - add xp with sounds and levelling up
 
 3 hours 35 minutes
+
+## 2021-07-25
+- 13:25 - Start work
+- 14:00 - pause
+- 14:35 - resume

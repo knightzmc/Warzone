@@ -2,6 +2,7 @@ package me.bristermitten.warzone.player;
 
 import me.bristermitten.warzone.config.ConfigurationProvider;
 import me.bristermitten.warzone.database.StorageException;
+import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -20,7 +22,7 @@ public class PlayerStatsListener implements Listener {
 
 
     @Inject
-    public PlayerStatsListener(PlayerStorage storage, Plugin plugin, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig) {
+    public PlayerStatsListener(PlayerStorage storage, @NotNull Plugin plugin, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig) {
         this.storage = storage;
         this.xpHandler = xpHandler;
         this.xpConfig = xpConfig;
@@ -29,7 +31,7 @@ public class PlayerStatsListener implements Listener {
     }
 
     @EventHandler
-    public void onKill(PlayerDeathEvent e) {
+    public void onKill(@NotNull PlayerDeathEvent e) {
         storage.load(e.getEntity().getUniqueId())
                 .onFailure(t -> {
                     throw new StorageException("Could not load player data for death", t);

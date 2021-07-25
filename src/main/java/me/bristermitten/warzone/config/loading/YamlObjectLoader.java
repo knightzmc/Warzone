@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.config.loading;
 
 import com.google.inject.Inject;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public record YamlObjectLoader(Yaml yaml) implements ObjectLoader {
     }
 
     @Override
-    public Map<Object, Object> load(Path source) throws IOException {
+    public Map<Object, Object> load(@NotNull Path source) throws IOException {
         return yaml.load(Files.readString(source));
     }
 }

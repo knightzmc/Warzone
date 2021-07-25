@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.database;
 
 import com.zaxxer.hikari.HikariConfig;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -13,7 +14,7 @@ public record HikariConfigurationProvider(
 
 
     @Override
-    public HikariConfig get() {
+    public @NotNull HikariConfig get() {
         DatabaseConfig config = configurationProvider.get();
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(config.type().createJdbcUrl(config));

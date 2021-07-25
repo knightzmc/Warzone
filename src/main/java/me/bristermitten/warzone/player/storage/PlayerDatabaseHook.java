@@ -1,8 +1,10 @@
-package me.bristermitten.warzone.player;
+package me.bristermitten.warzone.player.storage;
 
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Database;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.NoOp;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.UUID;
@@ -13,7 +15,7 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     }
 
     @Override
-    public Future<WarzonePlayer> load(UUID id) {
+    public Future<WarzonePlayer> load(@NotNull UUID id) {
         return database.query(
                 "SELECT * FROM players WHERE uuid = ?",
                 statement -> statement.setString(1, id.toString())
@@ -30,7 +32,7 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     }
 
     @Override
-    public Future<Void> save(WarzonePlayer player) {
+    public Future<Void> save(@NotNull WarzonePlayer player) {
         return database.update(
                 """
                             insert or replace into players (uuid, kills, deaths, level, xp) values (?, ?, ?, ?, ?)
@@ -60,7 +62,7 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     }
 
     @Override
-    public Future<Void> cleanup() {
+    public @NotNull Future<Void> cleanup() {
         return Future.run(NoOp.runnable());
     }
 }

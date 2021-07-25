@@ -2,8 +2,10 @@ package me.bristermitten.warzone.player;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.data.Ratio;
+import me.bristermitten.warzone.player.state.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -13,6 +15,8 @@ public class WarzonePlayer {
     private int deaths;
     private int level;
     private long xp;
+
+    private PlayerState currentState;
 
     public WarzonePlayer(UUID playerId) {
         this.playerId = playerId;
@@ -66,7 +70,17 @@ public class WarzonePlayer {
         this.xp = xp;
     }
 
-    public Ratio getKDR() {
+    public @NotNull Ratio getKDR() {
         return new Ratio(kills, deaths);
+    }
+
+    public PlayerState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(@NotNull PlayerState currentState) {
+        this.currentState.onStateLeave(this);
+        this.currentState = currentState;
+        this.currentState.onStateJoin(this);
     }
 }

@@ -2,6 +2,7 @@ package me.bristermitten.warzone.database;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.config.Configuration;
+import org.jetbrains.annotations.NotNull;
 
 public record DatabaseConfig(DatabaseType type,
                              String host,
@@ -19,13 +20,13 @@ public record DatabaseConfig(DatabaseType type,
     public enum DatabaseType {
         @SerializedName("sqlite") SQLITE {
             @Override
-            public String createJdbcUrl(DatabaseConfig config) {
+            public @NotNull String createJdbcUrl(DatabaseConfig config) {
                 return "jdbc:sqlite:plugins/Warzone/warzone.db";
             }
         },
         @SerializedName("mysql") MYSQL {
             @Override
-            public String createJdbcUrl(DatabaseConfig config) {
+            public String createJdbcUrl(@NotNull DatabaseConfig config) {
                 return "jdbc:mysql://%s:%d/%s".formatted(config.host(), config.port(), config.database());
             }
         };

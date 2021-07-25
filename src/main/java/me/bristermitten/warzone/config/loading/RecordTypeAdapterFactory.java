@@ -8,6 +8,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -44,7 +46,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
      * If annotated with {@link SerializedName} the list returned will be the primary name first, then any alternative names
      * Otherwise, the component name will be returned.
      */
-    private List<String> getRecordComponentNames(final RecordComponent recordComponent) {
+    private List<String> getRecordComponentNames(final @NotNull RecordComponent recordComponent) {
         List<String> inCache = recordComponentNameCache.get(recordComponent);
         if (inCache != null) {
             return inCache;
@@ -72,7 +74,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
     }
 
     @Override
-    public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+    public <T> @Nullable TypeAdapter<T> create(@NotNull Gson gson, @NotNull TypeToken<T> type) {
         @SuppressWarnings("unchecked")
         Class<T> clazz = (Class<T>) type.getRawType();
         if (!clazz.isRecord()) {
@@ -87,7 +89,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
             }
 
             @Override
-            public T read(JsonReader reader) throws IOException {
+            public @Nullable T read(@NotNull JsonReader reader) throws IOException {
                 if (reader.peek() == JsonToken.NULL) {
                     reader.nextNull();
                     return null;
@@ -139,7 +141,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
                     constructor = clazz.getDeclaredConstructor(argTypes);
                     constructor.setAccessible(true);
                     return constructor.newInstance(args);
-                } catch (NoSuchMethodException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                } catch (@NotNull NoSuchMethodException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             }
