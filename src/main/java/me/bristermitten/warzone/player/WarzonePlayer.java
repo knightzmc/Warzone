@@ -1,8 +1,8 @@
 package me.bristermitten.warzone.player;
 
 import io.vavr.control.Option;
-import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.data.Ratio;
+import me.bristermitten.warzone.player.state.NullState;
 import me.bristermitten.warzone.player.state.PlayerState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ public class WarzonePlayer {
     private int level;
     private long xp;
 
-    private PlayerState currentState;
+    private @NotNull PlayerState currentState = NullState.INSTANCE;
 
     public WarzonePlayer(UUID playerId) {
         this.playerId = playerId;
@@ -75,7 +75,7 @@ public class WarzonePlayer {
         return new Ratio(kills, deaths);
     }
 
-    public PlayerState getCurrentState() {
+    public @NotNull PlayerState getCurrentState() {
         return currentState;
     }
 
