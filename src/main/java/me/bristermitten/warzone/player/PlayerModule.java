@@ -13,5 +13,6 @@ public class PlayerModule extends AbstractModule {
         bind(PlayerPersistence.class).to(PlayerDatabaseHook.class);
 
         bind(PlayerStateChangeListener.class).asEagerSingleton();
+        bind(PlayerKillDeathListener.class).asEagerSingleton();
     }
 }

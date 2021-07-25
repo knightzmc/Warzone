@@ -14,14 +14,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
-public class PlayerStatsListener implements Listener {
+public class PlayerKillDeathListener implements Listener {
     private final PlayerStorage storage;
     private final XPHandler xpHandler;
     private final ConfigurationProvider<XPConfig> xpConfig;
 
 
     @Inject
-    public PlayerStatsListener(PlayerStorage storage, @NotNull Plugin plugin, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig) {
+    public PlayerKillDeathListener(PlayerStorage storage, @NotNull Plugin plugin, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig) {
         this.storage = storage;
         this.xpHandler = xpHandler;
         this.xpConfig = xpConfig;
