@@ -36,6 +36,9 @@ dependencies {
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("com.github.Redempt:Crunch:master")
 
+    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
