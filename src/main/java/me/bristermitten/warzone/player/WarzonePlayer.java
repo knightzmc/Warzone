@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.player;
 
 import io.vavr.control.Option;
+import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.player.state.PlayerState;
 import org.bukkit.Bukkit;

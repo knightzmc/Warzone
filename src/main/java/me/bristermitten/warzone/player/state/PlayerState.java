@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.player.state;
 
+import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.player.WarzonePlayer;
 
 /**
@@ -23,4 +24,7 @@ public interface PlayerState {
      * @param player the player whose state changed
      */
     void onStateLeave(WarzonePlayer player);
+
+
+    ChatChannel getChannel();
 }

@@ -38,6 +38,7 @@ dependencies {
     implementation("com.github.Redempt:Crunch:master")
 
     implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")

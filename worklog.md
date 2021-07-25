@@ -64,3 +64,4 @@ done today:
 - 15:10 - pause to do research and food
 - 16:30 - Resume
 - 17:10 - pause for more research into chat formatting
+- 19:20 - resume

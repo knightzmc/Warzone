@@ -18,12 +18,12 @@ import static net.kyori.adventure.text.Component.toComponent;
 
 public class MiniMessagePlaceholders implements Provider<Map<String, Function<@Nullable Player, ComponentLike>>> {
     private final Provider<ChatConfig> configProvider;
-    private final ChatManager chatManager;
+    private final ChatFormatter chatFormatter;
 
     @Inject
-    public MiniMessagePlaceholders(Provider<ChatConfig> configProvider, ChatManager chatManager) {
+    public MiniMessagePlaceholders(Provider<ChatConfig> configProvider, ChatFormatter chatFormatter) {
         this.configProvider = configProvider;
-        this.chatManager = chatManager;
+        this.chatFormatter = chatFormatter;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MiniMessagePlaceholders implements Provider<Map<String, Function<@N
                         Component.text(Option.of(player).map(Player::getName).getOrElse("[Server]")) // throw an exception?
                                 .hoverEvent(config.statsHoverMessage()
                                         .stream()
-                                        .map(Function2.of(chatManager::format).reversed().apply(player))
+                                        .map(Function2.of(chatFormatter::format).reversed().apply(player))
                                         .collect(toComponent(newline())).asHoverEvent())
         );
     }

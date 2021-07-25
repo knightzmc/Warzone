@@ -1,7 +1,6 @@
 package me.bristermitten.warzone.player;
 
 import me.bristermitten.warzone.config.ConfigurationProvider;
-import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
@@ -32,23 +31,16 @@ public class PlayerStatsListener implements Listener {
 
     @EventHandler
     public void onKill(@NotNull PlayerDeathEvent e) {
-        storage.load(e.getEntity().getUniqueId())
-                .onFailure(t -> {
-                    throw new StorageException("Could not load player data for death", t);
-                })
-                .onSuccess(died -> died.setDeaths(died.getDeaths() + 1));
+        storage.loadPlayer(e.getEntity().getUniqueId(),
+                died -> died.setDeaths(died.getDeaths() + 1));
 
         Player killerPlayer = e.getEntity().getKiller();
         if (killerPlayer == null) {
             return;
         }
-        storage.load(killerPlayer.getUniqueId())
-                .onFailure(t -> {
-                    throw new StorageException("Could not load player data for killer", t);
-                })
-                .onSuccess(killer -> {
-                    killer.setKills(killer.getKills() + 1);
-                    xpHandler.addXP(killer, xpConfig.get().kill());
-                });
+        storage.loadPlayer(killerPlayer.getUniqueId(), (killer -> {
+            killer.setKills(killer.getKills() + 1);
+            xpHandler.addXP(killer, xpConfig.get().kill());
+        }));
     }
 }

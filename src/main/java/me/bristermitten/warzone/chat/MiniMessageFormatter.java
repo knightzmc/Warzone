@@ -6,17 +6,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Set;
 
-public class MiniMessageFormatter implements ChatManager {
-    private final MiniMessageFactory miniMessageFactory;
-
-    private final List<ChatHook> chatHooks;
-
+public record MiniMessageFormatter(MiniMessageFactory miniMessageFactory,
+                                   Set<ChatHook> chatHooks) implements ChatFormatter {
     @Inject
-    public MiniMessageFormatter(MiniMessageFactory miniMessageFactory, List<ChatHook> chatHooks) {
-        this.miniMessageFactory = miniMessageFactory;
-        this.chatHooks = chatHooks;
+    public MiniMessageFormatter {
     }
 
     @Override
@@ -26,6 +21,7 @@ public class MiniMessageFormatter implements ChatManager {
     }
 
     @Override
+
     public Component format(String message, @Nullable Player player) {
         var formatted = preFormat(message, player);
         return miniMessageFactory.create(player)

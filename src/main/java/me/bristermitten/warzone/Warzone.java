@@ -2,6 +2,7 @@ package me.bristermitten.warzone;
 
 import com.google.inject.Guice;
 import me.bristermitten.warzone.aspect.Aspect;
+import me.bristermitten.warzone.chat.ChatAspect;
 import me.bristermitten.warzone.config.ConfigurationAspect;
 import me.bristermitten.warzone.database.DatabaseAspect;
 import me.bristermitten.warzone.database.DatabaseConfig;
@@ -33,6 +34,7 @@ public class Warzone extends JavaPlugin {
                     , new FileWatcherAspect()
                     , new DatabaseAspect()
                     , new PlayerAspect()
+                    , new ChatAspect()
             );
 
             var modules = aspects.stream().map(Aspect::generateModule).toList();
@@ -40,6 +42,7 @@ public class Warzone extends JavaPlugin {
             var injector = Guice.createInjector(modules);
 
             aspects.forEach(it -> it.finalizeInjections(injector));
+
         } catch (Exception e) {
             e.printStackTrace();
         }

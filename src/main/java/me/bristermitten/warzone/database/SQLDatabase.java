@@ -20,7 +20,7 @@ public class SQLDatabase implements Database {
     }
 
     @Override
-    public @NotNull Future<ResultSet> query(String query, CheckedConsumer<PreparedStatement> initializer) {
+    @NotNull public Future<ResultSet> query(String query, CheckedConsumer<PreparedStatement> initializer) {
         return Future.of(() -> Try.withResources(dataSource::getConnection)
                 .of(con -> con.prepareStatement(query))
                 .andThenTry(initializer)

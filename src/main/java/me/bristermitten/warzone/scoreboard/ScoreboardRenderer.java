@@ -3,7 +3,7 @@ package me.bristermitten.warzone.scoreboard;
 import io.vavr.Function2;
 import io.vavr.collection.List;
 import io.vavr.control.Option;
-import me.bristermitten.warzone.chat.ChatManager;
+import me.bristermitten.warzone.chat.ChatFormatter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-public record ScoreboardRenderer(ChatManager chatManager) {
+public record ScoreboardRenderer(ChatFormatter chatManager) {
     private static final Pattern LINES = Pattern.compile("\n");
 
     @Inject

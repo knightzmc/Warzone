@@ -1,12 +1,9 @@
 package me.bristermitten.warzone.chat;
 
-import net.kyori.adventure.text.Component;
+import me.bristermitten.warzone.chat.channel.ChatChannel;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
 
 public interface ChatManager {
 
-    Component format(String message, @Nullable Player player);
-
-    String preFormat(String message, @Nullable Player player);
+    void sendMessage(ChatChannel chatChannel, String message, Player sender);
 }

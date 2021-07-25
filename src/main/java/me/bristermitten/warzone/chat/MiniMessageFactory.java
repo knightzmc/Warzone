@@ -8,15 +8,15 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 
 public class MiniMessageFactory {
-    private final MiniMessagePlaceholders placeholders;
+    private final MiniMessagePlaceholders miniMessagePlaceholders;
 
     @Inject
-    public MiniMessageFactory(MiniMessagePlaceholders placeholders) {
-        this.placeholders = placeholders;
+    public MiniMessageFactory(MiniMessagePlaceholders miniMessagePlaceholders) {
+        this.miniMessagePlaceholders = miniMessagePlaceholders;
     }
 
     public MiniMessage create(@Nullable Player player) {
-        var placeholders = this.placeholders.get();
+        var placeholders = miniMessagePlaceholders.get();
         return MiniMessage.builder()
                 .placeholderResolver(placeholder -> placeholders.get(placeholder)
                         .map(f -> f.apply(player))

@@ -1,7 +1,8 @@
 package me.bristermitten.warzone.player.state;
 
-import me.bristermitten.warzone.player.storage.PlayerPersistence;
+import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import me.bristermitten.warzone.player.storage.PlayerPersistence;
 
 import javax.inject.Inject;
 
@@ -26,5 +27,10 @@ public class OfflineState implements PlayerState {
     @Override
     public void onStateLeave(WarzonePlayer player) {
 
+    }
+
+    @Override
+    public ChatChannel getChannel() {
+        return new ChatChannel("offline", () -> ""); // This doesn't really matter, nobody will be online to see it :)
     }
 }
