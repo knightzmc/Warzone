@@ -4,6 +4,7 @@ import io.vavr.control.Option;
 import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
+import me.bristermitten.warzone.player.xp.XPHandler;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -12,13 +13,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 public class WarzoneExpansion extends PlaceholderExpansion {
+    public static final String NOT_LOADED_YET = "Not loaded yet";
     private final Plugin plugin;
     private final PlayerStorage playerStorage;
+    private final XPHandler xpHandler;
 
     @Inject
-    public WarzoneExpansion(Plugin plugin, PlayerStorage playerStorage) {
+    public WarzoneExpansion(Plugin plugin, PlayerStorage playerStorage, XPHandler xpHandler) {
         this.plugin = plugin;
         this.playerStorage = playerStorage;
+        this.xpHandler = xpHandler;
     }
 
     @Override
@@ -51,8 +55,12 @@ public class WarzoneExpansion extends PlaceholderExpansion {
                 .onEmpty(() -> playerStorage.load(player.getUniqueId()));
 
         return switch (params) {
-            case "level" -> warzonePlayer.map(WarzonePlayer::getLevel).map(Object::toString).getOrElse("Not loaded yet");
-            case "kdr" -> warzonePlayer.map(WarzonePlayer::getKDR).map(Ratio::format).getOrElse("Not loaded yet");
+            case "level" -> warzonePlayer.map(WarzonePlayer::getLevel).map(Object::toString).getOrElse(NOT_LOADED_YET);
+            case "kdr" -> warzonePlayer.map(WarzonePlayer::getKDR).map(Ratio::format).getOrElse(NOT_LOADED_YET);
+            case "xp_required" -> warzonePlayer
+                    .map(player1 -> xpHandler.xpRequiredForLevel(player1.getLevel() + 1))
+                    .map(Object::toString)
+                    .getOrElse(NOT_LOADED_YET);
             default -> null;
         };
     }
