@@ -5,6 +5,7 @@ import me.bristermitten.warzone.config.Configuration;
 import org.jetbrains.annotations.Unmodifiable;
 
 public record ScoreboardConfig(@Unmodifiable @SerializedName("in-game") ScoreboardTemplate inGame,
-                               @Unmodifiable ScoreboardTemplate lobby) {
+                               @Unmodifiable ScoreboardTemplate lobby,
+                               @SerializedName("update-time") int updateTime) {
     public static final Configuration<ScoreboardConfig> CONFIG = new Configuration<>(ScoreboardConfig.class, "scoreboards.yml");
 }

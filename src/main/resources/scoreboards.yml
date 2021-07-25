@@ -5,6 +5,7 @@
 # You can use \n for a new line, for example "line1\nline2" is interpreted as 2 scoreboard lines, "line1" and "line2"
 ####
 
+
 # Format used when players are in a game
 in-game:
   title: '&4&lIn Game'
@@ -25,3 +26,7 @@ lobby:
     - "&4Global Ranking: &7%warzone_global_ranking%"
     - "&2&lParty:\n &7%warzone_party_members%"
 
+
+# How often the scoreboard should update in ticks. Smaller values mean the scoreboard is more responsive but might cause lag
+# 20 ticks = 1 second
+update-time: 20

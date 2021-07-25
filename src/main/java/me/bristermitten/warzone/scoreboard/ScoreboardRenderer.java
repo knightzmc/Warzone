@@ -30,7 +30,7 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     }
 
 
-    public void show(@NotNull ScoreboardTemplate template, @NotNull Player player) {
+    void show(@NotNull ScoreboardTemplate template, @NotNull Player player) {
         var board = player.getScoreboard();
         var title = chatManager.format(template.title(), player);
 
