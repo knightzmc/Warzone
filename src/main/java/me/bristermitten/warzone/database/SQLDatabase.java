@@ -20,31 +20,42 @@ public class SQLDatabase implements Database {
     }
 
     @Override
-    @NotNull public Future<ResultSet> query(String query, CheckedConsumer<PreparedStatement> initializer) {
+    @NotNull
+    public Future<ResultSet> query(String query, CheckedConsumer<PreparedStatement> initializer) {
         return Future.of(() -> Try.withResources(dataSource::getConnection)
-                .of(con -> con.prepareStatement(query))
-                .andThenTry(initializer)
-                .mapTry(PreparedStatement::executeQuery)
+                .of(con -> Try.withResources(() -> con.prepareStatement(query))
+                        .of(statement -> {
+                            initializer.accept(statement);
+                            return statement.executeQuery();
+                        })).get()
                 .get());
     }
 
     @Override
     public @NotNull Future<Void> update(String query, CheckedConsumer<PreparedStatement> initializer) {
-        return Future.run(() -> Try.withResources(dataSource::getConnection)
-                .of(con -> con.prepareStatement(query))
-                .andThenTry(initializer)
-                .mapTry(PreparedStatement::executeUpdate)
-                .get());
+        return Future.run(() ->
+                Try.withResources(dataSource::getConnection)
+                        .of(con -> Try.withResources(() -> con.prepareStatement(query))
+                                .of(statement -> {
+                                    initializer.accept(statement);
+                                    statement.executeUpdate();
+                                    return null;
+                                })).get()
+                        .get());
     }
 
 
     @Override
     public @NotNull Future<Void> execute(String query, CheckedConsumer<PreparedStatement> initializer) {
-        return Future.run(() -> Try.withResources(dataSource::getConnection)
-                .of(con -> con.prepareStatement(query))
-                .andThenTry(initializer)
-                .mapTry(PreparedStatement::execute)
-                .get());
+        return Future.run(() ->
+                Try.withResources(dataSource::getConnection)
+                        .of(con -> Try.withResources(() -> con.prepareStatement(query))
+                                .of(statement -> {
+                                    initializer.accept(statement);
+                                    statement.execute();
+                                    return null;
+                                })).get()
+                        .get());
     }
 
 }
