@@ -18,17 +18,18 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     public Future<WarzonePlayer> load(@NotNull UUID id) {
         return database.query(
                 "SELECT * FROM players WHERE uuid = ?",
-                statement -> statement.setString(1, id.toString())
-        ).mapTry(resultSet -> {
-            if (!resultSet.next()) {
-                return new WarzonePlayer(id);
-            }
-            int kills = resultSet.getInt(2);
-            int deaths = resultSet.getInt(3);
-            int level = resultSet.getInt(4);
-            long xp = resultSet.getLong(5);
-            return new WarzonePlayer(id, kills, deaths, level, xp);
-        });
+                statement -> statement.setString(1, id.toString()),
+                resultSet -> {
+                    if (!resultSet.next()) {
+                        return new WarzonePlayer(id);
+                    }
+                    int kills = resultSet.getInt(2);
+                    int deaths = resultSet.getInt(3);
+                    int level = resultSet.getInt(4);
+                    long xp = resultSet.getLong(5);
+                    return new WarzonePlayer(id, kills, deaths, level, xp);
+                }
+        );
     }
 
     @Override

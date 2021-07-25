@@ -3,6 +3,7 @@ package me.bristermitten.warzone.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import io.vavr.CheckedConsumer;
+import io.vavr.CheckedFunction1;
 import io.vavr.concurrent.Future;
 import io.vavr.control.Try;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +22,13 @@ public class SQLDatabase implements Database {
 
     @Override
     @NotNull
-    public Future<ResultSet> query(String query, CheckedConsumer<PreparedStatement> initializer) {
+    public <T> Future<T> query(String query, CheckedConsumer<PreparedStatement> initializer, CheckedFunction1<ResultSet, T> process) {
         return Future.of(() -> Try.withResources(dataSource::getConnection)
                 .of(con -> Try.withResources(() -> con.prepareStatement(query))
                         .of(statement -> {
                             initializer.accept(statement);
-                            return statement.executeQuery();
+                            var results = statement.executeQuery();
+                            return process.apply(results);
                         })).get()
                 .get());
     }
