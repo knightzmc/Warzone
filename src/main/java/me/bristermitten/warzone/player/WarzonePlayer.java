@@ -15,20 +15,31 @@ public class WarzonePlayer {
     private int kills;
     private int deaths;
     private int level;
+    private int wins;
+    private int losses;
     private long xp;
-
     private @NotNull PlayerState currentState = NullState.INSTANCE;
+
+    public WarzonePlayer(UUID playerId, int kills, int deaths, int level, int wins, int losses, long xp) {
+        this.playerId = playerId;
+        this.kills = kills;
+        this.deaths = deaths;
+        this.level = level;
+        this.wins = wins;
+        this.losses = losses;
+        this.xp = xp;
+    }
 
     public WarzonePlayer(UUID playerId) {
         this.playerId = playerId;
     }
 
-    public WarzonePlayer(UUID playerId, int kills, int deaths, int level, long xp) {
-        this.playerId = playerId;
-        this.kills = kills;
-        this.deaths = deaths;
-        this.level = level;
-        this.xp = xp;
+    public int getWins() {
+        return wins;
+    }
+
+    public int getLosses() {
+        return losses;
     }
 
     public UUID getPlayerId() {
@@ -73,6 +84,10 @@ public class WarzonePlayer {
 
     public @NotNull Ratio getKDR() {
         return new Ratio(kills, deaths);
+    }
+
+    public @NotNull Ratio getWLR() {
+        return new Ratio(wins, losses);
     }
 
     public @NotNull PlayerState getCurrentState() {

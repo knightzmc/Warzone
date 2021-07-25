@@ -57,6 +57,7 @@ public class WarzoneExpansion extends PlaceholderExpansion {
         return switch (params) {
             case "level" -> warzonePlayer.map(WarzonePlayer::getLevel).map(Object::toString).getOrElse(NOT_LOADED_YET);
             case "kdr" -> warzonePlayer.map(WarzonePlayer::getKDR).map(Ratio::format).getOrElse(NOT_LOADED_YET);
+            case "wlr" -> warzonePlayer.map(WarzonePlayer::getWLR).map(Ratio::format).getOrElse(NOT_LOADED_YET);
             case "xp_required" -> warzonePlayer
                     .map(player1 -> xpHandler.xpRequiredForLevel(player1.getLevel() + 1))
                     .map(Object::toString)
