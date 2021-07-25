@@ -1,7 +1,9 @@
 package me.bristermitten.warzone.config;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
 import me.bristermitten.warzone.config.loading.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -29,6 +31,9 @@ public class ConfigModule extends AbstractModule {
             //noinspection unchecked
             var configProvider = (Provider<? super Object>) provider;
             bind(clazz).toProvider(configProvider);
+            //noinspection unchecked pure evil
+            bind((TypeLiteral<ConfigurationProvider<?>>) TypeLiteral.get(TypeToken.getParameterized(ConfigurationProvider.class, clazz).getType()))
+                    .toInstance((ConfigurationProvider<? super Object>) configProvider);
 
         });
 
