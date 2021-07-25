@@ -21,10 +21,11 @@ repositories {
     maven("https://repo.citizensnpcs.co") // also for qualityarmory
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://jitpack.io")
+    maven("https://papermc.io/repo/repository/maven-public/")
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     compileOnly("me.zombie_striker:QualityArmory:1.1.169")
     compileOnly("org.jetbrains:annotations:21.0.1")
 

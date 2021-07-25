@@ -1,0 +1,13 @@
+# Chat formats
+# PlaceholderAPI supported
+# Custom placeholders:
+# <player_name_hover_stats> - The player's name, with a hover event that will show their stats
+formats:
+  in-game: "%warzone_level% <player_name_hover_stats> - {message}"
+  pre-game-lobby: "%warzone_level% <player_name_hover_stats> - {message}"
+  lobby: "%warzone_level% <player_name_hover_stats> - {message}"
+
+stats-hover-message:
+  - "<gold>Name: <gray>%player_name%"
+  - "<gold>Level: <gray>%warzone_level%"
+  - "<gold>Global Ranking: <gray>%warzone_global_ranking%"
