@@ -83,3 +83,5 @@ done today:
 
 - 10:50 - start work
 - 11:30 - pause
+
+40 minutes spent
