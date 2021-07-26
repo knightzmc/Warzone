@@ -1,0 +1,3 @@
+party:
+  invite-already-sent: "&cYou've already invited {player} to a party!"
+  invite-sent: '<click:run_command:/party join>{inviter} has invited you to a party! Click this message or type <gray>/party join <green> to join'
