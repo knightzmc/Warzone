@@ -78,3 +78,8 @@ done today:
 - many bugfixes
 
 5 hours 50 minutes spent today
+
+## 2021-07-26
+
+- 10:50 - start work
+- 11:30 - pause
