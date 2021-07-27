@@ -94,3 +94,11 @@ done today:
 - 13:50 - pause
 - 16:00 - resume
 - 18:00 - pause
+- 20:00 - resume
+- 20:50 - pause
+- 21:20 - resume
+- 22:30 - finish for today
+
+bugfixes, update configs with default keys if needed, and party system fully working
+
+4 hours 5 minutes spent today
