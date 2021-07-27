@@ -15,8 +15,6 @@ public class ConfigurationUpdater {
         if (destination == null) {
             return source;
         }
-        System.out.println(source);
-        System.out.println(destination);
         for (var entry : source.entrySet()) {
             var key = entry.getKey();
             var inSource = entry.getValue();

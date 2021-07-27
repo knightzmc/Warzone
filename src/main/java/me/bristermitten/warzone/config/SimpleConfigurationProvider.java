@@ -1,6 +1,5 @@
 package me.bristermitten.warzone.config;
 
-import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.file.FileWatcher;
 import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.util.Cached;
@@ -16,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> {
@@ -37,11 +37,14 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
         }
 
         var realizedPath = plugin.getDataFolder().toPath().resolve(source.path());
+        AtomicBoolean enabled = new AtomicBoolean(true);
         service.add(new FileWatcher(
                 realizedPath,
                 ignored -> {
-                    invalidationHooks.forEach(it -> it.accept(get()));
-                    cached.invalidate();
+                    if (enabled.get()) {
+                        invalidationHooks.forEach(it -> it.accept(get()));
+                        cached.invalidate();
+                    }
                 }
         ));
         this.cached = new Cached<>(() -> {
@@ -61,10 +64,11 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
                 }
             }
 
-            var loaded = readerWriter.readFrom(source.type(), realizedPath, pathInJar);
-            // Save updated version at some point
-            Future.run(() -> readerWriter.writeTo(loaded, realizedPath));
-            return loaded;
+            var read = readerWriter.readFrom(source.type(), realizedPath, pathInJar);
+            enabled.set(false);
+            readerWriter.writeTo(read, realizedPath);
+            enabled.set(true);
+            return read;
         });
     }
 

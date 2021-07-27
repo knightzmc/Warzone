@@ -18,7 +18,6 @@ public class ConfigurationAspect implements Aspect {
         }
     }
 
-
     @Override
     public @NotNull Module generateModule() {
         return new ConfigModule(binds);

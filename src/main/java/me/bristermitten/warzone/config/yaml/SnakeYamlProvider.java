@@ -11,7 +11,7 @@ public class SnakeYamlProvider implements Provider<Yaml> {
         var options = new DumperOptions();
         options.setIndent(4);
         options.setPrettyFlow(true);
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.FLOW);
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         return new Yaml(options);
     }
 }
