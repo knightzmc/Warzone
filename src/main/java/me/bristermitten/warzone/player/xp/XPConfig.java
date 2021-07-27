@@ -12,5 +12,5 @@ public record XPConfig(@SerializedName("level-algorithm") String levelAlgorithm,
                        @SerializedName("top-3") int top3,
                        @SerializedName("xp-gain-sound") @Nullable Sound xpGainSound,
                        @SerializedName("level-up-sound") @Nullable Sound levelUpSound) {
-    public static @NotNull Configuration<XPConfig> CONFIG = new Configuration<>(XPConfig.class, "xp.yml");
+    public static final @NotNull Configuration<XPConfig> CONFIG = new Configuration<>(XPConfig.class, "xp.yml");
 }
