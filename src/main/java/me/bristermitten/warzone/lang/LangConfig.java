@@ -11,6 +11,7 @@ public record LangConfig(
     public record PartyLang(
             @SerializedName("invite-received") String inviteReceived
             , @SerializedName("invite-already-sent") String inviteAlreadySent
+            , @SerializedName("invite-sent") String inviteSent
             , @SerializedName("no-invites") String noInvites
             , @SerializedName("no-invites-from-player") String noInvitesFromPlayer
             , @SerializedName("invalid-invite") String invalidInvite
@@ -20,6 +21,8 @@ public record LangConfig(
             , @SerializedName("party-user-left") String partyUserLeft
             , @SerializedName("party-you-left") String partyYouLeft
             , @SerializedName("party-joined") String partyJoined
+            , @SerializedName("cant-invite-self") String cannotInviteSelf
+            , @SerializedName("already-in-party") String alreadyInParty
     ) {
     }
 }

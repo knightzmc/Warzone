@@ -26,7 +26,16 @@ public class PartyManager {
 
 
     public void invite(Player inviter, Player receiver) {
+        if (inviter.getUniqueId().equals(receiver.getUniqueId())) {
+            langService.sendMessage(inviter, langConfig -> langConfig.partyLang().cannotInviteSelf());
+            return;
+        }
         var party = getParty(inviter);
+        if (party.getOwner().equals(receiver.getUniqueId()) || party.getOtherPlayers().contains(receiver.getUniqueId())) {
+            langService.sendMessage(inviter, config -> config.partyLang().alreadyInParty(),
+                    Map.of("{player}", receiver.getName()));
+            return;
+        }
         if (party.getOutgoingInvites().stream().anyMatch(i -> i.receiver().equals(receiver.getUniqueId()))) {
             langService.sendMessage(
                     inviter, config -> config.partyLang().inviteAlreadySent(),
@@ -50,7 +59,10 @@ public class PartyManager {
     }
 
     public @Unmodifiable Collection<PartyInvite> getInvitesFor(Player receiver) {
-        return Set.copyOf(getParty(receiver).getOutgoingInvites());
+        return partiesByMember.values().stream()
+                .flatMap(party -> party.getOutgoingInvites().stream())
+                .filter(partyInvite -> partyInvite.receiver().equals(receiver.getUniqueId()))
+                .toList();
     }
 
     public void accept(PartyInvite invite) {

@@ -1,5 +1,6 @@
 party:
   invite-already-sent: "&cYou've already invited {player} to a party!"
+  invite-sent: "&a{player} has been invited to your party!"
   invite-received: '<green><click:run_command:/party join {inviter}>{inviter} has invited you to a party! Click this message or type <gray>/party join <green> to join'
   no-invites: 'You have no pending party invitations!'
   no-invites-from-player: '{inviter} has not invited you to their party!'
@@ -10,3 +11,5 @@ party:
   party-user-left: '{leaver} left the party.'
   party-you-left: 'You left the party.'
   party-joined: '<green>You joined {owner}''s party!'
+  cant-invite-self: '<red>You can''t invite yourself!'
+  already-in-party: '<red>{player} is already in your party!'

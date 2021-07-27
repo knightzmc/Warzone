@@ -32,7 +32,7 @@ public class PartyCommand extends BaseCommand {
     @Subcommand("invite")
     @CommandCompletion("@players")
     public void invite(Player inviter, OnlinePlayer invitee) {
-        partyManager.invite(inviter, inviter.getPlayer());
+        partyManager.invite(inviter, invitee.getPlayer());
     }
 
     @Subcommand("join|accept")
