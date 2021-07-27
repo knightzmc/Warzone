@@ -106,15 +106,16 @@ public class PartyManager {
             return;
         }
 
+        langService.sendMessage(leaver, config -> config.partyLang().partyYouLeft());
+
+        party.getOtherPlayers().remove(leaver.getUniqueId());
+
         party.getOtherPlayers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(player ->
                         langService.sendMessage(player, config -> config.partyLang().partyUserLeft(),
                                 Map.of("{leaver}", leaver.getName())));
-
-        party.getOtherPlayers().remove(leaver.getUniqueId());
-        langService.sendMessage(leaver, config -> config.partyLang().partyYouLeft());
 
         if (leaver.getUniqueId().equals(party.getOwner())) {
             // destroy one and another will take its place

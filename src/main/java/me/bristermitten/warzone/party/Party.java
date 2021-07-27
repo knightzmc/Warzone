@@ -32,10 +32,6 @@ public class Party {
         otherPlayers.add(uuid);
     }
 
-    void remove(@NotNull UUID uuid) {
-        otherPlayers.remove(uuid);
-    }
-
     Set<PartyInvite> getOutgoingInvites() {
         return outgoingInvites;
     }
