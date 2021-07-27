@@ -11,5 +11,7 @@ party:
   party-user-left: '{leaver} left the party.'
   party-you-left: 'You left the party.'
   party-joined: '<green>You joined {owner}''s party!'
+  party-joined-broadcast: '<green>{player} has joined the party'
   cant-invite-self: '<red>You can''t invite yourself!'
   already-in-party: '<red>{player} is already in your party!'
+

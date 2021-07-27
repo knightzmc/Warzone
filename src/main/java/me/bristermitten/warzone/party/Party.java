@@ -1,7 +1,9 @@
 package me.bristermitten.warzone.party;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -52,5 +54,11 @@ public class Party {
 
     void setOwner(UUID owner) {
         this.owner = owner;
+    }
+
+    public @Unmodifiable Collection<UUID> getAllMembers() {
+        var set = new HashSet<>(otherPlayers);
+        set.add(owner);
+        return set;
     }
 }

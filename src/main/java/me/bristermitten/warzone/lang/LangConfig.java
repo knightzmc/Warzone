@@ -21,6 +21,7 @@ public record LangConfig(
             , @SerializedName("party-user-left") String partyUserLeft
             , @SerializedName("party-you-left") String partyYouLeft
             , @SerializedName("party-joined") String partyJoined
+            , @SerializedName("party-joined-broadcast") String partyJoinedBroadcast
             , @SerializedName("cant-invite-self") String cannotInviteSelf
             , @SerializedName("already-in-party") String alreadyInParty
     ) {

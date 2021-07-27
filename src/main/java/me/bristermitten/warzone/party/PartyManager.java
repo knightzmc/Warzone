@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import java.util.*;
 
 public class PartyManager {
+    public static final String PLAYER_PLACEHOLDER = "{player}";
     private final Map<UUID, Party> partiesByMember = new HashMap<>();
     private final LangService langService;
 
@@ -33,13 +34,13 @@ public class PartyManager {
         var party = getParty(inviter);
         if (party.getOwner().equals(receiver.getUniqueId()) || party.getOtherPlayers().contains(receiver.getUniqueId())) {
             langService.sendMessage(inviter, config -> config.partyLang().alreadyInParty(),
-                    Map.of("{player}", receiver.getName()));
+                    Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
             return;
         }
         if (party.getOutgoingInvites().stream().anyMatch(i -> i.receiver().equals(receiver.getUniqueId()))) {
             langService.sendMessage(
                     inviter, config -> config.partyLang().inviteAlreadySent(),
-                    Map.of("{player}", receiver.getName())
+                    Map.of(PLAYER_PLACEHOLDER, receiver.getName())
             );
             return;
         }
@@ -48,6 +49,9 @@ public class PartyManager {
                 receiver, config -> config.partyLang().inviteReceived(),
                 Map.of("{inviter}", inviter.getName())
         );
+
+        langService.sendMessage(inviter, config -> config.partyLang().inviteSent(),
+                Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
 
         party.getOutgoingInvites().add(
                 new PartyInvite(
@@ -80,11 +84,19 @@ public class PartyManager {
     }
 
     private void add(Party party, Player joining) {
+        party.getAllMembers().stream()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> langService.sendMessage(player, config -> config.partyLang().partyJoinedBroadcast(),
+                        Map.of(PLAYER_PLACEHOLDER, joining.getName())));
+
         party.add(joining.getUniqueId());
         partiesByMember.put(joining.getUniqueId(), party);
+
+
         langService.sendMessage(joining,
-                config -> config.partyLang().partyJoined(), Map.of("{owner}",
-                        Bukkit.getPlayer(party.getOwner()).getName()));
+                config -> config.partyLang().partyJoined(),
+                Map.of("{owner}", Bukkit.getPlayer(party.getOwner()).getName()));
     }
 
     public void leave(Party party, @NotNull Player leaver) {
@@ -120,7 +132,8 @@ public class PartyManager {
             party.setOwner(nextOwner.getUniqueId());
 
             party.getOtherPlayers().remove(nextOwner.getUniqueId());
-            langService.sendMessage(nextOwner, config -> config.partyLang().partyPromotedLeft());
+            langService.sendMessage(nextOwner, config -> config.partyLang().partyPromotedLeft(),
+                    Map.of("{owner}", leaver.getName()));
         }
 
     }
