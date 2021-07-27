@@ -19,6 +19,7 @@ public record LangConfig(
             , @SerializedName("party-promoted-left") String partyPromotedLeft
             , @SerializedName("party-user-left") String partyUserLeft
             , @SerializedName("party-you-left") String partyYouLeft
+            , @SerializedName("party-joined") String partyJoined
     ) {
     }
 }

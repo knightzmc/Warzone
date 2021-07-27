@@ -37,7 +37,7 @@ public class PartyManager {
 
         langService.sendMessage(
                 receiver, config -> config.partyLang().inviteReceived(),
-                Map.of("{inviter}", inviter.getName(), "{inviter_uuid}", inviter.getUniqueId())
+                Map.of("{inviter}", inviter.getName())
         );
 
         party.getOutgoingInvites().add(
@@ -63,13 +63,15 @@ public class PartyManager {
             return;
         }
 
-        add(invite.invitingTo(), invite.receiver());
+        add(invite.invitingTo(), receivingPlayer);
     }
 
-    private void add(Party party, UUID joining) {
-        party.add(joining);
-        partiesByMember.put(joining, party);
-        // TODO messages
+    private void add(Party party, Player joining) {
+        party.add(joining.getUniqueId());
+        partiesByMember.put(joining.getUniqueId(), party);
+        langService.sendMessage(joining,
+                config -> config.partyLang().partyJoined(), Map.of("{owner}",
+                        Bukkit.getPlayer(party.getOwner()).getName()));
     }
 
     public void leave(Party party, @NotNull Player leaver) {

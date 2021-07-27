@@ -2,6 +2,7 @@ package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
@@ -29,6 +30,7 @@ public class PartyCommand extends BaseCommand {
     }
 
     @Subcommand("invite")
+    @CommandCompletion("@players")
     public void invite(Player inviter, OnlinePlayer invitee) {
         partyManager.invite(inviter, inviter.getPlayer());
     }

@@ -1,6 +1,6 @@
 party:
   invite-already-sent: "&cYou've already invited {player} to a party!"
-  invite-received: '<click:run_command:/party join {inviter_uuid}>{inviter} has invited you to a party! Click this message or type <gray>/party join <green> to join'
+  invite-received: '<green><click:run_command:/party join {inviter}>{inviter} has invited you to a party! Click this message or type <gray>/party join <green> to join'
   no-invites: 'You have no pending party invitations!'
   no-invites-from-player: '{inviter} has not invited you to their party!'
   invalid-invite: 'This invitation is no longer valid'
@@ -9,3 +9,4 @@ party:
   party-promoted-left: 'As {owner} left the party, you have been promoted to party leader'
   party-user-left: '{leaver} left the party.'
   party-you-left: 'You left the party.'
+  party-joined: '<green>You joined {owner}''s party!'
