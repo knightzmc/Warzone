@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.config.loading;
+package me.bristermitten.warzone.config.gson;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;

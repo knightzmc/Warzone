@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.config.loading;
+package me.bristermitten.warzone.config.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;

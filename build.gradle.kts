@@ -45,6 +45,7 @@ dependencies {
     implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testImplementation("org.yaml:snakeyaml:1.28")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
 

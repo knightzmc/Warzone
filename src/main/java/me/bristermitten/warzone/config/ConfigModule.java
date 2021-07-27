@@ -4,7 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
+import me.bristermitten.warzone.config.gson.GsonProvider;
 import me.bristermitten.warzone.config.loading.*;
+import me.bristermitten.warzone.config.mapper.GsonObjectMapper;
+import me.bristermitten.warzone.config.mapper.ObjectMapper;
+import me.bristermitten.warzone.config.saving.ObjectSaver;
+import me.bristermitten.warzone.config.saving.YamlObjectSaver;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Provider;
@@ -24,6 +29,7 @@ public class ConfigModule extends AbstractModule {
 
         bind(ObjectMapper.class).to(GsonObjectMapper.class);
         bind(ObjectLoader.class).to(YamlObjectLoader.class);
+        bind(ObjectSaver.class).to(YamlObjectSaver.class);
 
         configs.forEach((key, provider) -> {
             //noinspection unchecked god i hate this

@@ -93,3 +93,4 @@ done today:
 - 13:05 - start work
 - 13:50 - pause
 - 16:00 - resume
+- 18:00 - pause
