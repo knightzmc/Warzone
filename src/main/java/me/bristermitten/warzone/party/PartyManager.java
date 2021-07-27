@@ -109,6 +109,7 @@ public class PartyManager {
         langService.sendMessage(leaver, config -> config.partyLang().partyYouLeft());
 
         party.getOtherPlayers().remove(leaver.getUniqueId());
+        partiesByMember.remove(leaver.getUniqueId());
 
         party.getOtherPlayers().stream()
                 .map(Bukkit::getPlayer)
