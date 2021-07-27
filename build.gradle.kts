@@ -59,7 +59,12 @@ tasks {
     }
 
     shadowJar {
-        relocate("com.google", "me.bristermitten.warzone.com.google")
-        relocate("co.aikar", "me.bristermitten.warzone.co.aikar")
+        listOf(
+            "com.google",
+            "co.aikar.commands",
+            "co.aikar.locales"
+        ).forEach {
+            relocate(it, "me.bristermitten.warzone.$it")
+        }
     }
 }
