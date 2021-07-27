@@ -55,12 +55,10 @@ public class PartyManager {
         langService.sendMessage(inviter, config -> config.partyLang().inviteSent(),
                 Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
 
-        party.getOutgoingInvites().add(
-                new PartyInvite(
-                        party,
-                        inviter.getUniqueId(), receiver.getUniqueId()
-                )
-        );
+        party.getOutgoingInvites().add(new PartyInvite(
+                party,
+                inviter.getUniqueId(), receiver.getUniqueId()
+        ));
 
     }
 

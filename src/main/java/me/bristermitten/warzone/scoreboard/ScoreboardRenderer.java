@@ -53,14 +53,16 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     private void updateScores(@NotNull ScoreboardTemplate template,
                               @NotNull Scoreboard board, @NotNull Objective objective, @NotNull Player player) {
         var lines = renderLines(List.ofAll(template.lines()), player);
-        lines.zipWithIndex()
-                .forEach(tuple -> tuple.apply((line, index) -> {
-                    var team = board.getTeam("team" + index);
-                    Objects.requireNonNull(team, "this should not happen!");
-                    team.prefix(line);
-                    objective.getScore(" ".repeat(index)).setScore(15 - index);
-                    return null; // not really relevant
-                }));
 
+        for (int index = 0; index < 15; index++) {
+            var team = board.getTeam("team" + index);
+            Objects.requireNonNull(team, "this should not happen!");
+            if (index >= lines.size()) {
+                board.resetScores(" ".repeat(index));
+            } else {
+                team.prefix(lines.get(index));
+                objective.getScore(" ".repeat(index)).setScore(15 - index);
+            }
+        }
     }
 }
