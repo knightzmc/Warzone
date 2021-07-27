@@ -7,8 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.*;
 
+@Singleton
 public class PartyManager {
     public static final String PLAYER_PLACEHOLDER = "{player}";
     private final Map<UUID, Party> partiesByMember = new HashMap<>();
