@@ -85,3 +85,11 @@ done today:
 - 11:30 - pause
 
 40 minutes spent
+
+**First Payment Sent**
+
+## 2021-07-27
+
+- 13:05 - start work
+- 13:50 - pause
+- 16:00 - resume

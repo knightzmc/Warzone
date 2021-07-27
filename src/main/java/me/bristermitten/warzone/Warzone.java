@@ -13,6 +13,7 @@ import me.bristermitten.warzone.database.DatabaseConfig;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
+import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
@@ -35,6 +36,7 @@ public class Warzone extends JavaPlugin {
                     , DatabaseConfig.CONFIG
                     , XPConfig.CONFIG
                     , ChatConfig.CONFIG
+                    , LangConfig.CONFIG
             ));
 
             var aspects = List.of(
