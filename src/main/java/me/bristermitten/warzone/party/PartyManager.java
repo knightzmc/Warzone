@@ -64,6 +64,7 @@ public class PartyManager {
         }
 
         add(invite.invitingTo(), receivingPlayer);
+        invite.invitingTo().getOutgoingInvites().remove(invite);
     }
 
     private void add(Party party, Player joining) {

@@ -43,7 +43,8 @@ public class PartyCommand extends BaseCommand {
             return;
         }
         if (inviter != null) {
-            var fromPlayer = invites.stream().filter(invite -> invite.sender().equals(inviter.getPlayer().getUniqueId()))
+            var fromPlayer = invites.stream()
+                    .filter(invite -> invite.sender().equals(inviter.getPlayer().getUniqueId()))
                     .findFirst();
             if (fromPlayer.isEmpty()) {
                 langService.sendMessage(sender, config -> config.partyLang().noInvitesFromPlayer(),
