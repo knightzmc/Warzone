@@ -6,6 +6,7 @@ import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.aspect.Aspect;
 import me.bristermitten.warzone.chat.ChatAspect;
 import me.bristermitten.warzone.chat.ChatConfig;
+import me.bristermitten.warzone.commands.CommandsAspect;
 import me.bristermitten.warzone.config.ConfigurationAspect;
 import me.bristermitten.warzone.database.DatabaseAspect;
 import me.bristermitten.warzone.database.DatabaseConfig;
@@ -44,6 +45,7 @@ public class Warzone extends JavaPlugin {
                     , new DatabaseAspect()
                     , new PlayerAspect()
                     , new ChatAspect()
+                    , new CommandsAspect()
             );
 
             var modules = aspects.map(Aspect::generateModule);
