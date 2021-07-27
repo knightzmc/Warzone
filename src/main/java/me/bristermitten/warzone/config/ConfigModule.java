@@ -10,6 +10,7 @@ import me.bristermitten.warzone.config.mapper.GsonObjectMapper;
 import me.bristermitten.warzone.config.mapper.ObjectMapper;
 import me.bristermitten.warzone.config.saving.ObjectSaver;
 import me.bristermitten.warzone.config.saving.YamlObjectSaver;
+import me.bristermitten.warzone.config.yaml.SnakeYamlProvider;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Provider;
@@ -24,7 +25,7 @@ public class ConfigModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(Yaml.class).toProvider(Yaml::new);
+        bind(Yaml.class).toProvider(SnakeYamlProvider.class);
         bind(Gson.class).toProvider(GsonProvider.class);
 
         bind(ObjectMapper.class).to(GsonObjectMapper.class);
