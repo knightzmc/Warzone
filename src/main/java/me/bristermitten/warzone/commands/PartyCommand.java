@@ -28,6 +28,11 @@ public class PartyCommand extends BaseCommand {
         this.langService = langService;
     }
 
+    @Subcommand("invite")
+    public void invite(Player inviter, OnlinePlayer invitee) {
+        partyManager.invite(inviter, inviter.getPlayer());
+    }
+
     @Subcommand("join|accept")
     public void join(Player sender, @Optional OnlinePlayer inviter) {
         var invites = partyManager.getInvitesFor(sender);
