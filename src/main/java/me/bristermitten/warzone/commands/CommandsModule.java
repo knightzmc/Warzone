@@ -11,8 +11,8 @@ public class CommandsModule extends AbstractModule {
         bind(PaperCommandManager.class).toProvider(CommandManagerProvider.class)
                 .asEagerSingleton();
 
-        var commandMultibinder = Multibinder.newSetBinder(binder(), BaseCommand.class);
-        commandMultibinder.addBinding().to(WarzoneCommand.class);
-        commandMultibinder.addBinding().to(PartyCommand.class);
+        var commandBinder = Multibinder.newSetBinder(binder(), BaseCommand.class);
+        commandBinder.addBinding().to(WarzoneCommand.class);
+        commandBinder.addBinding().to(PartyCommand.class);
     }
 }

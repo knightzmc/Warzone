@@ -6,11 +6,16 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.bristermitten.warzone.lang.LangService;
+import me.bristermitten.warzone.party.Party;
+import me.bristermitten.warzone.party.PartyInvite;
 import me.bristermitten.warzone.party.PartyManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @CommandAlias("party|p")
 public class PartyCommand extends BaseCommand {
@@ -48,10 +53,17 @@ public class PartyCommand extends BaseCommand {
             return;
         }
 
+        langService.sendMessage(sender, config -> config.partyLang().multipleInvites(),
+                Map.of("{invitations}", invites.stream().map(PartyInvite::sender)
+                        .map(Bukkit::getPlayer)
+                        .filter(Objects::nonNull)
+                        .map(Player::getName)
+                        .collect(Collectors.joining(","))));
     }
 
     @Subcommand("leave")
     public void leave(Player sender) {
-        throw new UnsupportedOperationException("TODO");
+        Party party = partyManager.getParty(sender);
+        partyManager.leave(party, sender);
     }
 }
