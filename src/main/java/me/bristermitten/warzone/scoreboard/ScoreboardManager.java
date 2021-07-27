@@ -2,6 +2,7 @@ package me.bristermitten.warzone.scoreboard;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -18,6 +19,7 @@ public class ScoreboardManager {
     private final ScoreboardRenderer renderer;
 
     private final Map<UUID, Function<ScoreboardConfig, ScoreboardTemplate>> activeScoreboards = new HashMap<>();
+    private final Map<UUID, Scoreboard> scoreboardMap = new HashMap<>();
 
     @Inject
     public ScoreboardManager(Provider<ScoreboardConfig> configProvider, ScoreboardRenderer renderer) {
@@ -33,7 +35,8 @@ public class ScoreboardManager {
     }
 
     private void set(@NotNull Player player, ScoreboardTemplate template) {
-        renderer.show(template, player);
+        var board = scoreboardMap.computeIfAbsent(player.getUniqueId(), unused -> Bukkit.getScoreboardManager().getNewScoreboard());
+        renderer.show(template, player, board);
     }
 
     public void updateScoreboards() {
@@ -44,6 +47,7 @@ public class ScoreboardManager {
             }
         });
     }
+
 
     public void show(@NotNull Player player, ScoreboardTemplate template) {
         show(player, ignored -> template);

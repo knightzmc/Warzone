@@ -5,6 +5,7 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -30,10 +31,9 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     }
 
 
-    void show(@NotNull ScoreboardTemplate template, @NotNull Player player) {
-        var board = player.getScoreboard();
+    void show(@NotNull ScoreboardTemplate template, @NotNull Player player, Scoreboard board) {
+        player.setScoreboard(board);
         var title = chatManager.format(template.title(), player);
-
         Objective objective = Option.of(board.getObjective("Warzone"))
                 .getOrElse(() -> board.registerNewObjective("Warzone", "dummy", title));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
