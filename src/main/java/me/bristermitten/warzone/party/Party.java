@@ -13,7 +13,7 @@ public class Party {
     private final Set<UUID> otherPlayers;
     private UUID owner;
 
-    public Party(UUID owner, Set<UUID> otherPlayers) {
+    Party(UUID owner, Set<UUID> otherPlayers) {
         this.owner = owner;
         if (otherPlayers.size() > MAX_SIZE) {
             throw new IllegalArgumentException("players is too big");

@@ -9,8 +9,10 @@ public record LangConfig(
     public static final Configuration<LangConfig> CONFIG = new Configuration<>(LangConfig.class, "lang.yml");
 
     public record PartyLang(
-            @SerializedName("invite-sent") String inviteSent,
-            @SerializedName("invite-already-sent") String inviteAlreadySent
+            @SerializedName("invite-received") String inviteReceived,
+            @SerializedName("invite-already-sent") String inviteAlreadySent,
+            @SerializedName("no-invites") String noInvites,
+            @SerializedName("no-invites-from-player") String noInvitesFromPlayer
     ) {
     }
 }

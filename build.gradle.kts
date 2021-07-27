@@ -22,6 +22,7 @@ repositories {
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     maven("https://jitpack.io")
     maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.aikar.co/content/groups/aikar/")
 }
 
 dependencies {
@@ -41,16 +42,25 @@ dependencies {
     implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
 
+    implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
-tasks {
 
+
+tasks {
+    compileJava {
+        options.compilerArgs.add("-parameters")
+        options.isFork = true
+        options.forkOptions.executable = "javac"
+    }
     test {
         useJUnitPlatform()
     }
 
     shadowJar {
         relocate("com.google", "me.bristermitten.warzone.com.google")
+        relocate("co.aikar", "me.bristermitten.warzone.co.aikar")
     }
 }

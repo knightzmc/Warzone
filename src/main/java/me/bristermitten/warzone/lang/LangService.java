@@ -26,6 +26,10 @@ public class LangService {
         receiver.sendMessage(formatter.format(replaced, receiver));
     }
 
+    public void sendMessage(Player receiver, Function<LangConfig, String> message) {
+        sendMessage(receiver, message, Map.of());
+    }
+
     public void sendMessage(Player receiver, Function<LangConfig, String> message, Map<String, Object> placeholders) {
         sendMessage(receiver, message.apply(configProvider.get()), placeholders);
     }
