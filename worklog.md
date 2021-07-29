@@ -106,3 +106,5 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 ## 2021-07-29
 - 14:30 - start work
 - 14:50 - pause
+- 19:40 - resume
+- 20:30 - pause
