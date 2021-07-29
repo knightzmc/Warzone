@@ -44,7 +44,7 @@ pages:
       player-head:
         type: PLAYER_HEAD
         name: '{gui_opener}'
-        head-owner: { gui_opener }
+        head-owner: "{gui_opener}"
         slots: [ 49 ]
       barrier:
         type: BARRIER
