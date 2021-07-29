@@ -2,22 +2,18 @@ package me.bristermitten.warzone.papi;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.data.Ratio;
-import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerLeaderboard;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.OrdinalFormatter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class WarzoneExpansion extends PlaceholderExpansion {
     public static final String NOT_LOADED_YET = "Not loaded yet";
@@ -26,15 +22,16 @@ public class WarzoneExpansion extends PlaceholderExpansion {
     private final XPHandler xpHandler;
 
     private final PlayerLeaderboard leaderboard;
-    private final PartyManager partyManager;
+
+    private final Set<WarzonePlaceholder> extraPlaceholders;
 
     @Inject
-    public WarzoneExpansion(Plugin plugin, PlayerStorage playerStorage, XPHandler xpHandler, PlayerLeaderboard leaderboard, PartyManager partyManager) {
+    public WarzoneExpansion(Plugin plugin, PlayerStorage playerStorage, XPHandler xpHandler, PlayerLeaderboard leaderboard, Set<WarzonePlaceholder> extraPlaceholders) {
         this.plugin = plugin;
         this.playerStorage = playerStorage;
         this.xpHandler = xpHandler;
         this.leaderboard = leaderboard;
-        this.partyManager = partyManager;
+        this.extraPlaceholders = extraPlaceholders;
     }
 
     @Override
@@ -66,7 +63,7 @@ public class WarzoneExpansion extends PlaceholderExpansion {
                 // While we obviously can't use the loaded player yet, we can trigger a query so that it starts
                 .onEmpty(() -> playerStorage.load(player.getUniqueId()));
 
-        return switch (params) {
+        var simple = switch (params) {
             case "level" -> warzonePlayer.map(WarzonePlayer::getLevel).map(Object::toString).getOrElse(NOT_LOADED_YET);
             case "kdr" -> warzonePlayer.map(WarzonePlayer::getKDR).map(Ratio::format).getOrElse(NOT_LOADED_YET);
             case "wlr" -> warzonePlayer
@@ -82,14 +79,19 @@ public class WarzoneExpansion extends PlaceholderExpansion {
                     .map(player1 -> xpHandler.xpRequiredForLevel(player1.getLevel() + 1))
                     .map(Object::toString)
                     .getOrElse(NOT_LOADED_YET);
-            case "party_members" -> partyManager.getParty(player)
-                    .getAllMembers()
-                    .stream()
-                    .map(Bukkit::getPlayer)
-                    .filter(Objects::nonNull)
-                    .map(HumanEntity::getName)
-                    .collect(Collectors.joining("\n"));
             default -> null;
         };
+        if (simple != null) {
+            return simple;
+        }
+
+        var firstMatching = extraPlaceholders
+                .stream()
+                .filter(p -> p.getPattern().matcher(params).matches())
+                .findFirst();
+        if (firstMatching.isEmpty()) {
+            return null;
+        }
+        return firstMatching.get().onPlaceholderRequest(player, params);
     }
 }

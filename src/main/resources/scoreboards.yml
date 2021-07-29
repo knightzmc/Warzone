@@ -24,7 +24,7 @@ lobby:
     - "&4&lLevel: &7%warzone_level%"
     - "&4&lXP to next level: &7%warzone_xp_required%"
     - "&4Global Ranking: &7%warzone_global_ranking%"
-    - "&2&lParty:\n &7%warzone_party_members%"
+    - "&2&lParty:\n%warzone_party_members:<gray>:</gray>%"
 
 
 # How often the scoreboard should update in ticks. Smaller values mean the scoreboard is more responsive but might cause lag
