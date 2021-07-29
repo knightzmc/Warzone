@@ -5,7 +5,6 @@ import io.vavr.collection.List;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -22,6 +21,7 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     @Inject
     public ScoreboardRenderer {
     }
+
 
     private List<Component> renderLines(List<String> lines, Player player) {
         return lines

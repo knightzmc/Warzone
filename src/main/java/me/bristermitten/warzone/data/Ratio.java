@@ -8,6 +8,12 @@ public record Ratio(int numerator, int denominator) implements Comparable<Ratio>
         if (denominator == 0) {
             return numerator;
         }
+        if (numerator == 0) {
+            return -denominator;
+        }
+        if (numerator < 0) {
+            return -(double) numerator / denominator;
+        }
         return (double) numerator / denominator;
     }
 

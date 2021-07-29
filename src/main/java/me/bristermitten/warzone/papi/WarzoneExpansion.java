@@ -84,7 +84,8 @@ public class WarzoneExpansion extends PlaceholderExpansion {
                     .getOrElse(NOT_LOADED_YET);
             case "party_members" -> partyManager.getParty(player)
                     .getAllMembers()
-                    .stream().map(Bukkit::getPlayer)
+                    .stream()
+                    .map(Bukkit::getPlayer)
                     .filter(Objects::nonNull)
                     .map(HumanEntity::getName)
                     .collect(Collectors.joining("\n"));

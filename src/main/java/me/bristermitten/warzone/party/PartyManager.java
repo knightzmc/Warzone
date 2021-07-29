@@ -34,6 +34,10 @@ public class PartyManager {
             return;
         }
         var party = getParty(inviter);
+        if (party.isFull()) {
+            langService.sendMessage(inviter, config -> config.partyLang().partyFull());
+            return;
+        }
         if (party.getOwner().equals(receiver.getUniqueId()) || party.getOtherPlayers().contains(receiver.getUniqueId())) {
             langService.sendMessage(inviter, config -> config.partyLang().alreadyInParty(),
                     Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
@@ -84,6 +88,12 @@ public class PartyManager {
     }
 
     private void add(Party party, Player joining) {
+        if (party.isFull()) {
+            langService.sendMessage(joining,
+                    langConfig -> langConfig.partyLang().partyFullJoin(),
+                    Map.of(PLAYER_PLACEHOLDER, Bukkit.getPlayer(party.getOwner()).getName()));
+            return;
+        }
         party.getAllMembers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)

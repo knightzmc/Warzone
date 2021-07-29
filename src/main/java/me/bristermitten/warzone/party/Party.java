@@ -26,7 +26,7 @@ public class Party {
     }
 
     void add(@NotNull UUID uuid) {
-        if (otherPlayers.size() == MAX_SIZE) {
+        if (isFull()) {
             throw new IllegalArgumentException("Party is full!");
         }
         otherPlayers.add(uuid);
@@ -56,5 +56,9 @@ public class Party {
         var set = new HashSet<>(otherPlayers);
         set.add(owner);
         return set;
+    }
+
+    public boolean isFull() {
+        return otherPlayers.size() >= MAX_SIZE;
     }
 }

@@ -7,12 +7,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 
-public class MiniMessageFactory {
-    private final MiniMessagePlaceholders miniMessagePlaceholders;
-
+public record MiniMessageFactory(MiniMessagePlaceholders miniMessagePlaceholders) {
     @Inject
-    public MiniMessageFactory(MiniMessagePlaceholders miniMessagePlaceholders) {
-        this.miniMessagePlaceholders = miniMessagePlaceholders;
+    public MiniMessageFactory {
     }
 
     public MiniMessage create(@Nullable Player player) {

@@ -102,3 +102,7 @@ done today:
 bugfixes, update configs with default keys if needed, and party system fully working
 
 4 hours 5 minutes spent today
+
+## 2021-07-29
+- 14:30 - start work
+- 14:50 - pause

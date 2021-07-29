@@ -14,4 +14,6 @@ party:
   party-joined-broadcast: '<green>{player} has joined the party'
   cant-invite-self: '<red>You can''t invite yourself!'
   already-in-party: '<red>{player} is already in your party!'
+  party-full: '<red>Your party is full!'
+  party-full-join: '<red>You can''t accept this invite as {player}''s party is full'
 
