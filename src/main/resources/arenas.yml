@@ -1,0 +1,4 @@
+arenas:
+  main:
+    name: main
+    world: mainarena
