@@ -1,27 +1,36 @@
 package me.bristermitten.warzone.menu;
 
 import com.google.gson.annotations.SerializedName;
-import io.vavr.collection.List;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Map;
 
 public record MenuConfig(
         Map<String, PageConfig> pages
 ) {
     public record PageConfig(
-            String title,
-            int size,
-            Map<String, ItemConfig> items
+            @Nullable String title,
+            @Nullable Integer size,
+            @Nullable Map<String, ItemConfig> items
     ) {
+
+        public static final PageConfig DEFAULT = new PageConfig(
+                "No title defined",
+                54,
+                Map.of()
+        );
+
         public record ItemConfig(
-                Material type,
-                String name,
-                List<String> lore,
-                List<Integer> slots,
-                @SerializedName("head-owner") @Nullable String headOwner,
-                @Nullable String action
+                @NotNull Material type,
+                @Nullable Integer amount,
+                @Nullable String name,
+                @Nullable List<String> lore,
+                @NotNull List<Integer> slots,
+                @Nullable @SerializedName("head-owner") String headOwner,
+                @Nullable MenuAction action
         ) {
         }
     }

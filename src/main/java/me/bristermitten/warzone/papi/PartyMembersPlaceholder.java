@@ -2,6 +2,7 @@ package me.bristermitten.warzone.papi;
 
 import me.bristermitten.warzone.party.PartyManager;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +28,8 @@ public class PartyMembersPlaceholder implements WarzonePlaceholder {
     }
 
     @Override
-    public String onPlaceholderRequest(@Nullable Player player, @NotNull String params) {
-        if (player == null) {
+    public String onPlaceholderRequest(@Nullable OfflinePlayer offlinePlayer, @NotNull String params) {
+        if (!(offlinePlayer instanceof Player player) || !player.isOnline()) {
             return null;
         }
         var matcher = PARTY_MEMBERS_PATTERN.matcher(params);

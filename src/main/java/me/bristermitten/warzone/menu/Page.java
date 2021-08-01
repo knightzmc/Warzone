@@ -1,0 +1,81 @@
+package me.bristermitten.warzone.menu;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+
+/**
+ * Represents a Page in a Menu
+ * Like {@link Menu} this class is ephemeral and so Page objects should not be stored
+ */
+public class Page implements Listener {
+    private final String name;
+    private final Inventory inventory;
+    private final Map<Integer, MenuItem> itemMap;
+    private final Logger logger = Logger.getLogger("Page");
+    private Menu menu;
+
+    public Page(String name, Inventory inventory, List<MenuItem> items) {
+        this.name = name;
+        this.inventory = inventory;
+        this.itemMap = new HashMap<>();
+
+        for (var item : items) {
+            for (int slot : item.slots()) {
+                if (this.itemMap.containsKey(slot)) {
+                    logger.warning(() -> "Duplicate slots for page named %s. Items %s and %s share slot %d".formatted(name, itemMap.get(slot), item, slot));
+                }
+                itemMap.put(slot, item);
+            }
+        }
+
+    }
+
+    void bind(Menu menu, Plugin plugin) {
+        if (this.menu != null) {
+            throw new IllegalStateException("Already bound!");
+        }
+        this.menu = menu;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void open(Player player) {
+        player.openInventory(inventory);
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+        if (event.getClickedInventory() != inventory) {
+            return;
+        }
+        var clickedItem = itemMap.get(event.getSlot());
+        if (clickedItem == null) {
+            return;
+        }
+        clickedItem.action()
+                .onClick(event, (Player) event.getWhoClicked(), menu, this);
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        if (event.getInventory() != inventory) {
+            return;
+        }
+        InventoryClickEvent.getHandlerList().unregister(this);
+        InventoryCloseEvent.getHandlerList().unregister(this);
+    }
+}

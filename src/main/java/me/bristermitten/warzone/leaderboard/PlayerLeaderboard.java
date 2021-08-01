@@ -1,4 +1,6 @@
-package me.bristermitten.warzone.player;
+package me.bristermitten.warzone.leaderboard;
+
+import me.bristermitten.warzone.player.WarzonePlayer;
 
 import javax.inject.Singleton;
 import java.util.Comparator;

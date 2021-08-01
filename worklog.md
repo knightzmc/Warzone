@@ -108,3 +108,10 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 - 14:50 - pause
 - 19:40 - resume
 - 20:30 - pause
+
+1 hour 10 minutes spent today
+
+## 2021-08-01
+
+- 14:35 - start work
+- 15:55 - pause
