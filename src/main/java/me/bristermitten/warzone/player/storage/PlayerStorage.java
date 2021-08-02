@@ -6,7 +6,7 @@ import io.vavr.collection.HashMap;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
-import me.bristermitten.warzone.player.PlayerLeaderboard;
+import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;

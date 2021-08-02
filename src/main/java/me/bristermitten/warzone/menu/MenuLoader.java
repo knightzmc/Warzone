@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.Plugin;
@@ -30,12 +30,12 @@ public class MenuLoader {
         this.plugin = plugin;
     }
 
-    public @NotNull MenuItem loadItem(Player player, String itemName, MenuConfig.PageConfig.ItemConfig itemConfig) {
+    public @NotNull MenuItem loadItem(OfflinePlayer player, MenuConfig.PageConfig.ItemConfig itemConfig) {
         var type = itemConfig.type();
         var amount = Null.get(itemConfig.amount(), 1);
         var name = itemConfig.name();
         var lore = Null.get(itemConfig.lore(), new ArrayList<String>());
-        var slots = itemConfig.slots();
+        var slots = Null.get(itemConfig.slots(), new ArrayList<Integer>());
         var action = Null.get(itemConfig.action(), MenuAction.NOTHING);
 
         var item = new ItemStack(type, amount);
@@ -50,10 +50,10 @@ public class MenuLoader {
         }
         item.setItemMeta(meta);
 
-        return new MenuItem(itemName, item, slots, action);
+        return new MenuItem(item, slots, action);
     }
 
-    private Page loadPage(Player player, MenuConfig.PageConfig globalPage, String name, MenuConfig.PageConfig config) {
+    private Page loadPage(OfflinePlayer player, MenuConfig.PageConfig globalPage, String name, MenuConfig.PageConfig config) {
         var titleString = Null.get(config.title(), Objects.requireNonNull(globalPage.title()));
         var title = formatter.format(titleString, player);
         var size = Null.get(config.size(), Objects.requireNonNull(globalPage.size()));
@@ -66,18 +66,14 @@ public class MenuLoader {
         });
 
         var items = configItems
-                .entrySet().stream()
-                .map(e -> loadItem(player, e.getKey(), e.getValue()))
+                .values().stream()
+                .map(itemConfig -> loadItem(player, itemConfig))
                 .toList();
 
-        var inventory = Bukkit.createInventory(null, size, title);
-        items.forEach(item -> item.slots()
-                .forEach(slot -> inventory.setItem(slot, item.item())));
-
-        return new Page(name, inventory, items);
+        return new Page(name, size, title, items);
     }
 
-    public Menu load(Player player, MenuConfig config) {
+    public Menu load(OfflinePlayer player, MenuConfig config) {
         var globalPageConfig =
                 Null.get(config.pages().get(GLOBAL_NAME), MenuConfig.PageConfig.DEFAULT);
 
@@ -101,7 +97,7 @@ public class MenuLoader {
                 .toList();
 
 
-        var menu = new Menu(pages);
+        var menu = new Menu(pages.get(0), pages);
         pages.forEach(page -> page.bind(menu, plugin));
         return menu;
     }

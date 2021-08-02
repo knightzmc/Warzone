@@ -14,6 +14,7 @@ import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.lang.LangConfig;
+import me.bristermitten.warzone.leaderboard.LeaderboardMenu;
 import me.bristermitten.warzone.papi.PAPIAspect;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
@@ -38,6 +39,7 @@ public class Warzone extends JavaPlugin {
                     , XPConfig.CONFIG
                     , ChatConfig.CONFIG
                     , LangConfig.CONFIG
+                    , LeaderboardMenu.CONFIG
             ));
 
             var aspects = List.of(

@@ -34,7 +34,7 @@ menu:
 
                    46, 47, 51, 52 ]
         background2:
-          type: DARK_GRAY_STAINED_GLASS_PANE
+          type: GRAY_STAINED_GLASS_PANE
           name: ''
           slots: [ 3, 4, 5,
                    8, 17,
@@ -72,7 +72,7 @@ menu:
                    36, 44,
                    46, 47, 51, 52 ]
         background2:
-          type: DARK_GRAY_STAINED_GLASS_PANE
+          type: GRAY_STAINED_GLASS_PANE
           name: ''
           slots: [ 3, 5,
                    11, 15,

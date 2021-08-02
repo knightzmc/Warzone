@@ -28,7 +28,7 @@ public record MenuConfig(
                 @Nullable Integer amount,
                 @Nullable String name,
                 @Nullable List<String> lore,
-                @NotNull List<Integer> slots,
+                @Nullable List<Integer> slots,
                 @Nullable @SerializedName("head-owner") String headOwner,
                 @Nullable MenuAction action
         ) {

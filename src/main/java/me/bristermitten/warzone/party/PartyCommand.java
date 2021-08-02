@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.commands;
+package me.bristermitten.warzone.party;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
@@ -7,9 +7,6 @@ import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.bristermitten.warzone.lang.LangService;
-import me.bristermitten.warzone.party.Party;
-import me.bristermitten.warzone.party.PartyInvite;
-import me.bristermitten.warzone.party.PartyManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

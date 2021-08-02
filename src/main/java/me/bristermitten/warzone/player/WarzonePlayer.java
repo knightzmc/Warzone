@@ -5,6 +5,7 @@ import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.player.state.NullState;
 import me.bristermitten.warzone.player.state.PlayerState;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +50,10 @@ public class WarzonePlayer {
 
     public Option<Player> getPlayer() {
         return Option.of(Bukkit.getPlayer(playerId));
+    }
+
+    public @NotNull OfflinePlayer getOfflinePlayer() {
+        return Bukkit.getOfflinePlayer(playerId);
     }
 
     public int getKills() {

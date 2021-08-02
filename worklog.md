@@ -115,3 +115,10 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 
 - 14:35 - start work
 - 15:55 - pause
+
+1 hour 20 minutes spent today
+
+## 2021-08-02
+- 22:15 - start work
+- 23:20 - pause
+

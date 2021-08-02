@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.menu;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,26 +20,50 @@ import java.util.logging.Logger;
  * Like {@link Menu} this class is ephemeral and so Page objects should not be stored
  */
 public class Page implements Listener {
+    private static final Logger LOGGER = Logger.getLogger(Page.class.getName());
     private final String name;
+    private final int size;
+    private final Component title;
     private final Inventory inventory;
     private final Map<Integer, MenuItem> itemMap;
-    private final Logger logger = Logger.getLogger("Page");
     private Menu menu;
+    private Plugin plugin;
 
-    public Page(String name, Inventory inventory, List<MenuItem> items) {
+    public Page(String name, int size, Component title, List<MenuItem> items) {
         this.name = name;
-        this.inventory = inventory;
+        this.size = size;
+        this.title = title;
+        this.inventory = Bukkit.createInventory(null, size, title);
         this.itemMap = new HashMap<>();
 
         for (var item : items) {
-            for (int slot : item.slots()) {
-                if (this.itemMap.containsKey(slot)) {
-                    logger.warning(() -> "Duplicate slots for page named %s. Items %s and %s share slot %d".formatted(name, itemMap.get(slot), item, slot));
-                }
-                itemMap.put(slot, item);
-            }
+            add(item);
         }
+    }
 
+    /**
+     * Copy constructor
+     */
+    private Page(String name, int size, Component title, Map<Integer, MenuItem> itemMap) {
+        this.name = name;
+        this.size = size;
+        this.title = title;
+        this.itemMap = itemMap;
+        this.inventory = Bukkit.createInventory(null, size, title);
+    }
+
+    boolean add(MenuItem item) {
+        if (inventory.firstEmpty() == -1) {
+            return false;
+        }
+        for (int slot : item.slots()) {
+            if (this.itemMap.containsKey(slot)) {
+                LOGGER.warning(() -> "Duplicate slots for page named %s. Items %s and %s share slot %d".formatted(name, itemMap.get(slot), item, slot));
+            }
+            itemMap.put(slot, item);
+            inventory.setItem(slot, item.item());
+        }
+        return true;
     }
 
     void bind(Menu menu, Plugin plugin) {
@@ -77,5 +102,19 @@ public class Page implements Listener {
         }
         InventoryClickEvent.getHandlerList().unregister(this);
         InventoryCloseEvent.getHandlerList().unregister(this);
+
+        // I'm not sure how important this is but it might prevent a potential memory leak
+        this.menu = null;
+        this.plugin = null;
+
+    }
+
+    Page copy() {
+        if (menu == null) {
+            throw new IllegalStateException("Not bound");
+        }
+        var copy = new Page(name, size, title, new HashMap<>(itemMap));
+        copy.bind(menu, plugin);
+        return copy;
     }
 }
