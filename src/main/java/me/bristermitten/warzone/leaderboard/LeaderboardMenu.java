@@ -28,9 +28,10 @@ public class LeaderboardMenu {
         LeaderboardMenuConfig menuConfig = configProvider.get();
         Menu menu = loader.load(player, menuConfig.menu());
         for (WarzonePlayer leaderboardPlayer : leaderboard.getPlayers()) {
-            menu.add(
-                    loader.loadItem(leaderboardPlayer.getOfflinePlayer(), menuConfig.leaderboardEntry())
-            );
+            var page = menu.firstEmptyPage();
+            var pageNumber = menu.pages().indexOf(page);
+            var formatter = loader.generateFormatter(leaderboardPlayer.getOfflinePlayer(), String.valueOf(pageNumber));
+            menu.addFirstEmpty(loader.loadItem(leaderboardPlayer.getOfflinePlayer(), menuConfig.leaderboardEntry(), formatter));
         }
         menu.open(player);
     }

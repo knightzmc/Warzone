@@ -14,6 +14,14 @@ public record Menu(Page globalPage, List<Page> pages) {
     }
 
 
+    public void addFirstEmpty(MenuItem item) {
+        for (Page page : pages) {
+            if (page.addFirstEmpty(item)) {
+                return;
+            }
+        }
+    }
+
     public void add(MenuItem item) {
         for (Page page : pages) {
             if (page.add(item)) {
@@ -29,5 +37,16 @@ public record Menu(Page globalPage, List<Page> pages) {
 
     public void open(Player player) {
         pages.get(0).open(player);
+    }
+
+    public Page firstEmptyPage() {
+        for (Page page : pages) {
+            if (page.firstEmpty() != -1) {
+                return page;
+            }
+        }
+        Page newPage = globalPage.copy();
+        pages.add(newPage);
+        return newPage;
     }
 }

@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 public record MiniMessageFormatter(MiniMessageFactory miniMessageFactory,
@@ -19,6 +21,13 @@ public record MiniMessageFormatter(MiniMessageFactory miniMessageFactory,
     public String preFormat(String message, @Nullable OfflinePlayer player) {
         return io.vavr.collection.List.ofAll(chatHooks)
                 .foldLeft(message, (m, r) -> r.format(m, player));
+    }
+
+    @Override
+    public ChatFormatter withHooks(ChatHook... hooks) {
+        var copy = new HashSet<>(chatHooks);
+        copy.addAll(Arrays.asList(hooks));
+        return new MiniMessageFormatter(miniMessageFactory, copy);
     }
 
     @Override

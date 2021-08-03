@@ -19,7 +19,7 @@ leaderboard-entry:
   name: '%player_name%'
   head-owner: '%player_uuid%'
   lore:
-    - '&4K/DR: &7%warzone_player_kdr%'
+    - '&4K/DR: &7%warzone_kdr%'
 
 menu:
   pages:
@@ -53,8 +53,8 @@ menu:
           action: NEXT_PAGE
         player-head:
           type: PLAYER_HEAD
-          name: '{gui_opener}'
-          head-owner: "{gui_opener}"
+          name: '{gui_opener_name}'
+          head-owner: "{gui_opener_uuid}"
           slots: [ 49 ]
         barrier:
           type: BARRIER

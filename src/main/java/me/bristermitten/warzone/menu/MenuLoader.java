@@ -12,25 +12,30 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 @Singleton
 public class MenuLoader {
     public static final String GLOBAL_NAME = "global";
-    private final ChatFormatter formatter;
+    private final ChatFormatter baseFormatter;
     private final Plugin plugin;
 
     @Inject
     public MenuLoader(ChatFormatter formatter, Plugin plugin) {
-        this.formatter = formatter;
+        this.baseFormatter = formatter;
         this.plugin = plugin;
     }
 
-    public @NotNull MenuItem loadItem(OfflinePlayer player, MenuConfig.PageConfig.ItemConfig itemConfig) {
+    public ChatFormatter generateFormatter(OfflinePlayer opener, String pageTitle) {
+        return baseFormatter.withHooks(
+                (message, player) -> message
+                        .replace("{gui_opener_name}", Null.get(opener.getName(), "Can't retrieve name"))
+                        .replace("{gui_opener_uuid}", opener.getUniqueId().toString())
+                        .replace("{page_number}", pageTitle));
+    }
+
+    public @NotNull MenuItem loadItem(OfflinePlayer player, MenuConfig.PageConfig.ItemConfig itemConfig, ChatFormatter formatter) {
         var type = itemConfig.type();
         var amount = Null.get(itemConfig.amount(), 1);
         var name = itemConfig.name();
@@ -44,8 +49,8 @@ public class MenuLoader {
         meta.lore(lore.stream().map(s -> formatter.format(s, player)).toList());
 
         if (itemConfig.headOwner() != null && meta instanceof SkullMeta headMeta) {
-            //noinspection deprecation cringe
-            headMeta.setOwningPlayer(Bukkit.getOfflinePlayer(itemConfig.headOwner()));
+            var owner = formatter.preFormat(itemConfig.headOwner(), player);
+            headMeta.setOwningPlayer(Bukkit.getOfflinePlayer(UUID.fromString(owner)));
             meta = headMeta;
         }
         item.setItemMeta(meta);
@@ -54,6 +59,8 @@ public class MenuLoader {
     }
 
     private Page loadPage(OfflinePlayer player, MenuConfig.PageConfig globalPage, String name, MenuConfig.PageConfig config) {
+        var formatter = generateFormatter(player, name);
+
         var titleString = Null.get(config.title(), Objects.requireNonNull(globalPage.title()));
         var title = formatter.format(titleString, player);
         var size = Null.get(config.size(), Objects.requireNonNull(globalPage.size()));
@@ -67,7 +74,7 @@ public class MenuLoader {
 
         var items = configItems
                 .values().stream()
-                .map(itemConfig -> loadItem(player, itemConfig))
+                .map(itemConfig -> loadItem(player, itemConfig, formatter))
                 .toList();
 
         return new Page(name, size, title, items);

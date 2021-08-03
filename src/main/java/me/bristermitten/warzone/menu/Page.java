@@ -52,6 +52,22 @@ public class Page implements Listener {
         this.inventory = Bukkit.createInventory(null, size, title);
     }
 
+    public boolean addFirstEmpty(MenuItem item) {
+        int firstEmpty = inventory.firstEmpty();
+        if (firstEmpty == -1) {
+            return false;
+        }
+        return add(new MenuItem(
+                item.item(),
+                List.of(firstEmpty),
+                item.action()
+        ));
+    }
+
+    int firstEmpty() {
+        return inventory.firstEmpty();
+    }
+
     boolean add(MenuItem item) {
         if (inventory.firstEmpty() == -1) {
             return false;
