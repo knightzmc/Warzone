@@ -5,14 +5,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import javax.inject.Singleton;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 @Singleton
 public class PlayerLeaderboard {
     private static final Comparator<WarzonePlayer> COMPARATOR = Comparator.comparing(WarzonePlayer::getKDR);
-    private final TreeSet<WarzonePlayer> players = new TreeSet<>(COMPARATOR.reversed());
+    private final SortedSet<WarzonePlayer> players = new ConcurrentSkipListSet<>(COMPARATOR.reversed());
 
     public void add(WarzonePlayer player) {
         players.remove(player);
@@ -20,7 +21,7 @@ public class PlayerLeaderboard {
     }
 
     public @Unmodifiable @NotNull SortedSet<WarzonePlayer> getPlayers() {
-        return new TreeSet<>(players);
+        return Collections.unmodifiableSortedSet(players);
     }
 
     public int getPosition(WarzonePlayer player) {
