@@ -79,6 +79,15 @@ public class Warzone extends JavaPlugin {
             injector.getInstance(WarzoneExpansion.class)
                     .register();
 
+            // TODO remove
+            PlayerStorage instance = injector.getInstance(PlayerStorage.class);
+            for (int i = 0; i < 1000; i++) {
+                var player = instance.load(UUID.randomUUID()).get();
+                player.setKills((int) (Math.random() * 1000));
+                player.setDeaths((int) (Math.random() * 1000));
+                injector.getInstance(PlayerLeaderboard.class).add(player);
+            }
+            instance.flush().get();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -8,6 +8,7 @@ import me.bristermitten.warzone.menu.MenuRenderer;
 import me.bristermitten.warzone.menu.MenuTemplate;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -22,15 +23,23 @@ public class LeaderboardMenuLoader implements Provider<LeaderboardMenu> {
     private final ItemRenderer renderer;
     private final ChatFormatter formatter;
     private final MenuRenderer menuRenderer;
+    private final Plugin plugin;
 
     @Inject
-    public LeaderboardMenuLoader(PlayerLeaderboard playerLeaderboard, Provider<LeaderboardMenuConfig> configProvider, MenuConfigLoader configLoader, ItemRenderer renderer, ChatFormatter formatter, MenuRenderer menuRenderer) {
+    public LeaderboardMenuLoader(PlayerLeaderboard playerLeaderboard,
+                                 Provider<LeaderboardMenuConfig> configProvider,
+                                 MenuConfigLoader configLoader,
+                                 ItemRenderer renderer,
+                                 ChatFormatter formatter,
+                                 MenuRenderer menuRenderer,
+                                 Plugin plugin) {
         this.playerLeaderboard = playerLeaderboard;
         this.configProvider = configProvider;
         this.configLoader = configLoader;
         this.renderer = renderer;
         this.formatter = formatter;
         this.menuRenderer = menuRenderer;
+        this.plugin = plugin;
     }
 
     @Override
@@ -46,6 +55,6 @@ public class LeaderboardMenuLoader implements Provider<LeaderboardMenu> {
             var head = config.leaderboardEntry();
             return renderer.render(head, formatter, player.getOfflinePlayer());
         };
-        return new LeaderboardMenu(playerLeaderboard, configLoader.load(globalPage), others, renderFunction, menuRenderer);
+        return new LeaderboardMenu(playerLeaderboard, configLoader.load(globalPage), others, renderFunction, menuRenderer, plugin);
     }
 }

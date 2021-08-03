@@ -30,21 +30,26 @@ public class PlayerStorage implements Persistence {
         this.leaderboard = leaderboard;
     }
 
+    public Future<Void> flush() {
+        return Future.sequence(HashMap.ofAll(playerCache.asMap())
+                .values()
+                .map(delegate::save))
+                .map(discard -> null); // we don't care about the resultant Seq<Void>
+    }
+
     public Future<WarzonePlayer> load(@NotNull UUID id) {
         WarzonePlayer cached = playerCache.getIfPresent(id);
         if (cached != null) {
             return Future.successful(cached);
         }
         return lookup(id)
-                .onSuccess(leaderboard::add) // I don't really like this being here but it means that the leaderboard will stay up to date without any external intervention
-                ;
+                .onSuccess(leaderboard::add); // I don't really like this being here but it means that the leaderboard will stay up to date without any external intervention
     }
 
     private Future<WarzonePlayer> lookup(@NotNull UUID id) {
         return delegate.load(id)
                 .onSuccess(loaded -> playerCache.put(id, loaded));
     }
-
 
     public void loadPlayer(@NotNull UUID id, Consumer<WarzonePlayer> callback) {
         load(id)
@@ -71,9 +76,6 @@ public class PlayerStorage implements Persistence {
     @Override
     public Future<Void> cleanup() {
         playerCache.cleanUp();
-        return Future.sequence(HashMap.ofAll(playerCache.asMap())
-                .values()
-                .map(delegate::save))
-                .map(discard -> null); // we don't care about the resultant Seq<Void>
+        return flush();
     }
 }
