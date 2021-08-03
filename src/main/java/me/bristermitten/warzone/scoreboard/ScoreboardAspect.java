@@ -13,6 +13,5 @@ public class ScoreboardAspect implements Aspect {
 
     @Override
     public void finalizeInjections(@NotNull Injector injector) {
-        System.out.println(injector.getInstance(ScoreboardConfig.class));
     }
 }
