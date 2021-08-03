@@ -124,3 +124,4 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 
 ## 2021-08-3
 - 11:30 - start work
+- 12:41 - pause

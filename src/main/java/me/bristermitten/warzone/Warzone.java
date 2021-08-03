@@ -15,16 +15,19 @@ import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardMenu;
+import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
 import me.bristermitten.warzone.papi.PAPIAspect;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
+import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
+import java.util.UUID;
 
 public class Warzone extends JavaPlugin {
 
@@ -73,6 +76,15 @@ public class Warzone extends JavaPlugin {
 
             injector.getInstance(WarzoneExpansion.class)
                     .register();
+
+            // TODO remove
+            for (int i = 0; i < 1000; i++) {
+                var player = injector.getInstance(PlayerStorage.class).load(UUID.randomUUID()).get();
+                player.setKills((int) (Math.random() * 1000));
+                player.setDeaths((int) (Math.random() * 1000));
+                injector.getInstance(PlayerLeaderboard.class).add(player);
+            }
+            System.out.println("done");
         } catch (Exception e) {
             e.printStackTrace();
         }

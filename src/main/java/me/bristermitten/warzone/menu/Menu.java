@@ -1,6 +1,8 @@
 package me.bristermitten.warzone.menu;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.List;
@@ -22,14 +24,13 @@ public record Menu(Page globalPage, List<Page> pages) {
         }
     }
 
-    public void add(MenuItem item) {
+    public void add(Plugin plugin, MenuItem item) {
         for (Page page : pages) {
             if (page.add(item)) {
                 return;
             }
         }
-        Page newPage = globalPage.copy();
-        pages.add(newPage);
+        Page newPage = addPage(plugin);
         if (!newPage.add(item)) {
             LOGGER.warning(() -> "Despite adding a new page there was still no room left in the Menu " + this);
         }
@@ -39,14 +40,20 @@ public record Menu(Page globalPage, List<Page> pages) {
         pages.get(0).open(player);
     }
 
-    public Page firstEmptyPage() {
+    public Page addPage(@NotNull Plugin plugin) {
+        globalPage.bind(this, plugin);
+        Page newPage = globalPage.copy();
+        newPage.bind(this, plugin);
+        pages.add(newPage);
+        return newPage;
+    }
+
+    public Page firstEmptyPage(Plugin plugin) {
         for (Page page : pages) {
             if (page.firstEmpty() != -1) {
                 return page;
             }
         }
-        Page newPage = globalPage.copy();
-        pages.add(newPage);
-        return newPage;
+        return addPage(plugin);
     }
 }

@@ -23,43 +23,6 @@ leaderboard-entry:
 
 menu:
   pages:
-    global:
-      title: 'Leaderboard Page {page_number}'
-      size: 54
-      items:
-        background:
-          type: RED_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 0, 1, 2, 6, 7, 8,
-
-                   46, 47, 51, 52 ]
-        background2:
-          type: GRAY_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 3, 4, 5,
-                   8, 17,
-                   18, 26,
-                   27, 35,
-                   36, 44 ]
-        back:
-          type: PAPER
-          name: '&9Back'
-          slots: [ 45 ]
-          action: PREVIOUS_PAGE
-        next:
-          type: PAPER
-          name: '&9Next'
-          slots: [ 53 ]
-          action: NEXT_PAGE
-        player-head:
-          type: PLAYER_HEAD
-          name: '{gui_opener_name}'
-          head-owner: "{gui_opener_uuid}"
-          slots: [ 49 ]
-        barrier:
-          type: BARRIER
-          name: ''
-          slots: [ 48, 50 ]
     '1':
       # title and size inherited from global
       items:
@@ -79,4 +42,45 @@ menu:
                    19, 25,
                    27, 34,
                    37, 38, 39, 40, 41, 42, 43 ]
+    global:
+      title: 'Leaderboard Page {page_number}'
+      size: 54
+      items:
+        background:
+          type: RED_STAINED_GLASS_PANE
+          name: ''
+          slots: [ 0, 1, 2, 6, 7, 8,
+
+                   46, 47, 51, 52 ]
+          action: NOTHING
+        background2:
+          type: GRAY_STAINED_GLASS_PANE
+          name: ''
+          slots: [ 3, 4, 5,
+                   8, 17,
+                   18, 26,
+                   27, 35,
+                   36, 44 ]
+          action: NOTHING
+        back:
+          type: PAPER
+          name: '&9Back'
+          slots: [ 45 ]
+          action: PREVIOUS_PAGE
+        next:
+          type: PAPER
+          name: '&9Next'
+          slots: [ 53 ]
+          action: NEXT_PAGE
+        player-head:
+          type: PLAYER_HEAD
+          name: '{gui_opener_name}'
+          head-owner: "{gui_opener_uuid}"
+          slots: [ 49 ]
+          action: NOTHING
+        barrier:
+          type: BARRIER
+          name: ''
+          slots: [ 48, 50 ]
+          action: CLOSE_MENU
 

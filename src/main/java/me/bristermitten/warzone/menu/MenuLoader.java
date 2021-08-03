@@ -1,6 +1,8 @@
 package me.bristermitten.warzone.menu;
 
 import com.google.common.primitives.Ints;
+import io.vavr.collection.List;
+import io.vavr.collection.Stream;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.Bukkit;
@@ -12,7 +14,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
 @Singleton
@@ -84,27 +89,14 @@ public class MenuLoader {
         var globalPageConfig =
                 Null.get(config.pages().get(GLOBAL_NAME), MenuConfig.PageConfig.DEFAULT);
 
-        final List<Page> pages = config.pages().entrySet().stream()
-                .sorted((o1, o2) -> {
-                    if (o1.getKey().equals(GLOBAL_NAME)) {
-                        return Integer.MAX_VALUE;
-                    }
-                    if (o2.getKey().equals(GLOBAL_NAME)) {
-                        return Integer.MIN_VALUE;
-                    }
-                    var i1 = Ints.tryParse(o1.getKey());
-                    var i2 = Ints.tryParse(o2.getKey());
-                    if (i1 != null && i2 != null) {
-                        return i1.compareTo(i2);
-                    }
-                    return 0;
-                })
-
+        List<Page> pages = List.ofAll(config.pages().entrySet())
                 .map(e -> loadPage(player, globalPageConfig, e.getKey(), e.getValue()))
                 .toList();
 
+        var globalPage = pages.head();
+        pages = pages.tail(); // don't want the global one in there
 
-        var menu = new Menu(pages.get(0), pages);
+        var menu = new Menu(globalPage, pages.toJavaList());
         pages.forEach(page -> page.bind(menu, plugin));
         return menu;
     }

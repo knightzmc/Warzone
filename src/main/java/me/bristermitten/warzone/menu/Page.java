@@ -9,6 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,11 +83,12 @@ public class Page implements Listener {
         return true;
     }
 
-    void bind(Menu menu, Plugin plugin) {
-        if (this.menu != null) {
-            throw new IllegalStateException("Already bound!");
+    void bind(@NotNull Menu menu, @NotNull Plugin plugin) {
+        if (this.menu != null || this.plugin != null) {
+            return;
         }
         this.menu = menu;
+        this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -126,7 +128,7 @@ public class Page implements Listener {
     }
 
     Page copy() {
-        if (menu == null) {
+        if (menu == null || plugin == null) {
             throw new IllegalStateException("Not bound");
         }
         var copy = new Page(name, size, title, new HashMap<>(itemMap));
