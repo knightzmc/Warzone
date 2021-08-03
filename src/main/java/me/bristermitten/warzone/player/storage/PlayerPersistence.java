@@ -10,4 +10,6 @@ public interface PlayerPersistence extends Persistence {
     Future<WarzonePlayer> load(UUID id);
 
     Future<Void> save(WarzonePlayer player);
+
+    // TODO add proper flush method that can do it all efficiently without concurrency issues
 }

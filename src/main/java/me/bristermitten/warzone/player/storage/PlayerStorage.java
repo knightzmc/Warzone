@@ -21,19 +21,19 @@ import java.util.function.Consumer;
 public class PlayerStorage implements Persistence {
     private final Cache<UUID, WarzonePlayer> playerCache = CacheBuilder.newBuilder().build();
 
-    private final PlayerPersistence delegate;
+    private final PlayerPersistence persistence;
     private final PlayerLeaderboard leaderboard;
 
     @Inject
-    public PlayerStorage(PlayerPersistence delegate, PlayerLeaderboard leaderboard) {
-        this.delegate = delegate;
+    public PlayerStorage(PlayerPersistence persistence, PlayerLeaderboard leaderboard) {
+        this.persistence = persistence;
         this.leaderboard = leaderboard;
     }
 
     public Future<Void> flush() {
         return Future.sequence(HashMap.ofAll(playerCache.asMap())
                 .values()
-                .map(delegate::save))
+                .map(persistence::save))
                 .map(discard -> null); // we don't care about the resultant Seq<Void>
     }
 
@@ -47,7 +47,7 @@ public class PlayerStorage implements Persistence {
     }
 
     private Future<WarzonePlayer> lookup(@NotNull UUID id) {
-        return delegate.load(id)
+        return persistence.load(id)
                 .onSuccess(loaded -> playerCache.put(id, loaded));
     }
 

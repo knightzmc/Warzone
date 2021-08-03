@@ -85,7 +85,6 @@ public class Warzone extends JavaPlugin {
                             player.setDeaths((int) (Math.random() * 1000));
                             injector.getInstance(PlayerLeaderboard.class).add(player);
                         }
-                        instance.flush().get();
                     });
 
             injector.getInstance(WarzoneExpansion.class)
