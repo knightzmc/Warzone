@@ -133,3 +133,4 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 - 20:00 - start
 - 20:30 - pause for research
 - 22:20 - resume
+- 23:45 - finish for today
