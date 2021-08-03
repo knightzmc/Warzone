@@ -3,6 +3,7 @@ package me.bristermitten.warzone.scoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -15,7 +16,7 @@ public class ScoreboardUpdateTask {
 
     private boolean running = false;
 
-    private BukkitTask task;
+    private @Nullable BukkitTask task;
 
     @Inject
     public ScoreboardUpdateTask(Provider<ScoreboardConfig> config, ScoreboardManager manager, Plugin plugin) {

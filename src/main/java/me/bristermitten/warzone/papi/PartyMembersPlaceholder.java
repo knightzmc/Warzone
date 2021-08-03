@@ -23,12 +23,12 @@ public class PartyMembersPlaceholder implements WarzonePlaceholder {
     }
 
     @Override
-    public Pattern getPattern() {
+    public @NotNull Pattern getPattern() {
         return PARTY_MEMBERS_PATTERN;
     }
 
     @Override
-    public String onPlaceholderRequest(@Nullable OfflinePlayer offlinePlayer, @NotNull String params) {
+    public @Nullable String onPlaceholderRequest(@Nullable OfflinePlayer offlinePlayer, @NotNull String params) {
         if (!(offlinePlayer instanceof Player player) || !player.isOnline()) {
             return null;
         }

@@ -22,7 +22,7 @@ public class SQLDatabase implements Database {
 
     @Override
     @NotNull
-    public <T> Future<T> query(String query, CheckedConsumer<PreparedStatement> initializer, CheckedFunction1<ResultSet, T> process) {
+    public <T> Future<T> query(String query, @NotNull CheckedConsumer<PreparedStatement> initializer, @NotNull CheckedFunction1<ResultSet, T> process) {
         return Future.of(() -> Try.withResources(dataSource::getConnection)
                 .of(con -> Try.withResources(() -> con.prepareStatement(query))
                         .of(statement -> {
@@ -34,7 +34,7 @@ public class SQLDatabase implements Database {
     }
 
     @Override
-    public @NotNull Future<Void> update(String query, CheckedConsumer<PreparedStatement> initializer) {
+    public @NotNull Future<Void> update(String query, @NotNull CheckedConsumer<PreparedStatement> initializer) {
         return Future.run(() ->
                 Try.withResources(dataSource::getConnection)
                         .of(con -> Try.withResources(() -> con.prepareStatement(query))
@@ -48,7 +48,7 @@ public class SQLDatabase implements Database {
 
 
     @Override
-    public @NotNull Future<Void> execute(String query, CheckedConsumer<PreparedStatement> initializer) {
+    public @NotNull Future<Void> execute(String query, @NotNull CheckedConsumer<PreparedStatement> initializer) {
         return Future.run(() ->
                 Try.withResources(dataSource::getConnection)
                         .of(con -> Try.withResources(() -> con.prepareStatement(query))

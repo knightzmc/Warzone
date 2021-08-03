@@ -23,7 +23,7 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     }
 
 
-    private List<Component> renderLines(List<String> lines, Player player) {
+    private List<Component> renderLines(@NotNull List<String> lines, Player player) {
         return lines
                 .map(Function2.of(chatManager::preFormat).reversed().apply(player)) // Apply placeholders initially, might generate new lines
                 .flatMap(line -> List.of(LINES.split(line)))
@@ -31,7 +31,7 @@ public record ScoreboardRenderer(ChatFormatter chatManager) {
     }
 
 
-    void show(@NotNull ScoreboardTemplate template, @NotNull Player player, Scoreboard board) {
+    void show(@NotNull ScoreboardTemplate template, @NotNull Player player, @NotNull Scoreboard board) {
         player.setScoreboard(board);
         var title = chatManager.format(template.title(), player);
         Objective objective = Option.of(board.getObjective("Warzone"))

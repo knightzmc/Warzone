@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.util;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Cast {
@@ -7,7 +8,7 @@ public class Cast {
 
     }
 
-    public static <T> @Nullable T safe(@Nullable Object o, Class<T> clazz) {
+    public static <T> @Nullable T safe(@Nullable Object o, @NotNull Class<T> clazz) {
         if (o == null) {
             return null;
         }

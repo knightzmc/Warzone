@@ -3,7 +3,7 @@ package me.bristermitten.warzone.leaderboard;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
-import me.bristermitten.warzone.leaderboard.LeaderboardMenu;
+import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;

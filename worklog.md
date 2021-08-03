@@ -58,6 +58,7 @@ done today:
 3 hours 35 minutes
 
 ## 2021-07-25
+
 - 13:25 - Start work
 - 14:00 - pause
 - 14:35 - resume
@@ -70,10 +71,11 @@ done today:
 - 23:30 - finish for the night
 
 done today:
+
 - add state system that encapsulates all the different states a player can be in
 - add chat formatting with minimessage and papi
 - make scoreboards work and update
-- add wins and deaths 
+- add wins and deaths
 - add many papi placeholders
 - many bugfixes
 
@@ -104,6 +106,7 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 4 hours 5 minutes spent today
 
 ## 2021-07-29
+
 - 14:30 - start work
 - 14:50 - pause
 - 19:40 - resume
@@ -119,9 +122,14 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 1 hour 20 minutes spent today
 
 ## 2021-08-02
+
 - 22:15 - start work
 - 23:20 - pause
 
 ## 2021-08-3
+
 - 11:30 - start work
 - 12:41 - pause
+- 20:00 - start
+- 20:30 - pause for research
+- 22:20 - resume

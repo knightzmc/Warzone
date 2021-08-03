@@ -13,11 +13,11 @@ import java.util.UUID;
  */
 public class Party {
     private static final int MAX_SIZE = 4;
-    private final Set<UUID> otherPlayers;
+    private final @NotNull Set<UUID> otherPlayers;
     private final Set<PartyInvite> outgoingInvites = new HashSet<>();
     private UUID owner;
 
-    Party(UUID owner, Set<UUID> otherPlayers) {
+    Party(UUID owner, @NotNull Set<UUID> otherPlayers) {
         this.owner = owner;
         if (otherPlayers.size() > MAX_SIZE) {
             throw new IllegalArgumentException("players is too big");
@@ -32,7 +32,7 @@ public class Party {
         otherPlayers.add(uuid);
     }
 
-    Set<PartyInvite> getOutgoingInvites() {
+    @NotNull Set<PartyInvite> getOutgoingInvites() {
         return outgoingInvites;
     }
 
@@ -40,7 +40,7 @@ public class Party {
         return otherPlayers.isEmpty();
     }
 
-    Set<UUID> getOtherPlayers() {
+    @NotNull Set<UUID> getOtherPlayers() {
         return otherPlayers;
     }
 
@@ -52,7 +52,7 @@ public class Party {
         this.owner = owner;
     }
 
-    public @Unmodifiable Collection<UUID> getAllMembers() {
+    public @Unmodifiable @NotNull Collection<UUID> getAllMembers() {
         var set = new HashSet<>(otherPlayers);
         set.add(owner);
         return set;

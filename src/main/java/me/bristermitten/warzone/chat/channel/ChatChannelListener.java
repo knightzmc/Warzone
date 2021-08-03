@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -16,14 +17,14 @@ public class ChatChannelListener implements Listener {
     private final PlayerStorage playerStorage;
 
     @Inject
-    ChatChannelListener(Plugin plugin, ChatManager chatManager, PlayerStorage playerStorage) {
+    ChatChannelListener(@NotNull Plugin plugin, ChatManager chatManager, PlayerStorage playerStorage) {
         this.chatManager = chatManager;
         this.playerStorage = playerStorage;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
-    public void onChat(AsyncChatEvent event) {
+    public void onChat(@NotNull AsyncChatEvent event) {
         event.setCancelled(true); // cancel default thing
         playerStorage.loadPlayer(event.getPlayer().getUniqueId(),
                 chatter -> {

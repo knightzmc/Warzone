@@ -22,13 +22,13 @@ public class PartyManager {
     }
 
     @NotNull
-    public Party getParty(Player partyOwner) {
+    public Party getParty(@NotNull Player partyOwner) {
         return partiesByMember.computeIfAbsent(partyOwner.getUniqueId(),
                 uid -> new Party(uid, new HashSet<>()));
     }
 
 
-    public void invite(Player inviter, Player receiver) {
+    public void invite(@NotNull Player inviter, @NotNull Player receiver) {
         if (inviter.getUniqueId().equals(receiver.getUniqueId())) {
             langService.sendMessage(inviter, langConfig -> langConfig.partyLang().cannotInviteSelf());
             return;
@@ -66,14 +66,14 @@ public class PartyManager {
 
     }
 
-    public @Unmodifiable Collection<PartyInvite> getInvitesFor(Player receiver) {
+    public @Unmodifiable Collection<PartyInvite> getInvitesFor(@NotNull Player receiver) {
         return partiesByMember.values().stream()
                 .flatMap(party -> party.getOutgoingInvites().stream())
                 .filter(partyInvite -> partyInvite.receiver().equals(receiver.getUniqueId()))
                 .toList();
     }
 
-    public void accept(PartyInvite invite) {
+    public void accept(@NotNull PartyInvite invite) {
         var receivingPlayer = Bukkit.getPlayer(invite.receiver());
         if (receivingPlayer == null) {
             return;
@@ -87,7 +87,7 @@ public class PartyManager {
         invite.invitingTo().getOutgoingInvites().remove(invite);
     }
 
-    private void add(Party party, Player joining) {
+    private void add(@NotNull Party party, @NotNull Player joining) {
         if (party.isFull()) {
             langService.sendMessage(joining,
                     langConfig -> langConfig.partyLang().partyFullJoin(),
@@ -109,7 +109,7 @@ public class PartyManager {
                 Map.of("{owner}", Bukkit.getPlayer(party.getOwner()).getName()));
     }
 
-    public void leave(Party party, @NotNull Player leaver) {
+    public void leave(@NotNull Party party, @NotNull Player leaver) {
 
         if (party.isEmpty()) { // This is a bit of a lie, everyone is in a party, but if a party is just you, can it really be considered a party?
             langService.sendMessage(leaver, langConfig -> langConfig.partyLang().noParty());

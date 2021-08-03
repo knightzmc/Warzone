@@ -4,6 +4,7 @@ import io.vavr.collection.List;
 import me.bristermitten.warzone.chat.hook.ChatHook;
 import net.kyori.adventure.text.Component;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -25,7 +26,7 @@ public record MiniMessageFormatter(MiniMessageFactory miniMessageFactory,
     }
 
     @Override
-    public ChatFormatter withHooks(ChatHook... hooks) {
+    public @NotNull ChatFormatter withHooks(ChatHook... hooks) {
         var copy = new HashSet<>(chatHooks);
         copy.addAll(Arrays.asList(hooks));
         return new MiniMessageFormatter(miniMessageFactory, copy);

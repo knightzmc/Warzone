@@ -8,18 +8,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 public class PlayerStateChangeListener implements Listener {
     private final PlayerStorage storage;
-    private final Plugin plugin;
+    private final @NotNull Plugin plugin;
     private final InLobbyState inLobbyState;
 
     private final OfflineState offlineState;
 
     @Inject
-    PlayerStateChangeListener(PlayerStorage storage, Plugin plugin, InLobbyState inLobbyState, OfflineState offlineState) {
+    PlayerStateChangeListener(PlayerStorage storage, @NotNull Plugin plugin, InLobbyState inLobbyState, OfflineState offlineState) {
         this.storage = storage;
         this.plugin = plugin;
         this.inLobbyState = inLobbyState;
@@ -28,13 +29,13 @@ public class PlayerStateChangeListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
+    public void onJoin(@NotNull PlayerJoinEvent event) {
         storage.loadPlayer(event.getPlayer().getUniqueId(),
                 player -> Sync.run(() -> player.setCurrentState(inLobbyState), plugin));
     }
 
     @EventHandler
-    public void onLeave(PlayerQuitEvent event) {
+    public void onLeave(@NotNull PlayerQuitEvent event) {
         storage.loadPlayer(event.getPlayer().getUniqueId(),
                 player -> Sync.run(() -> player.setCurrentState(offlineState), plugin));
     }

@@ -14,8 +14,9 @@ import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.lang.LangConfig;
-import me.bristermitten.warzone.leaderboard.LeaderboardMenu;
+import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
 import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
+import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
 import me.bristermitten.warzone.papi.PAPIAspect;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
@@ -55,6 +56,7 @@ public class Warzone extends JavaPlugin {
                     , new ChatAspect()
                     , new CommandsAspect()
                     , new PAPIAspect()
+                    , new LeaderboardAspect()
             );
 
             var modules = aspects.map(Aspect::generateModule);
@@ -77,14 +79,6 @@ public class Warzone extends JavaPlugin {
             injector.getInstance(WarzoneExpansion.class)
                     .register();
 
-            // TODO remove
-            for (int i = 0; i < 1000; i++) {
-                var player = injector.getInstance(PlayerStorage.class).load(UUID.randomUUID()).get();
-                player.setKills((int) (Math.random() * 1000));
-                player.setDeaths((int) (Math.random() * 1000));
-                injector.getInstance(PlayerLeaderboard.class).add(player);
-            }
-            System.out.println("done");
         } catch (Exception e) {
             e.printStackTrace();
         }

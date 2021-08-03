@@ -9,6 +9,8 @@ import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.bristermitten.warzone.lang.LangService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -28,12 +30,12 @@ public class PartyCommand extends BaseCommand {
 
     @Subcommand("invite")
     @CommandCompletion("@players")
-    public void invite(Player inviter, OnlinePlayer invitee) {
+    public void invite(@NotNull Player inviter, @NotNull OnlinePlayer invitee) {
         partyManager.invite(inviter, invitee.getPlayer());
     }
 
     @Subcommand("join|accept")
-    public void join(Player sender, @Optional OnlinePlayer inviter) {
+    public void join(@NotNull Player sender, @Optional @Nullable OnlinePlayer inviter) {
         var invites = partyManager.getInvitesFor(sender);
         if (invites.isEmpty()) {
             langService.sendMessage(sender, config -> config.partyLang().noInvites());
@@ -67,7 +69,7 @@ public class PartyCommand extends BaseCommand {
     }
 
     @Subcommand("leave")
-    public void leave(Player sender) {
+    public void leave(@NotNull Player sender) {
         Party party = partyManager.getParty(sender);
         partyManager.leave(party, sender);
     }

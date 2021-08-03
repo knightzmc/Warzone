@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,7 @@ public class ScoreboardUpdateJoinQuitListener implements Listener {
     private final ScoreboardUpdateTask task;
 
     @Inject
-    public ScoreboardUpdateJoinQuitListener(ScoreboardUpdateTask task, Plugin plugin) {
+    public ScoreboardUpdateJoinQuitListener(ScoreboardUpdateTask task, @NotNull Plugin plugin) {
         this.task = task;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

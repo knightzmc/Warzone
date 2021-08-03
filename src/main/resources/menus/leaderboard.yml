@@ -21,66 +21,64 @@ leaderboard-entry:
   lore:
     - '&4K/DR: &7%warzone_kdr%'
 
-menu:
-  pages:
-    '1':
-      # title and size inherited from global
-      items:
-        background:
-          type: RED_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 0, 1, 2, 6, 7, 8,
-                   9, 10, 16, 17,
-                   18, 26,
-                   36, 44,
-                   46, 47, 51, 52 ]
-        background2:
-          type: GRAY_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 3, 5,
-                   11, 15,
-                   19, 25,
-                   27, 34,
-                   37, 38, 39, 40, 41, 42, 43 ]
-    global:
-      title: 'Leaderboard Page {page_number}'
-      size: 54
-      items:
-        background:
-          type: RED_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 0, 1, 2, 6, 7, 8,
-
-                   46, 47, 51, 52 ]
-          action: NOTHING
-        background2:
-          type: GRAY_STAINED_GLASS_PANE
-          name: ''
-          slots: [ 3, 4, 5,
-                   8, 17,
-                   18, 26,
-                   27, 35,
-                   36, 44 ]
-          action: NOTHING
-        back:
-          type: PAPER
-          name: '&9Back'
-          slots: [ 45 ]
-          action: PREVIOUS_PAGE
-        next:
-          type: PAPER
-          name: '&9Next'
-          slots: [ 53 ]
-          action: NEXT_PAGE
-        player-head:
-          type: PLAYER_HEAD
-          name: '{gui_opener_name}'
-          head-owner: "{gui_opener_uuid}"
-          slots: [ 49 ]
-          action: NOTHING
-        barrier:
-          type: BARRIER
-          name: ''
-          slots: [ 48, 50 ]
-          action: CLOSE_MENU
+pages:
+  '1': # This will override the global configuration so that page 1 looks different to all of the others
+    # title and size inherited from global
+    items:
+      background:
+        type: RED_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 0, 1, 2, 6, 7, 8,
+                 9, 10, 16, 17,
+                 18, 26,
+                 36, 44,
+                 46, 47, 51, 52 ]
+      background2:
+        type: BLACK_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 3, 5,
+                 11, 15,
+                 19, 25,
+                 27, 34,
+                 37, 38, 39, 40, 41, 42, 43 ]
+  global: # If a specific page configuration isn't provided, this one will be used to generate a page
+    title: 'Leaderboard Page {page_number}'
+    size: 54
+    items:
+      background:
+        type: RED_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 0, 1, 2, 6, 7, 8,
+                 46, 47, 51, 52 ]
+        action: NOTHING
+      background2:
+        type: BLACK_STAINED_GLASS_PANE
+        name: ''
+        slots: [ 3, 4, 5,
+                 9, 17,
+                 18, 26,
+                 27, 35,
+                 36, 44 ]
+        action: NOTHING
+      back:
+        type: PAPER
+        name: '&9Back'
+        slots: [ 45 ]
+        action: PREVIOUS_PAGE
+      next:
+        type: PAPER
+        name: '&9Next'
+        slots: [ 53 ]
+        action: NEXT_PAGE
+      player-head:
+        type: PLAYER_HEAD
+        name: '{gui_opener_name}'
+        head-owner: "{gui_opener_uuid}"
+        slots: [ 49 ]
+        action: NOTHING
+      barrier:
+        type: BARRIER
+        name: '&cClose'
+        slots: [ 48, 50 ]
+        action: CLOSE_MENU
 

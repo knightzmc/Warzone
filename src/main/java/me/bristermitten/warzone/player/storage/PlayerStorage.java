@@ -64,7 +64,7 @@ public class PlayerStorage implements Persistence {
      * This method should <b>NOT</b> perform any database queries or file operations
      */
     @Nullable
-    public WarzonePlayer fetch(UUID id) {
+    public WarzonePlayer fetch(@NotNull UUID id) {
         return playerCache.getIfPresent(id);
     }
 

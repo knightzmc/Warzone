@@ -8,6 +8,7 @@ import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
@@ -22,7 +23,7 @@ public class SimpleChatManager implements ChatManager {
     }
 
     @Override
-    public void sendMessage(ChatChannel channel, String message, Player sender) {
+    public void sendMessage(@NotNull ChatChannel channel, @NotNull String message, Player sender) {
         Future.sequence(
                 List.ofAll(Bukkit.getOnlinePlayers())
                         .map(Player::getUniqueId)

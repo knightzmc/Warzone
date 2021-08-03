@@ -3,6 +3,7 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.PaperCommandManager;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,7 +20,7 @@ public class CommandManagerProvider implements Provider<PaperCommandManager> {
     }
 
     @Override
-    public PaperCommandManager get() {
+    public @NotNull PaperCommandManager get() {
         PaperCommandManager paperCommandManager = new PaperCommandManager(plugin);
         commands.forEach(paperCommandManager::registerCommand);
         return paperCommandManager;

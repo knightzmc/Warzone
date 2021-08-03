@@ -27,14 +27,14 @@ public class ScoreboardManager {
         this.renderer = renderer;
     }
 
-    public void show(@NotNull Player player, Function<ScoreboardConfig, ScoreboardTemplate> templateFunction) {
+    public void show(@NotNull Player player, @NotNull Function<ScoreboardConfig, ScoreboardTemplate> templateFunction) {
         activeScoreboards.put(player.getUniqueId(), templateFunction); // save for later
 
         ScoreboardTemplate template = templateFunction.apply(configProvider.get());
         set(player, template);
     }
 
-    private void set(@NotNull Player player, ScoreboardTemplate template) {
+    private void set(@NotNull Player player, @NotNull ScoreboardTemplate template) {
         var board = scoreboardMap.computeIfAbsent(player.getUniqueId(), unused -> Bukkit.getScoreboardManager().getNewScoreboard());
         renderer.show(template, player, board);
     }

@@ -1,11 +1,13 @@
 package me.bristermitten.warzone.util;
 
+import org.jetbrains.annotations.NotNull;
+
 public class OrdinalFormatter {
     private OrdinalFormatter() {
 
     }
 
-    public static String format(int ordinal) {
+    public static @NotNull String format(int ordinal) {
         if (ordinal <= 0) {
             throw new IllegalArgumentException("Must be greater than 0");
         }

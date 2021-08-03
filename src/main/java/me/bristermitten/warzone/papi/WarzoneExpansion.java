@@ -9,9 +9,9 @@ import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.OrdinalFormatter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -59,7 +59,7 @@ public class WarzoneExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String onRequest(OfflinePlayer player, @NotNull String params) {
+    public @Nullable String onRequest(@NotNull OfflinePlayer player, @NotNull String params) {
         var warzonePlayer = Option.of(playerStorage.fetch(player.getUniqueId()))
                 // While we obviously can't use the loaded player yet, we can trigger a query so that it starts
                 .onEmpty(() -> playerStorage.load(player.getUniqueId()));

@@ -1,5 +1,7 @@
 package me.bristermitten.warzone.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,7 +17,7 @@ public class PathUtil {
     private PathUtil() {}
 
     //Credit https://stackoverflow.com/questions/15713119/java-nio-file-path-for-a-classpath-resource
-    public static Path resourceToPath(URL resource)
+    public static @NotNull Path resourceToPath(@NotNull URL resource)
             throws IOException,
             URISyntaxException {
 

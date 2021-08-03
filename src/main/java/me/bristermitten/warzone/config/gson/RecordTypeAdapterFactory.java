@@ -141,7 +141,7 @@ public class RecordTypeAdapterFactory implements TypeAdapterFactory {
                     constructor = clazz.getDeclaredConstructor(argTypes);
                     constructor.setAccessible(true);
                     return constructor.newInstance(args);
-                } catch (@NotNull NoSuchMethodException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                } catch (NoSuchMethodException | InstantiationException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
                     throw new RuntimeException(e);
                 }
             }

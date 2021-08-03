@@ -2,6 +2,7 @@ package me.bristermitten.warzone.config;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  * any elements that aren't set from the default
  */
 public class ConfigurationUpdater {
-    public Map<Object, Object> update(@NotNull Map<Object, Object> source, Map<Object, Object> destination) {
+    public @Nullable Map<Object, Object> update(@NotNull Map<Object, Object> source, @Nullable Map<Object, Object> destination) {
         if (destination == null) {
             return source;
         }

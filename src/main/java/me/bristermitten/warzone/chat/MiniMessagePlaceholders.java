@@ -7,6 +7,7 @@ import io.vavr.control.Option;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -27,7 +28,7 @@ public class MiniMessagePlaceholders implements Provider<Map<String, Function<@N
     }
 
     @Override
-    public Map<String, Function<@Nullable OfflinePlayer, ComponentLike>> get() {
+    public @NotNull Map<String, Function<@Nullable OfflinePlayer, ComponentLike>> get() {
         var config = configProvider.get();
         return HashMap.of(
                 "player_name_hover_stats", player ->

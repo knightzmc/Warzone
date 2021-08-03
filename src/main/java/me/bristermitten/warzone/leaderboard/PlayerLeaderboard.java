@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.leaderboard;
 
 import me.bristermitten.warzone.player.WarzonePlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import javax.inject.Singleton;
@@ -18,7 +19,7 @@ public class PlayerLeaderboard {
         players.add(player);
     }
 
-    public @Unmodifiable SortedSet<WarzonePlayer> getPlayers() {
+    public @Unmodifiable @NotNull SortedSet<WarzonePlayer> getPlayers() {
         return new TreeSet<>(players);
     }
 

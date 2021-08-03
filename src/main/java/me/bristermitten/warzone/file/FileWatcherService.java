@@ -51,7 +51,7 @@ public class FileWatcherService implements Runnable {
                     poll = pollEvents(watchService);
                 }
             }
-        } catch (@NotNull IOException | InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
