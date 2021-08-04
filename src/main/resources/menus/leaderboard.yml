@@ -39,7 +39,7 @@ pages:
         slots: [ 3, 5,
                  11, 15,
                  19, 25,
-                 27, 34,
+                 27, 35,
                  37, 38, 39, 40, 41, 42, 43 ]
   global: # If a specific page configuration isn't provided, this one will be used to generate a page
     title: 'Leaderboard Page {page_number}'

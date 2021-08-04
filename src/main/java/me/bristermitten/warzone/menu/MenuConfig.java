@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public record MenuConfig(int size, String title, Map<String, ItemConfig> items) {
+public record MenuConfig(@Nullable Integer size, @Nullable String title, Map<String, ItemConfig> items) {
     public record ItemConfig(
             Material type,
             @Nullable Integer amount,

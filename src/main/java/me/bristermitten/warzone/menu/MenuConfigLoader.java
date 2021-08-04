@@ -1,15 +1,22 @@
 package me.bristermitten.warzone.menu;
 
+import me.bristermitten.warzone.util.Null;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class MenuConfigLoader {
     private final Logger logger = Logger.getLogger(MenuConfigLoader.class.getName());
 
     public @NotNull MenuTemplate load(@NotNull MenuConfig config) {
+        return load(config, null);
+    }
+
+    public @NotNull MenuTemplate load(@NotNull MenuConfig config, @Nullable MenuConfig defaultConfig) {
         var map = new HashMap<Integer, MenuConfig.ItemConfig>();
         for (var entry : config.items().entrySet()) {
             var name = entry.getKey();
@@ -25,7 +32,13 @@ public class MenuConfigLoader {
                 map.put(slot, item);
             }
         }
-        return new MenuTemplate(config.title(), config.size(), Map.copyOf(map));
+        var title = Null.get(config.title(), Optional.ofNullable(defaultConfig).map(MenuConfig::title).orElse("No Title Set"));
+        Integer defaultSize = Optional.ofNullable(defaultConfig).map(MenuConfig::size).orElse(54);
+        int size = Null.get(config.size(), defaultSize);
+        if (size == 0) {
+            size = defaultSize;
+        }
+        return new MenuTemplate(title, size, Map.copyOf(map));
     }
 
 }

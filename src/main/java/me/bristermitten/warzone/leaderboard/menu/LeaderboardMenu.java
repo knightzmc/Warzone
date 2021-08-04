@@ -40,10 +40,7 @@ public class LeaderboardMenu implements Menu {
     public void open(Player player, int page) {
         page = Math.max(page, 0);
 
-        var pageTemplate = others.get(page + 1); // pages are one indexed
-        if (pageTemplate == null) {
-            pageTemplate = global;
-        }
+        var pageTemplate = others.getOrDefault(page + 1, global); // pages are one indexed
 
         var offset = 0;
         for (int i = 1; i < page + 1; i++) {
