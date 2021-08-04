@@ -8,6 +8,7 @@ import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.UUID;
 
 public record PlayerDatabaseHook(Database database) implements PlayerPersistence {
@@ -45,20 +46,31 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
 
     @Override
     public Future<Void> save(@NotNull WarzonePlayer player) {
-        return database.update(
-                """
+        return flush(List.of(player));
+    }
+
+    @Override
+    public Future<Void> flush(Iterable<WarzonePlayer> players) {
+        return database.runTransactionally("""
                         insert or replace into players (uuid, kills, deaths, level, xp, wins, losses) values (?, ?, ?, ?, ?, ?, ?)
-                        """.stripIndent(),
-                statement -> {
-                    statement.setString(1, player.getPlayerId().toString());
-                    statement.setInt(2, player.getKills());
-                    statement.setInt(3, player.getDeaths());
-                    statement.setInt(4, player.getLevel());
-                    statement.setLong(5, player.getXp());
-                    statement.setLong(6, player.getWins());
-                    statement.setLong(7, player.getLosses());
+                """, statement -> {
+            int i = 0;
+            for (WarzonePlayer player : players) {
+                statement.setString(1, player.getPlayerId().toString());
+                statement.setInt(2, player.getKills());
+                statement.setInt(3, player.getDeaths());
+                statement.setInt(4, player.getLevel());
+                statement.setLong(5, player.getXp());
+                statement.setLong(6, player.getWins());
+                statement.setLong(7, player.getLosses());
+                statement.addBatch();
+                i++;
+                if (i % 50 == 0) {
+                    statement.executeBatch();
                 }
-        );
+            }
+            statement.executeBatch();
+        });
     }
 
     @Override

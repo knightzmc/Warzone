@@ -2,7 +2,6 @@ package me.bristermitten.warzone.player.storage;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import io.vavr.collection.HashMap;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
@@ -31,10 +30,7 @@ public class PlayerStorage implements Persistence {
     }
 
     public Future<Void> flush() {
-        return Future.sequence(HashMap.ofAll(playerCache.asMap())
-                .values()
-                .map(persistence::save))
-                .map(discard -> null); // we don't care about the resultant Seq<Void>
+        return persistence.flush(playerCache.asMap().values());
     }
 
     public Future<WarzonePlayer> load(@NotNull UUID id) {

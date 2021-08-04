@@ -60,4 +60,17 @@ public class SQLDatabase implements Database {
                         .get());
     }
 
+    @Override
+    public @NotNull Future<Void> runTransactionally(String query, CheckedConsumer<PreparedStatement> initializer) {
+        return Future.run(() -> Try.withResources(dataSource::getConnection).of(con -> {
+            con.setAutoCommit(false);
+            return Try.withResources(() -> con.prepareStatement(query))
+                    .of(statement -> {
+                        initializer.accept(statement);
+                        con.commit();
+                        return null;
+                    });
+        }));
+    }
+
 }

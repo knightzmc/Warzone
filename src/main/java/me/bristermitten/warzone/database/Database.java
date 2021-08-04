@@ -16,4 +16,6 @@ public interface Database {
 
     @NotNull Future<Void> execute(@Language("SQL") String query, CheckedConsumer<PreparedStatement> initializer);
 
+    @NotNull Future<Void> runTransactionally(@Language("SQL") String query, CheckedConsumer<PreparedStatement> initializer);
+
 }
