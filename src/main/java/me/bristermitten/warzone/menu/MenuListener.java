@@ -17,7 +17,6 @@ public class MenuListener implements Listener {
     public MenuListener(Inventory inventory, Consumer<InventoryClickEvent> onClick) {
         this.inventory = inventory;
         this.onClick = onClick;
-
     }
 
     public void register(Plugin plugin) {
@@ -34,7 +33,9 @@ public class MenuListener implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        InventoryClickEvent.getHandlerList().unregister(this);
-        InventoryCloseEvent.getHandlerList().unregister(this);
+        if(event.getInventory() == inventory) {
+            InventoryClickEvent.getHandlerList().unregister(this);
+            InventoryCloseEvent.getHandlerList().unregister(this);
+        }
     }
 }
