@@ -25,9 +25,7 @@ public class ItemRenderer {
                 meta.lore(config.lore().stream().map(s -> formatter.format(s, viewer)).toList());
             }
             if (config.headOwner() != null && meta instanceof SkullMeta skullMeta) {
-                skullMeta.setOwningPlayer(
-                        Bukkit.getOfflinePlayer(UUID.fromString(formatter.preFormat(config.headOwner(), viewer)))
-                );
+                skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(UUID.fromString(formatter.preFormat(config.headOwner(), viewer))));
             }
         });
         return item;
