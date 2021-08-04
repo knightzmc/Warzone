@@ -85,7 +85,7 @@ public class Warzone extends JavaPlugin {
     @Override
     public void onDisable() {
         Future.sequence(persistences
-                .map(Persistence::initialise))
+                .map(Persistence::cleanup))
                 .get(); // This needs to block!
     }
 }
