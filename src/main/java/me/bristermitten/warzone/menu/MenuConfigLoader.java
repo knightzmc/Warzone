@@ -16,29 +16,42 @@ public class MenuConfigLoader {
         return load(config, null);
     }
 
-    public @NotNull MenuTemplate load(@NotNull MenuConfig config, @Nullable MenuConfig defaultConfig) {
-        var map = new HashMap<Integer, MenuConfig.ItemConfig>();
-        for (var entry : config.items().entrySet()) {
-            var name = entry.getKey();
-            var item = entry.getValue();
-            if (item.slots() == null) {
-                logger.warning(() -> "Item " + name + " has no slots but it was configured to be inside a menu. It will not be rendered.");
-                continue;
-            }
-            for (int slot : item.slots()) {
-                if (map.containsKey(slot)) {
-                    logger.warning(() -> "Multiple items share slot " + slot + ". Conflicting items = " + name + " and " + map.get(slot));
-                }
-                map.put(slot, item);
-            }
+    private void loadInto(Map.Entry<String, MenuConfig.ItemConfig> entry, Map<Integer, MenuConfig.ItemConfig> map, boolean overwrite) {
+        var name = entry.getKey();
+        var item = entry.getValue();
+        if (item.slots() == null) {
+            logger.warning(() -> "Item " + name + " has no slots but it was configured to be inside a menu. It will not be rendered.");
+            return;
         }
+        for (int slot : item.slots()) {
+            if (map.containsKey(slot)) {
+                if (!overwrite) {
+                    continue;
+                }
+                logger.warning(() -> "Multiple items share slot " + slot + ". Conflicting items = " + name + " and " + map.get(slot));
+            }
+            map.put(slot, item);
+        }
+    }
+
+
+    @NotNull
+    public MenuTemplate load(@NotNull MenuConfig config, @Nullable MenuConfig defaultConfig) {
+        var itemsMap = new HashMap<Integer, MenuConfig.ItemConfig>();
+        for (var entry : config.items().entrySet()) {
+            loadInto(entry, itemsMap, true);
+        }
+        if (defaultConfig != null) {
+            defaultConfig.items().entrySet().forEach(entry -> loadInto(entry, itemsMap, false));
+        }
+
         var title = Null.get(config.title(), Optional.ofNullable(defaultConfig).map(MenuConfig::title).orElse("No Title Set"));
-        Integer defaultSize = Optional.ofNullable(defaultConfig).map(MenuConfig::size).orElse(54);
+        int defaultSize = Optional.ofNullable(defaultConfig).map(MenuConfig::size).orElse(54);
         int size = Null.get(config.size(), defaultSize);
         if (size == 0) {
             size = defaultSize;
         }
-        return new MenuTemplate(title, size, Map.copyOf(map));
+        return new MenuTemplate(title, size, Map.copyOf(itemsMap));
     }
 
 }

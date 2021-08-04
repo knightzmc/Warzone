@@ -41,6 +41,9 @@ pages:
                  19, 25,
                  27, 35,
                  37, 38, 39, 40, 41, 42, 43 ]
+      empty:
+        type: AIR
+        slots: [ 4 ] # This is used to overwrite the 4 slot that would otherwise be filled by global
   global: # If a specific page configuration isn't provided, this one will be used to generate a page
     title: 'Leaderboard Page {page_number}'
     size: 54
