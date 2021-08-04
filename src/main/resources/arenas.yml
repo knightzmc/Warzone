@@ -1,4 +1,23 @@
+##
+# Arena configuration
+#
+# Every arena must have a different world
+# Arena permissions do not have to be unique
+#
+# If a priority is not defined, 0 is used
+# Higher numbers have higher priority
+##
+
 arenas:
+  donor-1:
+    world: warzonedonor1
+    permission: warzone.donor
+    priority: 100
+  donor-2:
+    world: warzonedonor2
+    permission: warzone.donor
+    priority: 99
   main:
-    name: main
     world: mainarena
+    priority: -1 # The basic arena will always be tried last
+

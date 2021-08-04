@@ -1,10 +1,16 @@
 package me.bristermitten.warzone.arena;
 
-public class Arena {
-    private final String worldName;
-    private final String name;
-    public Arena(String worldName, String name) {
-        this.worldName = worldName;
-        this.name = name;
+import io.vavr.control.Option;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.jetbrains.annotations.Nullable;
+
+public record Arena(String name,
+                    String world,
+                    @Nullable String permission,
+                    int priority) {
+
+    public Option<World> getWorld() {
+        return Option.of(Bukkit.getWorld(world));
     }
 }
