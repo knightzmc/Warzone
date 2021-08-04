@@ -126,11 +126,28 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 - 22:15 - start work
 - 23:20 - pause
 
+1 hour 5 minutes spent today
+
 ## 2021-08-3
 
 - 11:30 - start work
-- 12:41 - pause
+- 12:40 - pause
 - 20:00 - start
 - 20:30 - pause for research
 - 22:20 - resume
 - 23:45 - finish for today
+
+3 hours 5 minutes spent today
+
+## 2021-08-04
+
+- 12:25 - start work
+- 13:40 - pause
+- 14:10 - resume
+- 14:30 - pause
+- 17:10 - resume
+- 17:25 - pause
+- 23:00 - resume
+- 23:25 - finish for today
+
+2 hours 15 minutes spent today
