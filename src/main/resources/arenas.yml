@@ -6,6 +6,8 @@
 #
 # If a priority is not defined, 0 is used
 # Higher numbers have higher priority
+#
+# Note that this configuration requires a server restart to update. It will NOT live-reload
 ##
 
 arenas:
