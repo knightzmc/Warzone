@@ -1,0 +1,39 @@
+# Loot tables configuration
+# This file lets you create named custom items,
+# and define tables with probabilities
+#
+# These will be used in chest placements
+
+items:
+  speed-potion:
+    type: POTION
+    amount: 1
+    name: '&9Speed Potion'
+    potion:
+      effect: SPEED
+      duration: 600
+      amplifier: 1
+  shield:
+    type: POTION
+    amount: 1
+    name: '&c&lShield'
+    potion:
+      effect: ABSORPTION
+      amplifier: 0
+      duration: 30
+
+tables:
+  basic:
+    - item: glock
+      chance: 0.3
+    - item: 9mm
+      chance: 0.9
+      min: 1
+      max: 10
+    - item: speed-potion
+      chance: 0.5 # each chest has a 0.5 chance of having a speed potion in
+    - item: shield
+      chance: 0.2
+    - item: medkit
+      chance: 0.1
+

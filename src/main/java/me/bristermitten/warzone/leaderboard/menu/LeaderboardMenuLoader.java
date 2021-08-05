@@ -4,7 +4,7 @@ import com.google.common.primitives.Ints;
 import io.vavr.collection.HashMap;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
-import me.bristermitten.warzone.menu.ItemRenderer;
+import me.bristermitten.warzone.item.ItemRenderer;
 import me.bristermitten.warzone.menu.MenuConfigLoader;
 import me.bristermitten.warzone.menu.MenuRenderer;
 import me.bristermitten.warzone.player.WarzonePlayer;

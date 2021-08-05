@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public record MenuTemplate(@NotNull String title, int size, Map<Integer, MenuConfig.ItemConfig> items) {
+public record MenuTemplate(@NotNull String title, int size, Map<Integer, MenuConfig.MenuItemConfig> items) {
 
     public int emptySlots() {
         return (int) (size - items.entrySet().stream()
-                .filter(e -> e.getValue().type() != Material.AIR)
+                .filter(e -> e.getValue().item().type() != Material.AIR)
                 .count());
     }
 }

@@ -17,7 +17,7 @@ public class OfflineState implements PlayerState {
     }
 
     @Override
-    public void onStateJoin(WarzonePlayer player) {
+    public void onEnter(WarzonePlayer player) {
         playerPersistence.save(player); // Flush any data
         /*
         TODO should a WarzonePlayer be 1 object per uuid? if not, need some way of "invalidating" them so functions know to retrieve a new one
@@ -26,7 +26,7 @@ public class OfflineState implements PlayerState {
     }
 
     @Override
-    public void onStateLeave(WarzonePlayer player) {
+    public void onLeave(WarzonePlayer player) {
 
     }
 

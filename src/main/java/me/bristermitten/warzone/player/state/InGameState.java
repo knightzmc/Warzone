@@ -23,12 +23,12 @@ public class InGameState implements PlayerState {
 
 
     @Override
-    public void onStateJoin(@NotNull WarzonePlayer player) {
+    public void onEnter(@NotNull WarzonePlayer player) {
         player.getPlayer().peek(p -> scoreboardManager.show(p, ScoreboardConfig::inGame));
     }
 
     @Override
-    public void onStateLeave(WarzonePlayer player) {
+    public void onLeave(WarzonePlayer player) {
 
     }
 

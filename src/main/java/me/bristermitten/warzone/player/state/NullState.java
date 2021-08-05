@@ -11,12 +11,12 @@ public class NullState implements PlayerState {
     }
 
     @Override
-    public void onStateJoin(WarzonePlayer player) {
+    public void onEnter(WarzonePlayer player) {
         // no op
     }
 
     @Override
-    public void onStateLeave(WarzonePlayer player) {
+    public void onLeave(WarzonePlayer player) {
         // no op
     }
 

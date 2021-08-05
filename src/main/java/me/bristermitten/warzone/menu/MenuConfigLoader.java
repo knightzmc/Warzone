@@ -17,7 +17,7 @@ public class MenuConfigLoader {
         return load(config, null);
     }
 
-    private void loadInto(Map.Entry<String, MenuConfig.ItemConfig> entry, Map<Integer, MenuConfig.ItemConfig> map, boolean overwrite) {
+    private void loadInto(Map.Entry<String, MenuConfig.MenuItemConfig> entry, Map<Integer, MenuConfig.MenuItemConfig> map, boolean overwrite) {
         var name = entry.getKey();
         var item = entry.getValue();
         if (item.slots() == null) {
@@ -38,7 +38,7 @@ public class MenuConfigLoader {
 
     @NotNull
     public MenuTemplate load(@NotNull MenuConfig config, @Nullable MenuConfig defaultConfig) {
-        var itemsMap = new HashMap<Integer, MenuConfig.ItemConfig>();
+        var itemsMap = new HashMap<Integer, MenuConfig.MenuItemConfig>();
         for (var entry : config.items().entrySet()) {
             loadInto(entry, itemsMap, true);
         }

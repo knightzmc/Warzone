@@ -22,12 +22,12 @@ public class InPreGameLobbyState implements PlayerState {
 
 
     @Override
-    public void onStateJoin(WarzonePlayer player) {
+    public void onEnter(WarzonePlayer player) {
 
     }
 
     @Override
-    public void onStateLeave(WarzonePlayer player) {
+    public void onLeave(WarzonePlayer player) {
 
     }
 

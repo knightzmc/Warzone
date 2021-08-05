@@ -101,9 +101,9 @@ public class WarzonePlayer {
     }
 
     public void setCurrentState(@NotNull PlayerState currentState) {
-        this.currentState.onStateLeave(this);
+        this.currentState.onLeave(this);
         this.currentState = currentState;
-        this.currentState.onStateJoin(this);
+        this.currentState.onEnter(this);
     }
 
     @Override

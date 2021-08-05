@@ -2,6 +2,7 @@ package me.bristermitten.warzone.menu;
 
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.chat.hook.ChatHook;
+import me.bristermitten.warzone.item.ItemRenderer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -24,7 +25,7 @@ public class MenuRenderer {
         var title = formatter.format(template.title(), viewer);
         var inv = Bukkit.createInventory(null, template.size(), title);
         template.items().forEach((slot, item) -> {
-            var rendered = renderer.render(item, formatter, viewer);
+            var rendered = renderer.render(item.item(), formatter, viewer);
             inv.setItem(slot, rendered);
         });
         return inv;

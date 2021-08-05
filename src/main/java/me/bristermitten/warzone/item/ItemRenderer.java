@@ -1,22 +1,26 @@
-package me.bristermitten.warzone.menu;
+package me.bristermitten.warzone.item;
 
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
 public class ItemRenderer {
 
 
-    public ItemStack render(MenuConfig.ItemConfig config, ChatFormatter formatter, OfflinePlayer viewer) {
+    public ItemStack render(ItemConfig config, ChatFormatter formatter, @Nullable OfflinePlayer viewer) {
         var item = new ItemStack(
                 config.type(),
                 Null.get(config.amount(), 1)
         );
+
         item.editMeta(meta -> {
             if (config.name() != null) {
                 meta.displayName(formatter.format(config.name(), viewer));
@@ -26,6 +30,13 @@ public class ItemRenderer {
             }
             if (config.headOwner() != null && meta instanceof SkullMeta skullMeta) {
                 skullMeta.setOwningPlayer(Bukkit.getOfflinePlayer(UUID.fromString(formatter.preFormat(config.headOwner(), viewer))));
+            }
+            if (config.potion() != null && meta instanceof PotionMeta potionMeta) {
+                potionMeta.addCustomEffect(new PotionEffect(
+                        config.potion().effect(),
+                        config.potion().duration(),
+                        config.potion().amplifier()
+                ), true);
             }
         });
         return item;

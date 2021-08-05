@@ -8,6 +8,8 @@
 # Higher numbers have higher priority
 #
 # Note that this configuration requires a server restart to update. It will NOT live-reload
+#
+# playable-area: The world border will form around this area and chests will only be placed in this area
 ##
 
 arenas:
@@ -15,11 +17,92 @@ arenas:
     world: warzonedonor1
     permission: warzone.donor
     priority: 100
+    loot: basic # refers to the basic table in loot.yml
+    playable-area:
+      min:
+        x: -300
+        y: 0
+        z: -300
+      max:
+        x: 500
+        y: 128
+        z: 500
+    gulag:
+      fighting-area-1:
+        x: 127
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 0
+      fighting-area-2:
+        x: 140
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 90
+      spawn-area:
+        x: 160
+        y: 30
+        z: 500
   donor-2:
     world: warzonedonor2
     permission: warzone.donor
     priority: 99
+    loot: basic # refers to the basic table in loot.yml
+    playable-area:
+      min:
+        x: -300
+        y: 0
+        z: -300
+      max:
+        x: 500
+        y: 128
+        z: 500
+    gulag:
+      fighting-area-1:
+        x: 127
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 0
+      fighting-area-2:
+        x: 140
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 90
+      spawn-area:
+        x: 160
+        y: 30
+        z: 500
   main:
     world: mainarena
+    loot: basic # refers to the basic table in loot.yml
+    playable-area:
+      min:
+        x: -300
+        y: 0
+        z: -300
+      max:
+        x: 500
+        y: 128
+        z: 500
+    gulag:
+      fighting-area-1:
+        x: 127
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 0
+      fighting-area-2:
+        x: 140
+        y: 50
+        z: 512
+        yaw: 0
+        pitch: 90
+      spawn-area:
+        x: 160
+        y: 30
+        z: 500
     priority: -1 # The basic arena will always be tried last
 
