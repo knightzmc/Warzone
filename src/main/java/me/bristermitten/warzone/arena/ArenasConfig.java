@@ -18,8 +18,18 @@ public record ArenasConfig(
                               @Nullable Integer priority,
                               @SerializedName("gulag") GulagConfig gulagConfig,
                               @SerializedName("playable-area") Region playableArea,
-                              String lootTable
-                              ) {
+                              String lootTable,
+                              GameConfiguration game
+    ) {
+        public record GameConfiguration(
+                @SerializedName("time-limit") int timeLimit,
+                @SerializedName("player-limit") int playerLimit,
+                @SerializedName("border-damage") int borderDamage,
+                @SerializedName("border-damage-time") int borderDamageTime,
+                @SerializedName("chest-rate") float chestRate
+        ) {
+        }
+
         public record GulagConfig(
                 @SerializedName("fighting-area-1") AngledPoint fightingArea1,
                 @SerializedName("fighting-area-2") AngledPoint fightingArea2,

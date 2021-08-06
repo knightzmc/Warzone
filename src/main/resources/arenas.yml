@@ -18,6 +18,12 @@ arenas:
     permission: warzone.donor
     priority: 100
     loot: basic # refers to the basic table in loot.yml
+    game:
+      time-limit: 600 # time limit in seconds
+      player-limit: 28
+      border-damage: 1 # half a heart = 1 hp
+      border-damage-time: 40 # every 2 seconds = 40 ticks
+      chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
     playable-area:
       min:
         x: -300
