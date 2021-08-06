@@ -17,6 +17,7 @@ import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
+import me.bristermitten.warzone.loot.LootTablesConfig;
 import me.bristermitten.warzone.papi.PAPIAspect;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerAspect;
@@ -43,6 +44,7 @@ public class Warzone extends JavaPlugin {
                     , LangConfig.CONFIG
                     , LeaderboardMenu.CONFIG
                     , ArenasConfig.CONFIG
+                    , LootTablesConfig.CONFIG
             ));
 
             var aspects = List.of(
