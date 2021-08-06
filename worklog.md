@@ -161,3 +161,15 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 - 17:40 - pause
 
 3 hours 5 minutes spent today
+
+## 2021-08-06
+- 12:35 - start work
+- 13:40 - pause for research
+- 16:25 - resume
+- 17:45 - pause
+- 19:40 - resume
+- 20:40 - pause
+- 22:30 - resume
+- 23:20 - pause
+
+4 hours 15 minutes spent today
