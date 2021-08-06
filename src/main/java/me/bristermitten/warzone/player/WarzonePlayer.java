@@ -1,9 +1,11 @@
 package me.bristermitten.warzone.player;
 
 import io.vavr.control.Option;
+import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.player.state.NullState;
 import me.bristermitten.warzone.player.state.PlayerState;
+import me.bristermitten.warzone.state.Stateful;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -12,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
-public class WarzonePlayer {
+public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
     private final UUID playerId;
     private int kills;
     private int deaths;
