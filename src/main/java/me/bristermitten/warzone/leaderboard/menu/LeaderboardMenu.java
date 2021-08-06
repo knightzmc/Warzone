@@ -67,7 +67,7 @@ public class LeaderboardMenu implements Menu {
         }
 
         new MenuListener(menu, event -> {
-            MenuConfig.ItemConfig clicked = finalPageTemplate.items().get(event.getSlot());
+            MenuConfig.MenuItemConfig clicked = finalPageTemplate.items().get(event.getSlot());
             event.setCancelled(true);
             if (clicked == null || clicked.action() == null) {
                 return;
