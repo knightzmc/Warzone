@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game.init;
 
 import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.data.Region;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,13 +17,25 @@ public class BlockFinder {
 
     }
 
+    public static Stream<Chunk> getChunks(World world, Region region) {
+        var minChunkX = region.min().x() >> 4;
+        var minChunkZ = region.min().z() >> 4;
+        var maxChunkZ = region.max().z() >> 4;
+        var maxChunkX = region.max().x() >> 4;
+
+        return IntStream.range(minChunkX, maxChunkX)
+                .boxed()
+                .flatMap(x -> IntStream.range(minChunkZ, maxChunkZ)
+                        .mapToObj(z -> world.getChunkAt(x << 4, z << 4)));
+
+    }
+
     public static Stream<Block> findBlocks(World world, Region region, Material type) {
         return findBlocks(world, region)
                 .filter(block -> block.getType() == type);
     }
 
     public static Stream<Block> findBlocks(World world, Region region) {
-        System.out.println(region);
         return IntStream.range(region.min().x(), region.max().x())
                 .boxed()
                 .parallel()

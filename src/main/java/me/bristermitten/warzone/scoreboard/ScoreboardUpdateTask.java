@@ -1,22 +1,17 @@
 package me.bristermitten.warzone.scoreboard;
 
+import me.bristermitten.warzone.task.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class ScoreboardUpdateTask {
+public class ScoreboardUpdateTask extends Task {
     private final Provider<ScoreboardConfig> config;
 
     private final ScoreboardManager manager;
     private final Plugin plugin;
-
-    private boolean running = false;
-
-    private @Nullable BukkitTask task;
 
     @Inject
     public ScoreboardUpdateTask(Provider<ScoreboardConfig> config, ScoreboardManager manager, Plugin plugin) {
@@ -25,28 +20,13 @@ public class ScoreboardUpdateTask {
         this.plugin = plugin;
     }
 
-    private void schedule() {
-        task = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+    @Override
+    protected void schedule() {
+        runningTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             manager.updateScoreboards();
             if (running) {
                 schedule();
             }
         }, config.get().updateTime());
-    }
-
-    public void start() {
-        if (task != null) {
-            return; // already running
-        }
-        running = true;
-        schedule();
-    }
-
-    public void pause() {
-        running = false;
-        if (task != null) {
-            task.cancel();
-        }
-        task = null;
     }
 }

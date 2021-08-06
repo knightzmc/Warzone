@@ -16,4 +16,8 @@ public class Game {
         this.arena = arena;
         this.players = players;
     }
+
+    public Arena getArena() {
+        return arena;
+    }
 }
