@@ -27,7 +27,8 @@ public class ArenaLoader {
                 Null.get(config.priority(), DEFAULT_PRIORITY),
                 config.gulagConfig(),
                 config.playableArea().realised(),
-                lootTable);
+                lootTable,
+                config.game());
     }
 
 

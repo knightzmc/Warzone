@@ -48,8 +48,8 @@ public class LootTableLoader {
                         return new TableEntry(
                                 item,
                                 chance,
-                                range._1,
-                                range._2
+                                Math.max(1, range._1),
+                                Math.max(1, range._2)
                         );
                     });
                     return Tuple.of(name, tableEntries);

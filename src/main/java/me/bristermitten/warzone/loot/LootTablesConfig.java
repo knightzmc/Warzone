@@ -1,9 +1,9 @@
 package me.bristermitten.warzone.loot;
 
-import io.vavr.collection.List;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.item.ItemConfig;
 
+import java.util.List;
 import java.util.Map;
 
 public record LootTablesConfig(

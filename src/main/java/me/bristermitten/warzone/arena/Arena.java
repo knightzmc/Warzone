@@ -13,7 +13,8 @@ public record Arena(String name,
                     int priority,
                     ArenasConfig.ArenaConfig.GulagConfig gulagConfig,
                     Region playableArea,
-                    LootTable lootTable) {
+                    LootTable lootTable,
+                    ArenasConfig.ArenaConfig.GameConfiguration gameConfiguration) {
 
     public Option<World> getWorld() {
         return Option.of(Bukkit.getWorld(world));

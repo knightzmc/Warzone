@@ -13,7 +13,7 @@ public class LootGenerator {
         var random = ThreadLocalRandom.current();
         return table.getItems()
                 .filter(entry -> random.nextDouble() < entry.chance())
-                .map(entry -> entry.item().getItem().asQuantity(random.nextInt(entry.min(), entry.max())))
+                .map(entry -> entry.item().getItem().asQuantity(entry.min() == entry.max() ? entry.max() : random.nextInt(entry.min(), entry.max() + 1)))
                 .toJavaList();
     }
 }

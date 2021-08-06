@@ -22,6 +22,7 @@ public class BlockFinder {
     }
 
     public static Stream<Block> findBlocks(World world, Region region) {
+        System.out.println(region);
         return IntStream.range(region.min().x(), region.max().x())
                 .boxed()
                 .parallel()
