@@ -34,7 +34,8 @@ public class ArenaManager {
             return true;
         }
         return party.getAllMembers().stream()
-                .map(Bukkit::getPlayer).filter(Objects::nonNull)
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
                 .allMatch(p -> p.hasPermission(arena.permission()));
     }
 
