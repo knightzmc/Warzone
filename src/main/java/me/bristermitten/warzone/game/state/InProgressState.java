@@ -31,7 +31,7 @@ public class InProgressState implements GameState {
         var maxZ = randomZ + PLAYER_SPAWN_RADIUS;
         var randomRegion = playableArea.segment(
                 new Point(minX, 0, minZ),
-                new Point(maxX, 1, maxZ)
+                new Point(maxX, 2, maxZ)
         );
 
         party.getAllMembers().forEach(uuid -> {
