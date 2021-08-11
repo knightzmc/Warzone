@@ -8,9 +8,11 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+@Singleton
 public class ArenaChestFiller extends Task {
     private final Queue<Entry> chunksToProcess = new ArrayDeque<>();
     private final Plugin plugin;
@@ -28,6 +30,8 @@ public class ArenaChestFiller extends Task {
                 .stream()
                 .map(chunk -> new Entry(chunk, arena))
                 .forEach(chunksToProcess::add);
+
+        start();
     }
 
 
@@ -41,7 +45,7 @@ public class ArenaChestFiller extends Task {
 
             filler.fill(next.chunk(), next.arena().lootTable(), next.arena().gameConfiguration().chestRate());
             if (running) {
-                start();
+                schedule();
             }
         }, 5);
     }
