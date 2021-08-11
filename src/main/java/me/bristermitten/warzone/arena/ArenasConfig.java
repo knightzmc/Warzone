@@ -21,7 +21,7 @@ public record ArenasConfig(
                               @Nullable Integer priority,
                               @SerializedName("gulag") GulagConfig gulagConfig,
                               @SerializedName("playable-area") Region playableArea,
-                              String lootTable,
+                              @SerializedName("loot") String lootTable,
                               GameConfiguration game
     ) {
         public record GameConfiguration(
