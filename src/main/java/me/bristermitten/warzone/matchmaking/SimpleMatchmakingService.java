@@ -16,6 +16,7 @@ import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
 import java.util.*;
+import java.util.function.Predicate;
 
 @Singleton
 public class SimpleMatchmakingService implements MatchmakingService, Listener {
@@ -42,7 +43,7 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
             Optional<Game> matching = gameManager.getGames().stream().sorted(Comparator.comparing(game -> game.getArena().priority()))
                     .filter(game -> arenaManager.partyCanUseArena(party, game.getArena()))
                     .filter(game -> game.getState() instanceof InLobbyState || game.getState() instanceof IdlingState)
-                    .filter(Game::isFull)
+                    .filter(Predicate.not(Game::isFull))
                     .findFirst();
 
             if (matching.isPresent()) {
