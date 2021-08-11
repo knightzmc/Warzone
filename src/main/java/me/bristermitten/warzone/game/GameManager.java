@@ -21,6 +21,7 @@ public class GameManager {
     private final PlayerStates playerStates;
     private final PlayerManager playerManager;
 
+
     @Inject
     public GameManager(LangService langService, GameStates states, PlayerStates playerStates, PlayerManager playerManager) {
         this.langService = langService;
@@ -40,7 +41,7 @@ public class GameManager {
 
         if (game.getState() instanceof InLobbyState) {
             game.getPlayers().add(party);
-
+            party.setLocked(true); // TODO unlock
             party.getAllMembers().forEach(uuid ->
                     playerManager.loadPlayer(uuid, player ->
                             playerManager.setState(player, playerStates.inPreGameLobbyState())));

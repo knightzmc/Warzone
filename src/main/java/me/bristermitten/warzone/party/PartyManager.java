@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.party;
 
 import me.bristermitten.warzone.lang.LangService;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +25,12 @@ public class PartyManager {
     @NotNull
     public Party getParty(@NotNull Player partyOwner) {
         return partiesByMember.computeIfAbsent(partyOwner.getUniqueId(),
+                uid -> new Party(uid, new HashSet<>()));
+    }
+
+    @NotNull
+    public Party getParty(@NotNull WarzonePlayer partyOwner) {
+        return partiesByMember.computeIfAbsent(partyOwner.getPlayerId(),
                 uid -> new Party(uid, new HashSet<>()));
     }
 

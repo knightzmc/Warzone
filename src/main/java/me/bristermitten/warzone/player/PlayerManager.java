@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.player;
 
+import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.state.PlayerState;
 import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
@@ -14,11 +15,13 @@ import java.util.function.Consumer;
 public class PlayerManager {
     private final Plugin plugin;
     private final PlayerStorage playerStorage;
+    private final PartyManager partyManager;
 
     @Inject
-    public PlayerManager(Plugin plugin, PlayerStorage playerStorage) {
+    public PlayerManager(Plugin plugin, PlayerStorage playerStorage, PartyManager partyManager) {
         this.plugin = plugin;
         this.playerStorage = playerStorage;
+        this.partyManager = partyManager;
     }
 
     public boolean setState(WarzonePlayer player, PlayerState newState) {
