@@ -26,13 +26,13 @@ arenas:
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
     playable-area:
       min:
-        x: -300
+        x: 0
         y: 0
-        z: -300
+        z: 0
       max:
-        x: 500
+        x: 250
         y: 128
-        z: 500
+        z: 250
     gulag:
       fighting-area-1:
         x: 127
@@ -63,13 +63,13 @@ arenas:
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
     playable-area:
       min:
-        x: -300
+        x: 0
         y: 0
-        z: -300
+        z: 0
       max:
-        x: 500
+        x: 250
         y: 128
-        z: 500
+        z: 250
     gulag:
       fighting-area-1:
         x: 127
@@ -98,13 +98,13 @@ arenas:
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
     playable-area:
       min:
-        x: -300
+        x: 0
         y: 0
-        z: -300
+        z: 0
       max:
-        x: 500
+        x: 250
         y: 128
-        z: 500
+        z: 250
     gulag:
       fighting-area-1:
         x: 127
