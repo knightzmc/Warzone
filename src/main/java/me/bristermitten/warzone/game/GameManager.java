@@ -1,33 +1,61 @@
 package me.bristermitten.warzone.game;
 
+import me.bristermitten.warzone.arena.Arena;
+import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.state.GameStates;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.game.state.InProgressState;
-import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.party.Party;
+import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import org.jetbrains.annotations.Contract;
 
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
 
 public class GameManager {
-    private final Set<Game> gamesInProgress = new HashSet<>();
-    private final LangService langService;
+    private final Set<Game> games = new HashSet<>();
 
     private final GameStates states;
     private final PlayerStates playerStates;
     private final PlayerManager playerManager;
+    private final ArenaManager arenaManager;
 
 
     @Inject
-    public GameManager(LangService langService, GameStates states, PlayerStates playerStates, PlayerManager playerManager) {
-        this.langService = langService;
+    public GameManager(GameStates states, PlayerStates playerStates, PlayerManager playerManager, ArenaManager arenaManager) {
         this.states = states;
         this.playerStates = playerStates;
         this.playerManager = playerManager;
+        this.arenaManager = arenaManager;
+    }
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    /**
+     * Create a new Game in the Idling State and add it to the games set
+     * This also marks the Arena as "in use" to the supplied {@link ArenaManager} and as such will throw any exceptions
+     * that {@link ArenaManager#use(Arena)} throws
+     *
+     * @param arena        The arena to create the game under
+     * @param acceptedSize The allowed party size in the game
+     * @return the new game
+     * @throws IllegalArgumentException if arena is already in use
+     */
+    @Contract("_, _ -> new")
+    public Game createNewGame(Arena arena, PartySize acceptedSize) {
+        arenaManager.use(arena);
+        if (games.stream().anyMatch(game -> game.getArena().equals(arena))) {
+            throw new IllegalArgumentException("Arena " + arena.name() + " is already in use!");
+        }
+        Game game = new Game(arena, new HashSet<>(), acceptedSize);
+        games.add(game);
+        return game;
     }
 
     public void addToGame(Game game, Party party) {

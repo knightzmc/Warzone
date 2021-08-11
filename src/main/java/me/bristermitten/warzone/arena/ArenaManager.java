@@ -12,10 +12,10 @@ import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @Singleton
 public class ArenaManager {
-    private final ArenaLoader loader;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final List<Arena> arenas;
@@ -24,7 +24,6 @@ public class ArenaManager {
 
     @Inject
     public ArenaManager(ArenaLoader loader, ConfigurationProvider<ArenasConfig> configProvider) {
-        this.loader = loader;
         configProvider.addInvalidationHook(unused -> logger.warn("arenas.yml was updated but changes will not apply until a restart"));
 
         this.arenas = List.ofAll(loader.loadArenas(configProvider.get()));
@@ -37,6 +36,14 @@ public class ArenaManager {
         return party.getAllMembers().stream()
                 .map(Bukkit::getPlayer).filter(Objects::nonNull)
                 .allMatch(p -> p.hasPermission(arena.permission()));
+    }
+
+    public Predicate<Arena> arenaIsInUse() {
+        return arenasInUse::contains;
+    }
+
+    public List<Arena> getArenas() {
+        return arenas;
     }
 
     public void use(Arena arena) {
