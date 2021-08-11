@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -41,5 +42,10 @@ public class PlayerKillDeathListener implements Listener {
             killer.setKills(killer.getKills() + 1);
             xpHandler.addXP(killer, xpConfig.get().kill());
         }));
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageEvent e) {
+        e.setCancelled(true); // todo remove
     }
 }

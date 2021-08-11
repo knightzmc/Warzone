@@ -4,7 +4,9 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
+import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.init.ChunkChestFiller;
+import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.PartyManager;
@@ -18,13 +20,17 @@ public class WarzoneCommand extends BaseCommand {
     private final LootTableManager lootTableManager;
     private final MatchmakingService matchmakingService;
     private final PartyManager partyManager;
+    private final InProgressState inProgressState;
+    private final GameManager gameManager;
 
     @Inject
-    public WarzoneCommand(ChunkChestFiller chunkChestFiller, LootTableManager lootTableManager, MatchmakingService matchmakingService, PartyManager partyManager) {
+    public WarzoneCommand(ChunkChestFiller chunkChestFiller, LootTableManager lootTableManager, MatchmakingService matchmakingService, PartyManager partyManager, InProgressState inProgressState, GameManager gameManager) {
         this.chunkChestFiller = chunkChestFiller;
         this.lootTableManager = lootTableManager;
         this.matchmakingService = matchmakingService;
         this.partyManager = partyManager;
+        this.inProgressState = inProgressState;
+        this.gameManager = gameManager;
     }
 
     @Subcommand("join")
@@ -32,6 +38,12 @@ public class WarzoneCommand extends BaseCommand {
         matchmakingService.queue(partyManager.getParty(sender));
         sender.sendMessage("You've been placed in a queue");
     }
+
+    @Subcommand("start")
+    public void start(Player sender) {
+        gameManager.getGames().forEach(game -> game.setCurrentState(inProgressState));
+    }
+
 
     @Subcommand("leave")
     public void leave(Player sender) {
