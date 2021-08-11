@@ -7,6 +7,7 @@ import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.state.Stateful;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +32,10 @@ public class Game implements Stateful<Game, GameState> {
         return players;
     }
 
+    public @Unmodifiable Set<Party> getPlayersInGame() {
+        return Set.copyOf(players);
+    }
+
     public GameState getState() {
         return state;
     }
@@ -45,6 +50,7 @@ public class Game implements Stateful<Game, GameState> {
     public PartySize getAcceptedSize() {
         return acceptedSize;
     }
+
 
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();

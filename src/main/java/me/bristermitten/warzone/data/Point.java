@@ -20,4 +20,8 @@ public record Point(int x, int y, int z) {
                 this.z + z
         );
     }
+
+    public Point setY(int y) {
+        return new Point(x, y, z);
+    }
 }

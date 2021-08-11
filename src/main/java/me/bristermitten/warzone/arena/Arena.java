@@ -16,6 +16,7 @@ public record Arena(String name,
                     LootTable lootTable,
                     ArenasConfig.ArenaConfig.GameConfiguration gameConfiguration) {
 
+
     public Option<World> getWorld() {
         return Option.of(Bukkit.getWorld(world));
     }

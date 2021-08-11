@@ -3,6 +3,8 @@ package me.bristermitten.warzone.data;
 import me.bristermitten.warzone.util.Numbers;
 import org.bukkit.Chunk;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  * Represents a region
  * Max is exclusive
@@ -36,5 +38,33 @@ public record Region(Point min, Point max) {
 
     public Region realised() {
         return realiseRegion(this);
+    }
+
+    public Point random() {
+        var random = ThreadLocalRandom.current();
+        var x = random.nextInt(min().x(), max().x());
+        var y = random.nextInt(min().y(), max().y());
+        var z = random.nextInt(min().z(), max().z());
+
+        return new Point(x, y, z);
+    }
+
+    /**
+     * Takes 2 points and returns a Region constraining those points to be within this region
+     * That is, if either of the points go past this region's min and max, they will be "trimmed"
+     */
+    public Region segment(Point segmentMin, Point segmentMax) {
+        var realised = realiseRegion(new Region(segmentMin, segmentMax));
+        var minX = Math.max(min.x(), realised.min.x());
+        var maxX = Math.min(min.x(), realised.min.x());
+        var minY = Math.max(min.y(), realised.min.y());
+        var maxY = Math.min(min.y(), realised.min.y());
+        var minZ = Math.max(min.z(), realised.min.z());
+        var maxZ = Math.min(min.z(), realised.min.z());
+
+        return new Region(
+                new Point(minX, minY, minZ),
+                new Point(maxX, maxY, maxZ)
+        );
     }
 }

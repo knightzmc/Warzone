@@ -13,9 +13,11 @@ import me.bristermitten.warzone.player.state.PlayerStates;
 import org.jetbrains.annotations.Contract;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
 
+@Singleton
 public class GameManager {
     private final Set<Game> games = new HashSet<>();
 
@@ -71,5 +73,6 @@ public class GameManager {
                     playerManager.loadPlayer(uuid, player ->
                             playerManager.setState(player, playerStates.inPreGameLobbyState())));
         }
+        // Otherwise people can't join
     }
 }
