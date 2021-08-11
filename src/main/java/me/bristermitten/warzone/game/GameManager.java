@@ -50,9 +50,6 @@ public class GameManager {
     @Contract("_, _ -> new")
     public Game createNewGame(Arena arena, PartySize acceptedSize) {
         arenaManager.use(arena);
-        if (games.stream().anyMatch(game -> game.getArena().equals(arena))) {
-            throw new IllegalArgumentException("Arena " + arena.name() + " is already in use!");
-        }
         Game game = new Game(arena, new HashSet<>(), acceptedSize);
         games.add(game);
         return game;
