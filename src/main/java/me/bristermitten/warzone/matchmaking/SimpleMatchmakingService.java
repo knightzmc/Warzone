@@ -44,6 +44,7 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
                     .filter(game -> game.getState() instanceof InLobbyState || game.getState() instanceof IdlingState)
                     .filter(Game::isFull)
                     .findFirst();
+
             if (matching.isPresent()) {
                 gameManager.addToGame(matching.get(), party);
                 toRemove.add(party);
@@ -54,7 +55,7 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
         for (Party waiting : playersInQueue) {
             var applicable = arenaManager.getArenas()
                     .sorted(Comparator.comparing(Arena::priority))
-                    .filter(arenaManager.arenaIsInUse())
+                    .filter(arenaManager.arenaIsInUse().negate())
                     .filter(arena -> arenaManager.partyCanUseArena(waiting, arena));
             if (applicable.isEmpty()) {
                 continue;
