@@ -3,7 +3,7 @@ package me.bristermitten.warzone.game.init;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.task.Task;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +25,7 @@ public class ArenaChestFiller extends Task {
     public void add(@NotNull final Arena arena) {
         var world = arena.getWorld().getOrElseThrow(() -> new IllegalStateException("Could not get world named " + arena.getWorld()));
         BlockFinder.getChunks(world, arena.playableArea())
+                .stream()
                 .map(chunk -> new Entry(chunk, arena))
                 .forEach(chunksToProcess::add);
     }
@@ -37,6 +38,7 @@ public class ArenaChestFiller extends Task {
             if (next == null) {
                 return;
             }
+
             filler.fill(next.chunk(), next.arena().lootTable(), next.arena().gameConfiguration().chestRate());
             if (running) {
                 start();
@@ -45,7 +47,7 @@ public class ArenaChestFiller extends Task {
     }
 
     private record Entry(
-            Chunk chunk,
+            ChunkSnapshot chunk,
             Arena arena
     ) {
     }
