@@ -1,5 +1,7 @@
 package me.bristermitten.warzone.game;
 
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.state.GameStates;
@@ -16,6 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Singleton
 public class GameManager {
@@ -75,4 +78,11 @@ public class GameManager {
         }
         // Otherwise people can't join
     }
+
+    public Option<Game> getGameContaining(UUID uuid) {
+        return List.ofAll(getGames())
+                .filter(game -> game.getPlayersInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid)))
+                .headOption();
+    }
+
 }

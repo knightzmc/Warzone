@@ -1,5 +1,7 @@
 package me.bristermitten.warzone.player;
 
+import io.vavr.concurrent.Future;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.player.state.PlayerState;
 import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;
 import me.bristermitten.warzone.player.state.PlayerStates;
@@ -51,5 +53,14 @@ public class PlayerManager {
 
     public void loadPlayer(@NotNull UUID id, Consumer<WarzonePlayer> onSuccess) {
         playerStorage.load(id).onSuccess(onSuccess);
+    }
+
+    public Future<WarzonePlayer> loadPlayer(@NotNull UUID id) {
+        return playerStorage.load(id);
+    }
+
+    public Option<WarzonePlayer> lookupPlayer(UUID uuid) {
+        return Option.of(playerStorage.fetch(uuid))
+                .onEmpty(() -> playerStorage.load(uuid));
     }
 }

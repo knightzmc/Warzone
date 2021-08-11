@@ -1,10 +1,9 @@
 package me.bristermitten.warzone.papi;
 
-import io.vavr.control.Option;
 import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
+import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
-import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.OrdinalFormatter;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -19,7 +18,7 @@ import java.util.Set;
 public class WarzoneExpansion extends PlaceholderExpansion {
     public static final String NOT_LOADED_YET = "Not loaded yet";
     private final Plugin plugin;
-    private final PlayerStorage playerStorage;
+    private final PlayerManager playerManager;
     private final XPHandler xpHandler;
 
     private final PlayerLeaderboard leaderboard;
@@ -27,9 +26,9 @@ public class WarzoneExpansion extends PlaceholderExpansion {
     private final Set<WarzonePlaceholder> extraPlaceholders;
 
     @Inject
-    public WarzoneExpansion(Plugin plugin, PlayerStorage playerStorage, XPHandler xpHandler, PlayerLeaderboard leaderboard, Set<WarzonePlaceholder> extraPlaceholders) {
+    public WarzoneExpansion(Plugin plugin, PlayerManager playerManager, XPHandler xpHandler, PlayerLeaderboard leaderboard, Set<WarzonePlaceholder> extraPlaceholders) {
         this.plugin = plugin;
-        this.playerStorage = playerStorage;
+        this.playerManager = playerManager;
         this.xpHandler = xpHandler;
         this.leaderboard = leaderboard;
         this.extraPlaceholders = extraPlaceholders;
@@ -60,9 +59,7 @@ public class WarzoneExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onRequest(@NotNull OfflinePlayer player, @NotNull String params) {
-        var warzonePlayer = Option.of(playerStorage.fetch(player.getUniqueId()))
-                // While we obviously can't use the loaded player yet, we can trigger a query so that it starts
-                .onEmpty(() -> playerStorage.load(player.getUniqueId()));
+        var warzonePlayer = playerManager.lookupPlayer(player.getUniqueId());
 
         var simple = switch (params) {
             case "level" -> warzonePlayer.map(WarzonePlayer::getLevel).map(Object::toString).getOrElse(NOT_LOADED_YET);
@@ -88,7 +85,7 @@ public class WarzoneExpansion extends PlaceholderExpansion {
 
         var firstMatching = extraPlaceholders
                 .stream()
-                .filter(p -> p.getPattern().matcher(params).matches())
+                .filter(p -> p.getPattern() == null || p.getPattern().matcher(params).matches())
                 .findFirst();
         if (firstMatching.isEmpty()) {
             return null;

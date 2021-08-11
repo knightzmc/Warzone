@@ -18,6 +18,8 @@ public class Game implements Stateful<Game, GameState> {
     private final PartySize acceptedSize;
     private GameState state = IdlingState.INSTANCE;
 
+    private int alivePlayers;
+
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
         this.arena = arena;
         this.players = new HashSet<>(players);
@@ -51,6 +53,9 @@ public class Game implements Stateful<Game, GameState> {
         return acceptedSize;
     }
 
+    public int getAlivePlayers() {
+        return alivePlayers;
+    }
 
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();

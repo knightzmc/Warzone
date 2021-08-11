@@ -7,7 +7,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.regex.Pattern;
 
 public interface WarzonePlaceholder {
-    Pattern getPattern();
+    @Nullable
+    default Pattern getPattern() {
+        return null;
+    }
 
-    String onPlaceholderRequest(@Nullable OfflinePlayer player, @NotNull String params);
+    @Nullable String onPlaceholderRequest(@Nullable OfflinePlayer player, @NotNull String params);
 }
