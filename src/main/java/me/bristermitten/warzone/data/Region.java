@@ -56,11 +56,11 @@ public record Region(Point min, Point max) {
     public Region segment(Point segmentMin, Point segmentMax) {
         var realised = realiseRegion(new Region(segmentMin, segmentMax));
         var minX = Math.max(min.x(), realised.min.x());
-        var maxX = Math.min(min.x(), realised.min.x());
+        var maxX = Math.min(max.x(), realised.max.x());
         var minY = Math.max(min.y(), realised.min.y());
-        var maxY = Math.min(min.y(), realised.min.y());
+        var maxY = Math.min(max.y(), realised.max.y());
         var minZ = Math.max(min.z(), realised.min.z());
-        var maxZ = Math.min(min.z(), realised.min.z());
+        var maxZ = Math.min(max.z(), realised.max.z());
 
         return new Region(
                 new Point(minX, minY, minZ),
