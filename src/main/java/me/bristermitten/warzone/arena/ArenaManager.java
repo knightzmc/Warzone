@@ -48,7 +48,7 @@ public class ArenaManager {
     }
 
     public void use(Arena arena) {
-        if (arenasInUse.add(arena)) {
+        if (!arenasInUse.add(arena)) {
             throw new IllegalStateException("Arena " + arena + " already in use!");
         }
     }
