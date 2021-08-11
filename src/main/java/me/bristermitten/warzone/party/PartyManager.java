@@ -27,7 +27,6 @@ public class PartyManager {
                 uid -> new Party(uid, new HashSet<>()));
     }
 
-
     public void invite(@NotNull Player inviter, @NotNull Player receiver) {
         if (inviter.getUniqueId().equals(receiver.getUniqueId())) {
             langService.sendMessage(inviter, langConfig -> langConfig.partyLang().cannotInviteSelf());
@@ -80,6 +79,10 @@ public class PartyManager {
         }
         if (!invite.invitingTo().getOutgoingInvites().contains(invite)) {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().invalidInvite());
+            return;
+        }
+        if (invite.invitingTo().isLocked()) {
+            langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame());
             return;
         }
 

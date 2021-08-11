@@ -16,6 +16,7 @@ public class Party {
     private final @NotNull Set<UUID> otherPlayers;
     private final Set<PartyInvite> outgoingInvites = new HashSet<>();
     private UUID owner;
+    private boolean locked = false;
 
     Party(UUID owner, @NotNull Set<UUID> otherPlayers) {
         this.owner = owner;
@@ -56,6 +57,22 @@ public class Party {
         var set = new HashSet<>(otherPlayers);
         set.add(owner);
         return set;
+    }
+
+    boolean isLocked() {
+        return locked;
+    }
+
+    void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public PartySize getSize() {
+        return switch (getAllMembers().size()) {
+            case 1 -> PartySize.SINGLES;
+            case 2 -> PartySize.DOUBLES;
+            default -> PartySize.SQUADS;
+        };
     }
 
     public boolean isFull() {

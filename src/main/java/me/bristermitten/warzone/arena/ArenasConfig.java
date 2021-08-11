@@ -4,12 +4,15 @@ import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.data.AngledPoint;
 import me.bristermitten.warzone.data.Region;
+import me.bristermitten.warzone.data.WorldAngledPoint;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 
 public record ArenasConfig(
-        Map<String, ArenaConfig> arenas
+        Map<String, ArenaConfig> arenas,
+        @SerializedName("lobby-spawnpoint") WorldAngledPoint lobbySpawnpoint,
+        @SerializedName("pre-game-lobby-spawnpoint") WorldAngledPoint preGameLobbySpawnpoint
 ) {
     public static final Configuration<ArenasConfig> CONFIG = new Configuration<>(ArenasConfig.class, "arenas.yml");
 

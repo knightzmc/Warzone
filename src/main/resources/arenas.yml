@@ -124,3 +124,16 @@ arenas:
         z: 500
     priority: -1 # The basic arena will always be tried last
 
+lobby-spawnpoint: # the normal lobby for players that arent in a game
+  world: lobby
+  x: 300
+  y: 60
+  z: 128
+
+pre-game-lobby-spawnpoint: # the pre game lobby
+  world: pregamelobby
+  x: 300
+  y: 60
+  z: 128
+
+

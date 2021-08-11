@@ -26,6 +26,7 @@ public record LangConfig(
             , @SerializedName("already-in-party") String alreadyInParty
             , @SerializedName("party-full") String partyFull
             , @SerializedName("party-full-join") String partyFullJoin
+            , @SerializedName("party-is-in-game") String partyIsInGame
     ) {
     }
 }

@@ -2,7 +2,7 @@ package me.bristermitten.warzone.chat.channel;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
 import me.bristermitten.warzone.chat.ChatManager;
-import me.bristermitten.warzone.player.storage.PlayerStorage;
+import me.bristermitten.warzone.player.PlayerManager;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -14,19 +14,19 @@ import javax.inject.Inject;
 
 public class ChatChannelListener implements Listener {
     private final ChatManager chatManager;
-    private final PlayerStorage playerStorage;
+    private final PlayerManager playerManager;
 
     @Inject
-    ChatChannelListener(@NotNull Plugin plugin, ChatManager chatManager, PlayerStorage playerStorage) {
+    ChatChannelListener(@NotNull Plugin plugin, ChatManager chatManager, PlayerManager playerManager) {
         this.chatManager = chatManager;
-        this.playerStorage = playerStorage;
+        this.playerManager = playerManager;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onChat(@NotNull AsyncChatEvent event) {
         event.setCancelled(true); // cancel default thing
-        playerStorage.loadPlayer(event.getPlayer().getUniqueId(),
+        playerManager.loadPlayer(event.getPlayer().getUniqueId(),
                 chatter -> {
                     var channel = chatter.getCurrentState().getChannel();
 

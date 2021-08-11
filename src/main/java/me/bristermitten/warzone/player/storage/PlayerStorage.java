@@ -44,16 +44,12 @@ public class PlayerStorage implements Persistence {
 
     private Future<WarzonePlayer> lookup(@NotNull UUID id) {
         return persistence.load(id)
-                .onSuccess(loaded -> playerCache.put(id, loaded));
-    }
-
-    public void loadPlayer(@NotNull UUID id, Consumer<WarzonePlayer> callback) {
-        load(id)
                 .onFailure(t -> {
                     throw new StorageException("Could not load player data for " + id, t);
                 })
-                .onSuccess(callback);
+                .onSuccess(loaded -> playerCache.put(id, loaded));
     }
+
 
     @Override
     public @NotNull Future<Void> initialise() {

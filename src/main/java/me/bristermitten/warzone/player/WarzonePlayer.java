@@ -1,7 +1,6 @@
 package me.bristermitten.warzone.player;
 
 import io.vavr.control.Option;
-import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.data.Ratio;
 import me.bristermitten.warzone.player.state.NullState;
 import me.bristermitten.warzone.player.state.PlayerState;
@@ -106,6 +105,7 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
         this.currentState.onLeave(this);
         this.currentState = currentState;
         this.currentState.onEnter(this);
+
     }
 
     @Override
