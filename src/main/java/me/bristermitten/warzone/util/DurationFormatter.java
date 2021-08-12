@@ -4,7 +4,7 @@ import java.time.Duration;
 
 public class DurationFormatter {
     private DurationFormatter() {
-    
+
     }
 
     public static String format(long seconds) {

@@ -1,6 +1,6 @@
 package me.bristermitten.warzone.game.state;
 
-import me.bristermitten.warzone.player.state.InGameState;
+import me.bristermitten.warzone.player.state.game.InGameState;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

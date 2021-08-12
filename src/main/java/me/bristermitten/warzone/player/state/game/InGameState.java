@@ -1,7 +1,8 @@
-package me.bristermitten.warzone.player.state;
+package me.bristermitten.warzone.player.state.game;
 
 import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import me.bristermitten.warzone.player.state.PlayerState;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class InGameState implements PlayerState {
+public abstract class InGameState implements PlayerState {
 
     private final ScoreboardManager scoreboardManager;
 
