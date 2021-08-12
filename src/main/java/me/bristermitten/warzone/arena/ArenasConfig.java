@@ -29,7 +29,8 @@ public record ArenasConfig(
                 @SerializedName("player-limit") int playerLimit,
                 @SerializedName("border-damage") int borderDamage,
                 @SerializedName("border-damage-time") int borderDamageTime,
-                @SerializedName("chest-rate") float chestRate
+                @SerializedName("chest-rate") float chestRate,
+                @SerializedName("max-gulag-entries") int maxGulagEntries
         ) {
         }
 

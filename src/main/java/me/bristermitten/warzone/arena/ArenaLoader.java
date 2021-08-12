@@ -28,7 +28,21 @@ public class ArenaLoader {
                 config.gulagConfig(),
                 config.playableArea().realised(),
                 lootTable,
-                config.game());
+                loadGameConfig(config.game()));
+    }
+
+    public ArenasConfig.ArenaConfig.GameConfiguration loadGameConfig(ArenasConfig.ArenaConfig.GameConfiguration configuration) {
+        if (configuration.maxGulagEntries() == 0) {
+            return new ArenasConfig.ArenaConfig.GameConfiguration(
+                    configuration.timeLimit(),
+                    configuration.playerLimit(),
+                    configuration.borderDamage(),
+                    configuration.borderDamageTime(),
+                    configuration.chestRate(),
+                    1
+            );
+        }
+        return configuration;
     }
 
 

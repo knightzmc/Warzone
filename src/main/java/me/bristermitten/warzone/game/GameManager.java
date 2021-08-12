@@ -12,6 +12,7 @@ import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.player.state.game.InGulagState;
 import org.jetbrains.annotations.Contract;
 
 import javax.inject.Inject;
@@ -82,8 +83,28 @@ public class GameManager {
 
     public Option<Game> getGameContaining(UUID uuid) {
         return List.ofAll(getGames())
-                .filter(game -> game.getPlayersInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid)))
+                .filter(game -> gameContains(game, uuid))
                 .headOption();
     }
 
+    public boolean gameContains(Game game, UUID uuid) {
+        return game.getPlayersInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid));
+    }
+
+    public void handleDeath(Game game, UUID died) {
+        if (!gameContains(game, died)) {
+            throw new IllegalArgumentException("Player is not in this game! something has gone very wrong");
+        }
+        var info = game.getInfo(died)
+                .getOrElseThrow(() -> new IllegalStateException("Something has also gone very wrong as the player has no PlayerInformation"));
+
+        playerManager.loadPlayer(died, player -> {
+            if (info.getDeathCount() > game.getArena().gameConfiguration().maxGulagEntries() || player.getCurrentState() instanceof InGulagState) {
+                // they're out
+                playerManager.setState(player, PlayerStates::spectatingState);
+            } else {
+                playerManager.setState(player, PlayerStates::inGulagState);
+            }
+        });
+    }
 }

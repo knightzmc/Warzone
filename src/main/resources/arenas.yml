@@ -19,6 +19,7 @@ arenas:
     priority: 100
     loot: basic # refers to the basic table in loot.yml
     game:
+      max-gulag-entries: 2 # Each player can enter the gulag TWICE, rather than once before being fully eliminated
       time-limit: 600 # time limit in seconds
       player-limit: 28
       border-damage: 1 # half a heart = 1 hp

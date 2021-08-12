@@ -17,6 +17,7 @@ public record Arena(String name,
                     ArenasConfig.ArenaConfig.GameConfiguration gameConfiguration) {
 
 
+
     public Option<World> getWorld() {
         return Option.of(Bukkit.getWorld(world));
     }

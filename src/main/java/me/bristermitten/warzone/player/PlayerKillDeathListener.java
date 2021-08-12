@@ -1,8 +1,6 @@
 package me.bristermitten.warzone.player;
 
-import io.vavr.control.Option;
 import me.bristermitten.warzone.config.ConfigurationProvider;
-import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
@@ -10,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +34,13 @@ public class PlayerKillDeathListener implements Listener {
     @EventHandler
     public void onKill(@NotNull PlayerDeathEvent e) {
         playerManager.loadPlayer(e.getEntity().getUniqueId(),
-                died -> {
-                    died.setDeaths(died.getDeaths() + 1);
-                    var containingGame = gameManager.getGameContaining(died.getPlayerId());
+                whoDied -> {
+                    whoDied.setDeaths(whoDied.getDeaths() + 1);
+                    var containingGame = gameManager.getGameContaining(whoDied.getPlayerId());
                     containingGame
-                            .flatMap(game -> game.getInfo(died.getPlayerId()))
-                            .peek(playerInformation -> playerInformation.setDeathCount(playerInformation.getDeathCount() + 1));
+                            .flatMap(game -> game.getInfo(whoDied.getPlayerId()))
+                            .peek(playerInformation -> playerInformation.setDeathCount(playerInformation.getDeathCount() + 1))
+                            .peek(unused -> gameManager.handleDeath(containingGame.get(), whoDied.getPlayerId()));
                 });
 
         Player killerPlayer = e.getEntity().getKiller();
