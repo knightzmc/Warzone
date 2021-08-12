@@ -3,6 +3,11 @@ package me.bristermitten.warzone.game;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Stores player information during a game
+ * It can be assumed that any object of this type will be actively mutated by the plugin
+ * Once a game finishes, this is transformed into a statistics report
+ */
 public class PlayerInformation {
     private final UUID player;
     private boolean isAlive = true;
