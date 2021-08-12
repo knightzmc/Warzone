@@ -1,6 +1,8 @@
 package me.bristermitten.warzone.player;
 
+import io.vavr.control.Option;
 import me.bristermitten.warzone.config.ConfigurationProvider;
+import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
@@ -35,7 +37,13 @@ public class PlayerKillDeathListener implements Listener {
     @EventHandler
     public void onKill(@NotNull PlayerDeathEvent e) {
         playerManager.loadPlayer(e.getEntity().getUniqueId(),
-                died -> died.setDeaths(died.getDeaths() + 1));
+                died -> {
+                    died.setDeaths(died.getDeaths() + 1);
+                    var containingGame = gameManager.getGameContaining(died.getPlayerId());
+                    containingGame
+                            .flatMap(game -> game.getInfo(died.getPlayerId()))
+                            .peek(playerInformation -> playerInformation.setDeathCount(playerInformation.getDeathCount() + 1));
+                });
 
         Player killerPlayer = e.getEntity().getKiller();
         if (killerPlayer == null) {
@@ -48,10 +56,5 @@ public class PlayerKillDeathListener implements Listener {
                     .flatMap(game -> game.getInfo(killerPlayer.getUniqueId()))
                     .peek(information -> information.setKills(information.getKills() + 1));
         }));
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent e) {
-        e.setCancelled(true); // todo remove
     }
 }
