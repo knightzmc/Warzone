@@ -11,19 +11,25 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class Game implements Stateful<Game, GameState> {
     private final Arena arena;
     private final Set<Party> players;
     private final PartySize acceptedSize;
+    private final GameTimer timer;
     private GameState state = IdlingState.INSTANCE;
-
     private int alivePlayers;
 
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
+        this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfiguration().timeLimit()));
+    }
+
+    public GameTimer getTimer() {
+        return timer;
     }
 
     public Arena getArena() {
