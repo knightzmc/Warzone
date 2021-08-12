@@ -43,7 +43,7 @@ public class InProgressState implements GameState {
             var world = game.getArena().getWorld().get(); // empty case should have been handled by now
             var y = world.getHighestBlockYAt(spawnPoint.x(), spawnPoint.y());
             player.teleport(spawnPoint.setY(y).toLocation(world));
-            playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::inGameState));
+            playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::aliveState));
         });
     }
 

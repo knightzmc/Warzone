@@ -71,6 +71,7 @@ public class GameManager {
 
         if (game.getState() instanceof InLobbyState) {
             game.getPlayers().add(party);
+            party.getAllMembers().forEach(uuid -> game.getPlayerInformationMap().put(uuid, new PlayerInformation(uuid)));
             party.setLocked(true); // TODO unlock
             party.getAllMembers().forEach(uuid ->
                     playerManager.loadPlayer(uuid, player ->

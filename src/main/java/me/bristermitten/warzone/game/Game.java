@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.game;
 
+import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
@@ -9,8 +10,7 @@ import me.bristermitten.warzone.state.Stateful;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Game implements Stateful<Game, GameState> {
@@ -18,14 +18,15 @@ public class Game implements Stateful<Game, GameState> {
     private final Set<Party> players;
     private final PartySize acceptedSize;
     private final GameTimer timer;
+    private final Map<UUID, PlayerInformation> playerInformationMap = new HashMap<>();
     private GameState state = IdlingState.INSTANCE;
-    private int alivePlayers;
 
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
         this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfiguration().timeLimit()));
+        players.forEach(party -> party.getAllMembers().forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid))));
     }
 
     public GameTimer getTimer() {
@@ -38,6 +39,14 @@ public class Game implements Stateful<Game, GameState> {
 
     Set<Party> getPlayers() {
         return players;
+    }
+
+    Map<UUID, PlayerInformation> getPlayerInformationMap() {
+        return playerInformationMap;
+    }
+
+    public Option<PlayerInformation> getInfo(UUID uuid) {
+        return Option.of(playerInformationMap.get(uuid));
     }
 
     public @Unmodifiable Set<Party> getPlayersInGame() {
@@ -59,9 +68,6 @@ public class Game implements Stateful<Game, GameState> {
         return acceptedSize;
     }
 
-    public int getAlivePlayers() {
-        return alivePlayers;
-    }
 
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();
