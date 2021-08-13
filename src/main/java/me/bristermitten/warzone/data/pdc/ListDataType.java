@@ -43,6 +43,9 @@ public class ListDataType<T> implements PersistentDataType<byte[], List<T>> {
         //noinspection UnstableApiUsage
         var in = ByteStreams.newDataInput(primitive);
         var len = in.readInt();
+        if (len == 0) {
+            return new ArrayList<>();
+        }
         var list = new ArrayList<T>(len);
 
         var size = primitive.length - Integer.BYTES;
