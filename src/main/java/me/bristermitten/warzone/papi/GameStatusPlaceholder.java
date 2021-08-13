@@ -7,6 +7,7 @@ import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.GameTimer;
+import me.bristermitten.warzone.game.PlayerInformation;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.game.AliveState;
@@ -30,6 +31,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
             InGulagState.class, ChatColor.YELLOW.toString(),
             SpectatingState.class, ChatColor.RED.toString()
     );
+    public static final String NOT_IN_GAME = "Not in game";
     private final PlayerManager playerManager;
     private final GameManager gameManager;
     private final PartyManager partyManager;
@@ -49,11 +51,16 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
         }
 
         return switch (params) {
+            case "kill_count" -> gameManager.getGameContaining(player.getUniqueId())
+                    .flatMap(game -> game.getInfo(player.getUniqueId()))
+                    .map(PlayerInformation::getKills)
+                    .map(Objects::toString)
+                    .getOrElse(NOT_IN_GAME);
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(Game::getTimer)
                     .map(GameTimer::getTimeRemaining)
                     .map(DurationFormatter::format)
-                    .getOrElse("Not in game");
+                    .getOrElse(NOT_IN_GAME);
             case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(game -> game.getPartiesInGame().stream()
                             .flatMap(party -> party.getAllMembers().stream())
@@ -63,7 +70,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                             .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof AliveState || warzonePlayer.getCurrentState() instanceof InGulagState)
                             .count())
                     .map(Objects::toString)
-                    .getOrElse("Not in game");
+                    .getOrElse(NOT_IN_GAME);
             case "party_members_gameformat" -> List.ofAll(partyManager.getParty(player)
                     .getAllMembers())
                     .map(playerManager::lookupPlayer)
