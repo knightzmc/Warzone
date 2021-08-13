@@ -26,12 +26,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class GameStatusPlaceholder implements WarzonePlaceholder {
+    public static final String NOT_IN_GAME = "Not in game";
     private static final Map<Class<? extends InGameState>, String> PREFIXES = HashMap.of(
             AliveState.class, ChatColor.GREEN.toString(),
             InGulagState.class, ChatColor.YELLOW.toString(),
             SpectatingState.class, ChatColor.RED.toString()
     );
-    public static final String NOT_IN_GAME = "Not in game";
     private final PlayerManager playerManager;
     private final GameManager gameManager;
     private final PartyManager partyManager;
