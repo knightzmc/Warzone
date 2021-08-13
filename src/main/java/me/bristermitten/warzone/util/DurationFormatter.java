@@ -7,8 +7,8 @@ public class DurationFormatter {
 
     }
 
-    public static String format(long seconds) {
-        var duration = Duration.ofSeconds(seconds);
+    public static String format(long millis) {
+        var duration = Duration.ofMillis(millis);
         return String.format("%02d:%02d", duration.toMinutesPart(), duration.toSecondsPart());
     }
 }
