@@ -49,7 +49,7 @@ public class Game implements Stateful<Game, GameState> {
         return Option.of(playerInformationMap.get(uuid));
     }
 
-    public @Unmodifiable Set<Party> getPlayersInGame() {
+    public @Unmodifiable Set<Party> getPartiesInGame() {
         return Set.copyOf(players);
     }
 

@@ -55,7 +55,13 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .map(DurationFormatter::format)
                     .getOrElse("Not in game");
             case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
-                    .map(Game::getAlivePlayers)
+                    .map(game -> game.getPartiesInGame().stream()
+                            .flatMap(party -> party.getAllMembers().stream())
+                            .map(playerManager::lookupPlayer)
+                            .filter(Option::isDefined)
+                            .map(Option::get)
+                            .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof AliveState || warzonePlayer.getCurrentState() instanceof InGulagState)
+                            .count())
                     .map(Objects::toString)
                     .getOrElse("Not in game");
             case "party_members_gameformat" -> List.ofAll(partyManager.getParty(player)

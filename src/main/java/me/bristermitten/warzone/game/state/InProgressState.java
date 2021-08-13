@@ -49,7 +49,7 @@ public class InProgressState implements GameState {
 
     @Override
     public void onEnter(Game game) {
-        game.getPlayersInGame().forEach(party -> spawn(game, party));
+        game.getPartiesInGame().forEach(party -> spawn(game, party));
     }
 
     @Override

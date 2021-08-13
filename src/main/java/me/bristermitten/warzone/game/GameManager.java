@@ -88,7 +88,7 @@ public class GameManager {
     }
 
     public boolean gameContains(Game game, UUID uuid) {
-        return game.getPlayersInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid));
+        return game.getPartiesInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid));
     }
 
     public void handleDeath(Game game, UUID died) {
