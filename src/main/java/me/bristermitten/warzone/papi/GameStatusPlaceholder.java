@@ -81,7 +81,8 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                         }
                         return prefix + user.getOfflinePlayer().getName();
                     })
-                    .collect(Collectors.joining("\n"));
+                    .collect(Collectors.joining("\n"))
+                    .trim();
 
             default -> null;
         };
