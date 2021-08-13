@@ -79,7 +79,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                         if (prefix == null) {
                             prefix = ChatColor.BLACK.toString();
                         }
-                        return prefix + user.getCurrentState();
+                        return prefix + user.getOfflinePlayer().getName();
                     })
                     .collect(Collectors.joining("\n"));
 
