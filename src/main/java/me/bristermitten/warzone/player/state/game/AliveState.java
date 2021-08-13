@@ -4,10 +4,11 @@ import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-public class AliveState extends InGameState{
+public class AliveState extends InGameState {
     @Inject
-    AliveState(ScoreboardManager scoreboardManager, ChatChannel channel) {
+    AliveState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel) {
         super(scoreboardManager, channel);
     }
 }

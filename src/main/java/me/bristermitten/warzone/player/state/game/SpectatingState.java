@@ -6,10 +6,11 @@ import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class SpectatingState extends InGameState {
     @Inject
-    SpectatingState(ScoreboardManager scoreboardManager, ChatChannel channel) {
+    SpectatingState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel) {
         super(scoreboardManager, channel);
     }
 
