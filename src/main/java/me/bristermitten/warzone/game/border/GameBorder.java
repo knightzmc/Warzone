@@ -53,6 +53,6 @@ public class GameBorder extends Task {
             if (running) {
                 schedule();
             }
-        }, 5);
+        }, 2);
     }
 }
