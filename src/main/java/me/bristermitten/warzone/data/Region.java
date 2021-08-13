@@ -67,4 +67,19 @@ public record Region(Point min, Point max) {
                 new Point(maxX, maxY, maxZ)
         );
     }
+
+    public Point center() {
+        return new Point(
+                min.x() + max.x() / 2
+                , min.y() + max.y() / 2
+                , min.z() + max.z() / 2
+        );
+    }
+
+    public int longestSizeLength() {
+        return Math.max(
+                max.x() - min.x(),
+                max.z() - min.z()
+        );
+    }
 }
