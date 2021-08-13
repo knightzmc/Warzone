@@ -162,6 +162,8 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 
 3 hours 5 minutes spent today
 
+**Second Payment Sent**
+
 ## 2021-08-06
 - 12:35 - start work
 - 13:40 - pause for research
@@ -201,3 +203,9 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 - 23:40 - pause
 
 1 hour 10 minutes spent today
+
+## 2021-08-13
+- 22:10 - start work
+- 00:20 - pause
+
+2 hours 10 minutes spent today
