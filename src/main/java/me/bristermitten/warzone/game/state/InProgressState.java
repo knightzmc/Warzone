@@ -2,21 +2,25 @@ package me.bristermitten.warzone.game.state;
 
 import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.game.Game;
+import me.bristermitten.warzone.game.border.GameBorder;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
 
 public class InProgressState implements GameState {
     private static final int PLAYER_SPAWN_RADIUS = 10; // players in a party spawn within 20 blocks of each other
     private final PlayerManager playerManager;
+    private final Plugin plugin;
 
     @Inject
-    public InProgressState(PlayerManager playerManager) {
+    public InProgressState(PlayerManager playerManager, Plugin plugin) {
         this.playerManager = playerManager;
+        this.plugin = plugin;
     }
 
 
@@ -45,6 +49,8 @@ public class InProgressState implements GameState {
             player.teleport(spawnPoint.setY(y).toLocation(world));
             playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::aliveState));
         });
+
+        new GameBorder(game.getArena(), plugin).begin();
     }
 
     @Override

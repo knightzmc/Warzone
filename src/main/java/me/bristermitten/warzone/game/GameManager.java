@@ -77,6 +77,10 @@ public class GameManager {
             party.getAllMembers().forEach(uuid ->
                     playerManager.loadPlayer(uuid, player ->
                             playerManager.setState(player, playerStates.inPreGameLobbyState())));
+
+            if (game.isFull()) {
+                game.setCurrentState(states.inProgressStateProvider().get());
+            }
         }
         // Otherwise people can't join
     }
