@@ -47,7 +47,7 @@ public class ArenaChestFiller extends Task {
             if (running) {
                 schedule();
             }
-        }, 8);
+        }, 5);
     }
 
     private record Entry(
