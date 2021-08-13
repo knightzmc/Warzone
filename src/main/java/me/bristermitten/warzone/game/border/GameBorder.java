@@ -41,6 +41,9 @@ public class GameBorder extends Task {
         border.setCenter(around.playableArea().center().toLocation(world));
         border.setSize(around.playableArea().longestSizeLength());
         border.setSize(0, around.gameConfiguration().timeLimit()); // this probably won't work
+        border.setDamageAmount(0);
+        border.setDamageBuffer(0);
+        start();
     }
 
     @Override
