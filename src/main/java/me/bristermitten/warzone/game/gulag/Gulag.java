@@ -23,11 +23,11 @@ public class Gulag {
         return game;
     }
 
-    public GulagPlayers getGulagPlayers() {
+    public @Nullable GulagPlayers getGulagPlayers() {
         return gulagPlayers;
     }
 
-    public void setGulagPlayers(GulagPlayers gulagPlayers) {
+    public void setGulagPlayers(@Nullable GulagPlayers gulagPlayers) {
         this.gulagPlayers = gulagPlayers;
     }
 
