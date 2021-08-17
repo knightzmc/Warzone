@@ -15,8 +15,12 @@ public class SpectatingState extends InGameState {
     }
 
     @Override
-    public void onEnter(@NotNull WarzonePlayer player) {
-        super.onEnter(player);
+    public void onEnter(@NotNull WarzonePlayer warzonePlayer) {
+        super.onEnter(warzonePlayer);
+        warzonePlayer.getPlayer().peek(player -> {
+            player.setAllowFlight(true);
+            player.setFlying(true);
+        });
         // TODO remove from game and stuff
     }
 }

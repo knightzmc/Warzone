@@ -25,7 +25,7 @@ public class ArenaChestFiller extends Task {
     }
 
     public void add(@NotNull final Arena arena) {
-        var world = arena.getWorld().getOrElseThrow(() -> new IllegalStateException("Could not get world named " + arena.getWorld()));
+        var world = arena.forceGetWorld();
         BlockFinder.getChunks(world, arena.playableArea())
                 .stream()
                 .map(chunk -> new Entry(chunk, arena))

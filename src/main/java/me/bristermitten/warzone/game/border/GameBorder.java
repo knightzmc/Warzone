@@ -22,7 +22,7 @@ public class GameBorder extends Task {
     private final Map<UUID, Long> playerDamageTimes = new HashMap<>();
 
     public GameBorder(Arena around, Plugin plugin) {
-        this.world = around.getWorld().getOrElseThrow(() -> new IllegalStateException("Could not load world for arena " + around));
+        this.world = around.forceGetWorld();
         this.border = world.getWorldBorder();
         this.around = around;
         this.plugin = plugin;

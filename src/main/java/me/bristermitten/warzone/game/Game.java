@@ -2,10 +2,12 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
+import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.Stateful;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -20,12 +22,14 @@ public class Game implements Stateful<Game, GameState> {
     private final GameTimer timer;
     private final Map<UUID, PlayerInformation> playerInformationMap = new HashMap<>();
     private GameState state = IdlingState.INSTANCE;
+    private final Gulag gulag;
 
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
         this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfiguration().timeLimit()));
+        this.gulag = new Gulag(this);
         players.forEach(party -> party.getAllMembers().forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid))));
     }
 
@@ -37,9 +41,10 @@ public class Game implements Stateful<Game, GameState> {
         return arena;
     }
 
-    Set<Party> getPlayers() {
+    Set<Party> getParties() {
         return players;
     }
+
 
     Map<UUID, PlayerInformation> getPlayerInformationMap() {
         return playerInformationMap;
@@ -72,5 +77,9 @@ public class Game implements Stateful<Game, GameState> {
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();
         return currentSize >= arena.gameConfiguration().playerLimit();
+    }
+
+    public Gulag getGulag() {
+        return gulag;
     }
 }
