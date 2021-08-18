@@ -33,6 +33,7 @@ public class PlayerKillDeathListener implements Listener {
 
     @EventHandler
     public void onKill(@NotNull PlayerDeathEvent e) {
+        e.setCancelled(true);
         playerManager.loadPlayer(e.getEntity().getUniqueId(),
                 whoDied -> {
                     whoDied.setDeaths(whoDied.getDeaths() + 1);
