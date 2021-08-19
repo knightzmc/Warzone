@@ -129,7 +129,7 @@ public class GameManager {
                 .getOrElseThrow(() -> new IllegalStateException("Something has also gone very wrong as the player has no PlayerInformation"));
 
         playerManager.loadPlayer(died, player -> {
-            if (playerInfo.getDeathCount() > game.getArena().gameConfiguration().maxGulagEntries()
+            if (playerInfo.getDeathCount() > game.getArena().gameConfigDAO().maxGulagEntries()
                 || player.getCurrentState() instanceof InGulagState
                 || !gulagManager.gulagIsAvailable(game.getGulag())) {
                 // they're out

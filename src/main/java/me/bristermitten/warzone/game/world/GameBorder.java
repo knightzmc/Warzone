@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game.border;
+package me.bristermitten.warzone.game.world;
 
 import com.google.common.base.Functions;
 import io.vavr.collection.List;
@@ -32,15 +32,15 @@ public class GameBorder extends Task {
         List.ofAll(Bukkit.getOnlinePlayers())
                 .filter(player -> player.getWorld().equals(world))
                 .filter(player -> !border.isInside(player.getLocation()))
-                .filter(player -> Time.millisToTicks(System.currentTimeMillis() - playerDamageTimes.computeIfAbsent(player.getUniqueId(), Functions.constant(0L))) >= around.gameConfiguration().borderDamageTime())
+                .filter(player -> Time.millisToTicks(System.currentTimeMillis() - playerDamageTimes.computeIfAbsent(player.getUniqueId(), Functions.constant(0L))) >= around.gameConfigDAO().borderDamageTime())
                 .peek(player -> playerDamageTimes.put(player.getUniqueId(), System.currentTimeMillis()))
-                .forEach(player -> player.damage(around.gameConfiguration().borderDamage()));
+                .forEach(player -> player.damage(around.gameConfigDAO().borderDamage()));
     }
 
     public void begin() {
         border.setCenter(around.playableArea().center().toLocation(world));
         border.setSize(around.playableArea().longestSizeLength());
-        border.setSize(0, around.gameConfiguration().timeLimit()); // this probably won't work
+        border.setSize(0, around.gameConfigDAO().timeLimit()); // this probably won't work
         border.setDamageAmount(0);
         border.setDamageBuffer(0);
         start();

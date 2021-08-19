@@ -7,7 +7,6 @@ import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
-import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.Stateful;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -28,7 +27,7 @@ public class Game implements Stateful<Game, GameState> {
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
-        this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfiguration().timeLimit()));
+        this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfigDAO().timeLimit()));
         this.gulag = new Gulag(this);
         players.forEach(party -> party.getAllMembers().forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid))));
     }
@@ -76,7 +75,7 @@ public class Game implements Stateful<Game, GameState> {
 
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();
-        return currentSize >= arena.gameConfiguration().playerLimit();
+        return currentSize >= arena.gameConfigDAO().playerLimit();
     }
 
     public Gulag getGulag() {

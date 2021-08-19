@@ -43,7 +43,7 @@ public class ArenaChestFiller extends Task {
                 return;
             }
 
-            filler.fill(next.chunk(), next.arena().lootTable(), next.arena().gameConfiguration().chestRate());
+            filler.fill(next.chunk(), next.arena().lootTable(), next.arena().gameConfigDAO().chestRate());
             if (running) {
                 schedule();
             }

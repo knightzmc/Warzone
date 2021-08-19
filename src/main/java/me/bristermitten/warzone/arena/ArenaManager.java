@@ -23,7 +23,7 @@ public class ArenaManager {
     private final Set<Arena> arenasInUse = new HashSet<>();
 
     @Inject
-    public ArenaManager(ArenaLoader loader, ConfigurationProvider<ArenasConfig> configProvider) {
+    public ArenaManager(ArenaLoader loader, ConfigurationProvider<ArenasConfigDAO> configProvider) {
         configProvider.addInvalidationHook(unused -> logger.warn("arenas.yml was updated but changes will not apply until a restart"));
 
         this.arenas = List.ofAll(loader.loadArenas(configProvider.get()));

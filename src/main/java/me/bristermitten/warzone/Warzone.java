@@ -3,7 +3,7 @@ package me.bristermitten.warzone;
 import com.google.inject.Guice;
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
-import me.bristermitten.warzone.arena.ArenasConfig;
+import me.bristermitten.warzone.arena.ArenasConfigDAO;
 import me.bristermitten.warzone.aspect.Aspect;
 import me.bristermitten.warzone.chat.ChatAspect;
 import me.bristermitten.warzone.chat.ChatConfig;
@@ -44,7 +44,7 @@ public class Warzone extends JavaPlugin {
                     , ChatConfig.CONFIG
                     , LangConfig.CONFIG
                     , LeaderboardMenu.CONFIG
-                    , ArenasConfig.CONFIG
+                    , ArenasConfigDAO.CONFIG
                     , LootTablesConfig.CONFIG
             ));
 

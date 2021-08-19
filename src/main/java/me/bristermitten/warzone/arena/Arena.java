@@ -11,10 +11,10 @@ public record Arena(String name,
                     String world,
                     @Nullable String permission,
                     int priority,
-                    ArenasConfig.ArenaConfig.GulagConfig gulagConfig,
+                    ArenaConfig.GulagConfig gulagConfig,
                     Region playableArea,
                     LootTable lootTable,
-                    ArenasConfig.ArenaConfig.GameConfiguration gameConfiguration) {
+                    ArenaConfig.GameConfig gameConfigDAO) {
 
 
     public Option<World> getWorld() {

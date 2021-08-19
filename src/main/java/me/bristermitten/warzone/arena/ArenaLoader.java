@@ -3,9 +3,13 @@ package me.bristermitten.warzone.arena;
 import io.vavr.collection.HashMap;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.util.Null;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 
 public class ArenaLoader {
     private static final int DEFAULT_PRIORITY = 0;
@@ -17,7 +21,7 @@ public class ArenaLoader {
         this.manager = manager;
     }
 
-    public Arena load(String name, ArenasConfig.ArenaConfig config) {
+    public Arena load(String name, ArenasConfigDAO.ArenaConfigDAO config) {
         var lootTable = manager.getTables().get(config.lootTable())
                 .getOrElseThrow(() -> new IllegalStateException("No loot table named " + config.lootTable() + " defined!"));
 
@@ -25,28 +29,43 @@ public class ArenaLoader {
                 config.world(),
                 config.permission(),
                 Null.get(config.priority(), DEFAULT_PRIORITY),
-                config.gulagConfig(),
+                loadGulagConfig(config.gulagConfigDAO()),
                 config.playableArea().realised(),
                 lootTable,
                 loadGameConfig(config.game()));
     }
 
-    public ArenasConfig.ArenaConfig.GameConfiguration loadGameConfig(ArenasConfig.ArenaConfig.GameConfiguration configuration) {
-        if (configuration.maxGulagEntries() == 0) {
-            return new ArenasConfig.ArenaConfig.GameConfiguration(
-                    configuration.timeLimit(),
-                    configuration.playerLimit(),
-                    configuration.borderDamage(),
-                    configuration.borderDamageTime(),
-                    configuration.chestRate(),
-                    1
-            );
-        }
-        return configuration;
+    public ArenaConfig.GulagConfig loadGulagConfig(ArenasConfigDAO.ArenaConfigDAO.GulagConfigDAO config) {
+        return new ArenaConfig.GulagConfig(
+                config.fightingArea1(),
+                config.fightingArea2(),
+                config.spawnArea()
+        );
+    }
+
+    public ArenaConfig.GameConfig.BossBarConfig loadBossBarConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO.BossBarConfigDAO configuration) {
+        return new ArenaConfig.GameConfig.BossBarConfig(
+                configuration.format(),
+                Null.get(configuration.color(), BarColor.WHITE),
+                Null.get(configuration.style(), BarStyle.SOLID),
+                Null.get(configuration.flags(), List.<BarFlag>of()).stream().filter(Objects::nonNull).toList()
+        );
+    }
+
+    public ArenaConfig.GameConfig loadGameConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO configuration) {
+        return new ArenaConfig.GameConfig(
+                configuration.timeLimit(),
+                configuration.playerLimit(),
+                configuration.borderDamage(),
+                configuration.borderDamageTime(),
+                configuration.chestRate(),
+                Null.get(configuration.maxGulagEntries(), 1),
+                loadBossBarConfig(configuration.bossBarConfigDAO())
+        );
     }
 
 
-    public List<Arena> loadArenas(ArenasConfig config) {
+    public List<Arena> loadArenas(ArenasConfigDAO config) {
         return HashMap.ofAll(config.arenas())
                 .map(t -> t.apply(this::load))
                 .sortBy(Arena::priority)

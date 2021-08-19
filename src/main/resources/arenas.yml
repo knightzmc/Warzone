@@ -25,6 +25,11 @@ arenas:
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      boss-bar:
+        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+        color: BLUE # see https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarColor.html
+        style: SOLID # see https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarStyle.html
+        flags: [ ] # see https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/boss/BarFlag.html
     playable-area:
       min:
         x: 0

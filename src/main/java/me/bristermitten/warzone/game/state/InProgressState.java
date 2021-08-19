@@ -2,7 +2,7 @@ package me.bristermitten.warzone.game.state;
 
 import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.game.Game;
-import me.bristermitten.warzone.game.border.GameBorder;
+import me.bristermitten.warzone.game.world.GameBorder;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;

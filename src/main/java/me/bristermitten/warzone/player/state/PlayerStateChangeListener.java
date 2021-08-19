@@ -1,6 +1,6 @@
 package me.bristermitten.warzone.player.state;
 
-import me.bristermitten.warzone.arena.ArenasConfig;
+import me.bristermitten.warzone.arena.ArenasConfigDAO;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -13,10 +13,10 @@ import javax.inject.Provider;
 
 public class PlayerStateChangeListener implements Listener {
 
-    private final Provider<ArenasConfig> arenasConfigProvider;
+    private final Provider<ArenasConfigDAO> arenasConfigProvider;
 
     @Inject
-    PlayerStateChangeListener(@NotNull Plugin plugin, Provider<ArenasConfig> arenasConfigProvider) {
+    PlayerStateChangeListener(@NotNull Plugin plugin, Provider<ArenasConfigDAO> arenasConfigProvider) {
         this.arenasConfigProvider = arenasConfigProvider;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -35,7 +35,6 @@ public class PlayerStateChangeListener implements Listener {
                 player.teleport(arenasConfigProvider.get().lobbySpawnpoint().toLocation());
                 player.setGameMode(GameMode.SURVIVAL);
             });
-            return;
         }
 
     }
