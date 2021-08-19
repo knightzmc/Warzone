@@ -67,6 +67,8 @@ arenas:
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      boss-bar:
+        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:
       min:
         x: 0
@@ -102,6 +104,8 @@ arenas:
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      boss-bar:
+        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:
       min:
         x: 0
