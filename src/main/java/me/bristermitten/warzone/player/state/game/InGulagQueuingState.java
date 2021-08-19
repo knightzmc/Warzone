@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public abstract class InGulagQueuingState extends InGulagState {
+public class InGulagQueuingState extends InGulagState {
     private final GameManager gameManager;
 
     @Inject
