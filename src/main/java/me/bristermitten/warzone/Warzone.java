@@ -14,6 +14,7 @@ import me.bristermitten.warzone.database.DatabaseConfig;
 import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
+import me.bristermitten.warzone.game.GameAspect;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
@@ -60,6 +61,7 @@ public class Warzone extends JavaPlugin {
                     , new PAPIAspect()
                     , new LeaderboardAspect()
                     , new MatchmakingAspect()
+                    , new GameAspect()
             );
 
             var modules = aspects.map(Aspect::generateModule);

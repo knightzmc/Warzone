@@ -1,9 +1,12 @@
 package me.bristermitten.warzone.game.state;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import me.bristermitten.warzone.game.Game;
+import me.bristermitten.warzone.state.States;
 
-public record GameStates(Provider<InProgressState> inProgressStateProvider, Provider<InLobbyState> inLobbyStateProvider) {
+import javax.inject.Inject;
+
+public record GameStates(InProgressState inProgressStateProvider,
+                         InLobbyState inLobbyStateProvider) implements States<Game, GameState> {
     @Inject
     public GameStates {
     }

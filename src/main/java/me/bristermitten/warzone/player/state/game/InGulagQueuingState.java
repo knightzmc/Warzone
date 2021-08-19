@@ -8,12 +8,13 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Provider;
 
 public class InGulagQueuingState extends InGulagState {
-    private final GameManager gameManager;
+    private final Provider<GameManager> gameManager;
 
     @Inject
-    InGulagQueuingState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel, GameManager gameManager) {
+    InGulagQueuingState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel, Provider<GameManager> gameManager) {
         super(scoreboardManager, channel);
         this.gameManager = gameManager;
     }
@@ -21,7 +22,7 @@ public class InGulagQueuingState extends InGulagState {
     @Override
     public void onEnter(@NotNull WarzonePlayer player) {
         super.onEnter(player);
-        var game = gameManager.getGameContaining(player.getPlayerId())
+        var game = gameManager.get().getGameContaining(player.getPlayerId())
                 .getOrElseThrow(() -> new IllegalStateException("Player is not in a game"));
 
         var spawnArea = game.getArena().gulagConfig().spawnArea().toLocation(game.getArena().forceGetWorld());

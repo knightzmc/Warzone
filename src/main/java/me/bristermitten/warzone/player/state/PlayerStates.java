@@ -1,20 +1,24 @@
 package me.bristermitten.warzone.player.state;
 
+import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagArenaState;
 import me.bristermitten.warzone.player.state.game.InGulagQueuingState;
 import me.bristermitten.warzone.player.state.game.SpectatingState;
+import me.bristermitten.warzone.state.States;
 
-import javax.inject.Inject;
+public interface PlayerStates extends States<WarzonePlayer, PlayerState> {
+    AliveState aliveState();
 
-public record PlayerStates(AliveState aliveState,
-                           InGulagArenaState inGulagArenaState,
-                           InGulagQueuingState inGulagQueuingState,
-                           SpectatingState spectatingState,
-                           InLobbyState inLobbyState,
-                           InPreGameLobbyState inPreGameLobbyState,
-                           OfflineState offlineState) {
-    @Inject
-    public PlayerStates {
-    }
+    InGulagArenaState inGulagArenaState();
+
+    InGulagQueuingState inGulagQueuingState();
+
+    SpectatingState spectatingState();
+
+    InLobbyState inLobbyState();
+
+    InPreGameLobbyState inPreGameLobbyState();
+
+    OfflineState offlineState();
 }
