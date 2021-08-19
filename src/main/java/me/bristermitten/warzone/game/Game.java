@@ -35,7 +35,8 @@ public class Game implements Stateful<Game, GameState> {
         this.gulag = new Gulag(this);
         this.gameBorder = new GameBorder(arena);
         this.gameBossBar = new GameBossBar(this);
-        players.forEach(party -> party.getAllMembers().forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid))));
+        players.stream().map(Party::getAllMembers).flatMap(Collection::stream)
+                .forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid)));
     }
 
     public GameBorder getGameBorder() {
