@@ -3,13 +3,13 @@ package me.bristermitten.warzone.arena;
 import io.vavr.collection.HashMap;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.util.Null;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
+import net.kyori.adventure.bossbar.BossBar;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ArenaLoader {
     private static final int DEFAULT_PRIORITY = 0;
@@ -46,9 +46,9 @@ public class ArenaLoader {
     public ArenaConfig.GameConfig.BossBarConfig loadBossBarConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO.BossBarConfigDAO configuration) {
         return new ArenaConfig.GameConfig.BossBarConfig(
                 configuration.format(),
-                Null.get(configuration.color(), BarColor.WHITE),
-                Null.get(configuration.style(), BarStyle.SOLID),
-                Null.get(configuration.flags(), List.<BarFlag>of()).stream().filter(Objects::nonNull).toList()
+                Null.get(configuration.color(), BossBar.Color.WHITE),
+                Null.get(configuration.style(), BossBar.Overlay.PROGRESS),
+                Null.get(configuration.flags(), Set.<BossBar.Flag>of()).stream().filter(Objects::nonNull).collect(Collectors.toSet())
         );
     }
 

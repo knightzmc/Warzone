@@ -5,14 +5,12 @@ import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.data.AngledPoint;
 import me.bristermitten.warzone.data.Region;
 import me.bristermitten.warzone.data.WorldAngledPoint;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
+import net.kyori.adventure.bossbar.BossBar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public record ArenasConfigDAO(
         Map<String, ArenaConfigDAO> arenas,
@@ -22,12 +20,12 @@ public record ArenasConfigDAO(
     public static final Configuration<ArenasConfigDAO> CONFIG = new Configuration<>(ArenasConfigDAO.class, "arenas.yml");
 
     record ArenaConfigDAO(String world,
-                                 @Nullable String permission,
-                                 @Nullable Integer priority,
-                                 @SerializedName("gulag") GulagConfigDAO gulagConfigDAO,
-                                 @SerializedName("playable-area") Region playableArea,
-                                 @SerializedName("loot") String lootTable,
-                                 GameConfigDAO game
+                          @Nullable String permission,
+                          @Nullable Integer priority,
+                          @SerializedName("gulag") GulagConfigDAO gulagConfigDAO,
+                          @SerializedName("playable-area") Region playableArea,
+                          @SerializedName("loot") String lootTable,
+                          GameConfigDAO game
     ) {
         record GameConfigDAO(
                 @SerializedName("time-limit") int timeLimit,
@@ -40,10 +38,11 @@ public record ArenasConfigDAO(
         ) {
             record BossBarConfigDAO(
                     @NotNull String format,
-                    @Nullable BarColor color,
-                    @Nullable BarStyle style,
-                    @Nullable List<BarFlag> flags
-                    ){}
+                    @Nullable BossBar.Color color,
+                    @Nullable BossBar.Overlay style,
+                    @Nullable Set<BossBar.Flag> flags
+            ) {
+            }
         }
 
         record GulagConfigDAO(
