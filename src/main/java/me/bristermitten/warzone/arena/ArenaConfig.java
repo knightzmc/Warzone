@@ -2,11 +2,9 @@ package me.bristermitten.warzone.arena;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.data.AngledPoint;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
+import net.kyori.adventure.bossbar.BossBar;
 
-import java.util.List;
+import java.util.Set;
 
 public interface ArenaConfig {
     record GulagConfig(
@@ -25,11 +23,11 @@ public interface ArenaConfig {
             int maxGulagEntries,
             BossBarConfig bossBarConfig
     ) {
-        record BossBarConfig(
+        public record BossBarConfig(
                 String format,
-                BarColor color,
-                BarStyle style,
-                List<BarFlag> flags
+                BossBar.Color color,
+                BossBar.Overlay style,
+                Set<BossBar.Flag> flags
         ) {
         }
     }

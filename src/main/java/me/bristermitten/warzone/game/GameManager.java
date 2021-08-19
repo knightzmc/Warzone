@@ -11,6 +11,7 @@ import me.bristermitten.warzone.game.state.GameStates;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.game.state.InProgressState;
+import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -34,15 +35,17 @@ public class GameManager {
     private final PlayerManager playerManager;
     private final ArenaManager arenaManager;
     private final GulagManager gulagManager;
+    private final GameWorldUpdateTask gameWorldUpdateTask;
 
 
     @Inject
-    public GameManager(GameStates states, PlayerStates playerStates, PlayerManager playerManager, ArenaManager arenaManager, GulagManager gulagManager) {
+    public GameManager(GameStates states, PlayerStates playerStates, PlayerManager playerManager, ArenaManager arenaManager, GulagManager gulagManager, GameWorldUpdateTask gameWorldUpdateTask) {
         this.states = states;
         this.playerStates = playerStates;
         this.playerManager = playerManager;
         this.arenaManager = arenaManager;
         this.gulagManager = gulagManager;
+        this.gameWorldUpdateTask = gameWorldUpdateTask;
     }
 
     public Set<Game> getGames() {
@@ -64,6 +67,11 @@ public class GameManager {
         arenaManager.use(arena);
         Game game = new Game(arena, new HashSet<>(), acceptedSize);
         games.add(game);
+
+        gameWorldUpdateTask.start();
+        /* TODO i'm not really sure if this belong here. iterating an empty set is so cheap
+        *   that it could just be started when the plugin loads up. but this seems like a kinda logical place to put it, for now */
+
         return game;
     }
 
@@ -129,7 +137,7 @@ public class GameManager {
                 .getOrElseThrow(() -> new IllegalStateException("Something has also gone very wrong as the player has no PlayerInformation"));
 
         playerManager.loadPlayer(died, player -> {
-            if (playerInfo.getDeathCount() > game.getArena().gameConfigDAO().maxGulagEntries()
+            if (playerInfo.getDeathCount() > game.getArena().gameConfig().maxGulagEntries()
                 || player.getCurrentState() instanceof InGulagState
                 || !gulagManager.gulagIsAvailable(game.getGulag())) {
                 // they're out

@@ -14,7 +14,7 @@ public record Arena(String name,
                     ArenaConfig.GulagConfig gulagConfig,
                     Region playableArea,
                     LootTable lootTable,
-                    ArenaConfig.GameConfig gameConfigDAO) {
+                    ArenaConfig.GameConfig gameConfig) {
 
 
     public Option<World> getWorld() {

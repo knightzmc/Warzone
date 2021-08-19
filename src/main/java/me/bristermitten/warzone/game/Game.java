@@ -5,6 +5,8 @@ import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
+import me.bristermitten.warzone.game.world.GameBorder;
+import me.bristermitten.warzone.game.world.GameBossBar;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.state.Stateful;
@@ -20,16 +22,28 @@ public class Game implements Stateful<Game, GameState> {
     private final PartySize acceptedSize;
     private final GameTimer timer;
     private final Map<UUID, PlayerInformation> playerInformationMap = new HashMap<>();
-    private GameState state = IdlingState.INSTANCE;
     private final Gulag gulag;
+    private final GameBorder gameBorder;
+    private final GameBossBar gameBossBar;
+    private GameState state = IdlingState.INSTANCE;
 
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
-        this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfigDAO().timeLimit()));
+        this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfig().timeLimit()));
         this.gulag = new Gulag(this);
+        this.gameBorder = new GameBorder(arena);
+        this.gameBossBar = new GameBossBar(this);
         players.forEach(party -> party.getAllMembers().forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid))));
+    }
+
+    public GameBorder getGameBorder() {
+        return gameBorder;
+    }
+
+    public GameBossBar getGameBossBar() {
+        return gameBossBar;
     }
 
     public GameTimer getTimer() {
@@ -75,7 +89,7 @@ public class Game implements Stateful<Game, GameState> {
 
     public boolean isFull() {
         var currentSize = acceptedSize.getSize() * players.size();
-        return currentSize >= arena.gameConfigDAO().playerLimit();
+        return currentSize >= arena.gameConfig().playerLimit();
     }
 
     public Gulag getGulag() {
