@@ -40,11 +40,11 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
     private void processQueue() {
         var toRemove = new LinkedList<Party>();
         for (Party party : playersInQueue) {
-            Optional<Game> matching = gameManager.getGames().stream().sorted(Comparator.comparing(game -> game.getArena().priority()))
+            Optional<Game> matching = gameManager.getGames().stream()
                     .filter(game -> arenaManager.partyCanUseArena(party, game.getArena()))
                     .filter(game -> game.getState() instanceof InLobbyState || game.getState() instanceof IdlingState)
                     .filter(Predicate.not(Game::isFull))
-                    .findFirst();
+                    .max(Comparator.comparing(game -> game.getArena().priority()));
 
             if (matching.isPresent()) {
                 gameManager.addToGame(matching.get(), party);
@@ -55,13 +55,13 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
 
         for (Party waiting : playersInQueue) {
             var applicable = arenaManager.getArenas()
-                    .sorted(Comparator.comparing(Arena::priority))
                     .filter(arenaManager.arenaIsInUse().negate())
-                    .filter(arena -> arenaManager.partyCanUseArena(waiting, arena));
+                    .filter(arena -> arenaManager.partyCanUseArena(waiting, arena))
+                    .maxBy(Comparator.comparing(Arena::priority));
             if (applicable.isEmpty()) {
                 continue;
             }
-            gameManager.createNewGame(applicable.head(), waiting.getSize());
+            gameManager.createNewGame(applicable.get(), waiting.getSize());
             processQueue();
         }
 

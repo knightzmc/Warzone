@@ -25,10 +25,11 @@ public class BlockFinder {
             for (int z = minChunkZ; z < maxChunkZ; z++) {
                 if (world.isChunkLoaded(x, z)) {
                     list = list.prepend(world.getChunkAt(x, z).getChunkSnapshot(true, false, false));
+                } else {
+                    world.getChunkAtAsync(x, z);
                 }
             }
         }
-        System.out.println(list);
         return list;
     }
 

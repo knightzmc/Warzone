@@ -62,12 +62,12 @@ public class ChunkChestFiller {
                 .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()).isAir()) // we can only place chests where there's air
                 .filter(point -> snapshot.getBlockType(point.x(), point.y() + 1, point.z()).isAir()) // has to have a free spot above it
                 .filter(point -> snapshot.getBlockType(point.x(), point.y() - 1, point.z()).isSolid())  //must have a solid block below it
-                .filter(block -> ThreadLocalRandom.current().nextDouble() * 100f < chestChance)
+                .filter(block -> ThreadLocalRandom.current().nextDouble(0, 100) < chestChance)
                 .toList())
                 .flatMap(points -> Sync.run(() -> {
                     points.forEach(point -> {
-                        var block = chunk.getWorld().getBlockAt(point.toLocation(chunk.getWorld()));
-                        block.setType(Material.CHEST, false);
+                        var block = chunk.getBlock(point.x(), point.y(), point.z());
+                        block.setType(Material.CHEST);
                         BlockState state = block.getState();
                         if (!(state instanceof Chest chest)) {
                             throw new IllegalStateException("what the hell");

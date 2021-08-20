@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game.state;
 
 import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.game.Game;
+import me.bristermitten.warzone.game.init.ArenaChestFiller;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -17,9 +18,10 @@ public class InProgressState implements GameState {
     private final GameWorldUpdateTask gameWorldUpdateTask;
 
     @Inject
-    public InProgressState(PlayerManager playerManager, GameWorldUpdateTask gameWorldUpdateTask) {
+    public InProgressState(PlayerManager playerManager, GameWorldUpdateTask gameWorldUpdateTask, ArenaChestFiller arenaChestFiller) {
         this.playerManager = playerManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
+        this.arenaChestFiller = arenaChestFiller;
     }
 
 
@@ -58,8 +60,10 @@ public class InProgressState implements GameState {
         gameWorldUpdateTask.submit(game);
     }
 
+    private final ArenaChestFiller arenaChestFiller;
     @Override
     public void onLeave(Game game) {
         gameWorldUpdateTask.remove(game);
+        arenaChestFiller.unload(game.getArena());
     }
 }
