@@ -93,9 +93,13 @@ public record Region(Point min, Point max) {
      * otherwise returns false
      */
     public boolean contains(Chunk chunk) {
+        // Adjusted from https://github.com/EngineHub/WorldGuard/blob/master/worldguard-core/src/main/java/com/sk89q/worldguard/protection/regions/ProtectedRegion.java
         var chunkRegion = fromChunk(chunk);
-        return min().x() <= chunkRegion.min().x() && max().x() >= chunkRegion.max().x()
-               || min().y() <= chunkRegion.min().y() && max().y() >= chunkRegion.max().y()
-               || min().z() <= chunkRegion.min().z() && max().z() >= chunkRegion.max().z();
+        if (chunkRegion.max.x() < min.x()) return false;
+        if (chunkRegion.max.y() < min.y()) return false;
+        if (chunkRegion.max.z() < min.z()) return false;
+        if (chunkRegion.min.x() > max.x()) return false;
+        if (chunkRegion.min.y() > max.y()) return false;
+        return chunkRegion.min.z() <= max.z();
     }
 }

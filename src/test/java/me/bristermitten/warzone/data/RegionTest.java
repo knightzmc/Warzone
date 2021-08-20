@@ -55,6 +55,7 @@ class RegionTest {
     void chunk() {
         Chunk chunk1 = createChunk(5, 6);
         Chunk chunk2 = createChunk(-7, 17);
+        Chunk chunk3 = createChunk(-11, 1);
         var region = Region.of(
                 new Point(0, 0, 0),
                 new Point(250, 128, 250)
@@ -62,5 +63,6 @@ class RegionTest {
 
         assertTrue(region.contains(chunk1));
         assertFalse(region.contains(chunk2));
+        assertFalse(region.contains(chunk3));
     }
 }

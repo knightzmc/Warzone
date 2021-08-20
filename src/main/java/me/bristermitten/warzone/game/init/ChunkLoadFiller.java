@@ -26,16 +26,13 @@ public class ChunkLoadFiller implements Listener {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        var gameOption = arenaManager.getArenas()
+        arenaManager.getArenas()
                 .filter(arena -> arena.playableArea().contains(event.getChunk()))
                 .headOption()
-                .flatMap(arena -> List.ofAll(gameManager.getGames()).filter(game -> game.getArena().equals(arena))
-                        .headOption());
-        if (gameOption.isEmpty()) {
-            return;
-        }
-        var game = gameOption.get();
-        arenaChestFiller.add(event.getChunk(), game.getArena());
+                .flatMap(arena ->
+                        List.ofAll(gameManager.getGames()).filter(game -> game.getArena().equals(arena))
+                                .headOption())
+                .peek(game -> arenaChestFiller.add(event.getChunk(), game.getArena()));
     }
 
 }
