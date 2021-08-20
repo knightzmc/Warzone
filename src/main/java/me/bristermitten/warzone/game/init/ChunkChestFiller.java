@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.game.init;
 
+import io.vavr.Tuple;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.data.Point;
@@ -21,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.SplittableRandom;
 
@@ -37,47 +39,53 @@ public class ChunkChestFiller {
         this.plugin = plugin;
     }
 
+    private void cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
+        if (existingPoints != null) { // Server might have crashed, clean up from the last time
+            for (Point point : existingPoints) {
+                Location location = point.toLocation(chunk.getWorld());
+                Block loc = location.getBlock();
+                Sync.run(() -> loc.setType(Material.AIR, false), plugin);
+            }
+        }
+    }
+
+    private Future<List<Point>> readPointsFromPDC(Chunk chunk) {
+        return Sync.run(
+                () -> chunk.getPersistentDataContainer().get(KEY, new ListDataType<>(PointDataType.INSTANCE))
+                , plugin);
+    }
+
     public void fill(ChunkSnapshot chunkSnapshot, LootTable table, float chestChance) {
         var world = Bukkit.getWorld(chunkSnapshot.getWorldName());
         Objects.requireNonNull(world, "World cannot be null");
 
         Future.fromCompletableFuture(world.getChunkAtAsync(chunkSnapshot.getX(), chunkSnapshot.getZ()))
-                .onSuccess(chunk -> {
-                    var existingPoints = chunk.getPersistentDataContainer()
-                            .get(KEY, new ListDataType<>(PointDataType.INSTANCE));
+                .onSuccess(chunk -> readPointsFromPDC(chunk)
+                        .onSuccess(existingPoints -> cleanupOldPoints(chunk, existingPoints)))
 
-                    if (existingPoints != null) { // Server might have crashed, clean up from the last time
-                        existingPoints.stream()
-                                .map(point -> point.toLocation(chunk.getWorld()))
-                                .map(Location::getBlock)
-                                .forEach(loc -> Sync.run(() -> loc.setType(Material.AIR, false), plugin));
-                    }
+                .map(chunk -> Tuple.of(chunk, BlockFinder.findBlocks(chunk.getWorld(), Region.fromChunk(chunk), Material.AIR) // we can only place chests where there's air
+                        .filter(block -> block.getLocation().getBlockY() <= block.getWorld().getHighestBlockYAt(block.getLocation()) + 1)
+                        .filter(block -> block.getRelative(BlockFace.UP).getType().isAir()) // has to have a free spot above it
+                        .filter(block -> !block.getRelative(BlockFace.DOWN).getType().isAir()) //must have a solid block below it
+                        .sequential() // this should be small enough that parallel isn't needed and it means random can be used properly
+                        .filter(block -> random.nextDouble() * 100f < chestChance)
+                        .toList()))
+                .flatMap(t -> Sync.run(() -> {
+                    var chunk = t._1;
+                    var blocks = t._2;
+                    blocks.forEach(block -> {
+                        block.setType(Material.CHEST, false);
+                        BlockState state = block.getState();
+                        if (!(state instanceof Chest chest)) {
+                            throw new IllegalStateException("what the hell");
+                        }
+                        fill(table, chest);
+                    });
 
-
-                    // generate the new points
-                    var blockPoints = Future.of(() -> BlockFinder.findBlocks(chunk.getWorld(), Region.fromChunk(chunk), Material.AIR) // we can only place chests where there's air
-                            .filter(block -> block.getLocation().getBlockY() <= block.getWorld().getHighestBlockYAt(block.getLocation()) + 1)
-                            .filter(block -> block.getRelative(BlockFace.UP).getType().isAir()) // has to have a free spot above it
-                            .filter(block -> !block.getRelative(BlockFace.DOWN).getType().isAir()) //must have a solid block below it
-                            .sequential() // this should be small enough that parallel isn't needed and it means random can be used properly
-                            .filter(block -> random.nextDouble() * 100f < chestChance)
-                            .toList());
-
-                    blockPoints.onSuccess(blocks -> Bukkit.getScheduler().runTask(plugin, () -> {
-                        blocks.forEach(block -> {
-                            block.setType(Material.CHEST, false);
-                            BlockState state = block.getState();
-                            if (!(state instanceof Chest chest)) {
-                                throw new IllegalStateException("what the hell");
-                            }
-                            fill(table, chest);
-                        });
-
-                        chunk.getPersistentDataContainer().set(KEY,
-                                new ListDataType<>(PointDataType.INSTANCE),
-                                blocks.stream().map(Block::getLocation).map(Point::fromLocation).toList());
-                    }));
-                });
+                    chunk.getPersistentDataContainer().set(KEY,
+                            new ListDataType<>(PointDataType.INSTANCE),
+                            blocks.stream().map(Block::getLocation).map(Point::fromLocation).toList());
+                }, plugin));
     }
 
     public void fill(LootTable table, Chest chest) {
