@@ -40,6 +40,7 @@ public class GameWorldUpdateTask extends Task {
             for (Game game : gamesToUpdate) {
                 game.getGameBorder().damagePlayersInBorder();
                 renderer.addBar(game.getGameBossBar());
+                renderer.renderAll();
             }
 
             if (running) {

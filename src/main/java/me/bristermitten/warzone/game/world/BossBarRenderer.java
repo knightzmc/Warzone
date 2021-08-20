@@ -21,27 +21,39 @@ public class BossBarRenderer {
         this.formatter = formatter;
     }
 
-    public void update() {
-        managedBars.forEach(bossBar -> bossBar.getViewers().forEach(uuid -> {
+    /**
+     * Render all boss bars stored in {@link BossBarRenderer#managedBars}
+     * @see BossBarRenderer#render(GameBossBar)
+     */
+    public void renderAll() {
+        managedBars.forEach(this::render);
+    }
+
+    /**
+     * Render a given {@link GameBossBar}
+     * This function is pure in that it does not require the given {@link GameBossBar} to be {@link BossBarRenderer#addBar(GameBossBar)}'d
+     *
+     * @param bossBar the boss bar to render
+     */
+    public void render(GameBossBar bossBar) {
+        bossBar.getViewers().forEach(uuid -> {
             var player = Bukkit.getPlayer(uuid);
             if (player == null) {
                 return;
             }
             var bossBarConfig = bossBar.getGame().getArena().gameConfig().bossBarConfig();
-            update(player, bossBarConfig, (float) bossBar.getProgress());
-        }));
+            render(player, bossBarConfig, (float) bossBar.getProgress());
+        });
     }
 
-    private void update(Player player, ArenaConfig.GameConfig.BossBarConfig config, float progress) {
+    private void render(Player player, ArenaConfig.GameConfig.BossBarConfig config, float progress) {
         var formatted = formatter.format(config.format(), player);
         var bar = BossBar.bossBar(formatted, progress, config.color(), config.style(), config.flags());
         player.showBossBar(bar);
     }
 
     public void addBar(GameBossBar bossBar) {
-        if (managedBars.add(bossBar)) {
-            update();
-        }
+        managedBars.add(bossBar);
     }
 
     public void removeBar(GameBossBar bossBar) {

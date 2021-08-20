@@ -54,6 +54,7 @@ public class InProgressState implements GameState {
     public void onEnter(Game game) {
         game.getPartiesInGame().forEach(party -> spawn(game, party));
         game.getTimer().start();
+        game.getGameBorder().begin();
         gameWorldUpdateTask.submit(game);
     }
 
