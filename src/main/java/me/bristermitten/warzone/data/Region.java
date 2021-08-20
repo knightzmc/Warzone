@@ -94,8 +94,8 @@ public record Region(Point min, Point max) {
      */
     public boolean contains(Chunk chunk) {
         var chunkRegion = fromChunk(chunk);
-        return min().x() <= chunkRegion.min().x() || max().x() >= chunkRegion.max().x()
-               || min().y() <= chunkRegion.min().y() || max().y() >= chunkRegion.max().y()
-               || min().z() <= chunkRegion.min().z() || max().z() >= chunkRegion.max().z();
+        return min().x() <= chunkRegion.min().x() && max().x() >= chunkRegion.max().x()
+               || min().y() <= chunkRegion.min().y() && max().y() >= chunkRegion.max().y()
+               || min().z() <= chunkRegion.min().z() && max().z() >= chunkRegion.max().z();
     }
 }
