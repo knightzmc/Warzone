@@ -2,6 +2,7 @@ package me.bristermitten.warzone.lang;
 
 import io.vavr.collection.HashMap;
 import me.bristermitten.warzone.chat.ChatFormatter;
+import net.kyori.adventure.title.Title;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,17 @@ public class LangService {
 
     public void sendMessage(@NotNull Player receiver, @NotNull Function<LangConfig, String> message) {
         sendMessage(receiver, message, Map.of());
+    }
+
+    public void sendTitle(@NotNull Player receiver, @NotNull String title, @NotNull String subtitle) {
+        var formattedTitle = formatter.format(title, receiver);
+        var formattedSubtitle = formatter.format(subtitle, receiver);
+        receiver.showTitle(Title.title(formattedTitle, formattedSubtitle));
+    }
+
+    public void sendTitle(@NotNull Player receiver, @NotNull Function<LangConfig, LangConfig.TitleConfig> titleFunction) {
+        var title = titleFunction.apply(configProvider.get());
+        sendTitle(receiver, title.title(), title.subtitle());
     }
 
     public void sendMessage(@NotNull Player receiver, @NotNull Function<LangConfig, String> message, @NotNull Map<String, Object> placeholders) {

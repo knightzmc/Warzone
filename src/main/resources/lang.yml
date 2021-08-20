@@ -17,4 +17,7 @@ party:
   party-full: '<red>Your party is full!'
   party-full-join: '<red>You can''t accept this invite as {player}''s party is full'
   party-is-in-game: '<red>You can''t accept this invite as {player}''s party is in a game'
-
+game:
+  player-out-title:
+    title: '<red>You''re out!'
+    subtitle: '<gray>You can find a new game, or spectate this one'

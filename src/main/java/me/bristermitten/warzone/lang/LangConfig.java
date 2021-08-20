@@ -2,11 +2,21 @@ package me.bristermitten.warzone.lang;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.config.Configuration;
+import org.jetbrains.annotations.NotNull;
 
 public record LangConfig(
-        @SerializedName("party") PartyLang partyLang
+        @SerializedName("party") PartyLang partyLang,
+        @SerializedName("game") GameLang gameLang
 ) {
     public static final Configuration<LangConfig> CONFIG = new Configuration<>(LangConfig.class, "lang.yml");
+
+    public record TitleConfig(@NotNull String title, @NotNull String subtitle) {
+    }
+
+    public record GameLang(
+            @SerializedName("player-out") TitleConfig playerOut
+    ) {
+    }
 
     public record PartyLang(
             @SerializedName("invite-received") String inviteReceived

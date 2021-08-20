@@ -129,6 +129,10 @@ public class GameManagerImpl implements GameManager {
         if (!gameContains(game, died)) {
             throw new IllegalArgumentException("Player is not in this game! something has gone very wrong");
         }
+        if (!(game.getState() instanceof InProgressState)) {
+            // This probably shouldn't happen, i guess we'll ignore it
+            return;
+        }
         var playerInfo = game.getInfo(died)
                 .getOrElseThrow(() -> new IllegalStateException("Something has also gone very wrong as the player has no PlayerInformation"));
 
@@ -137,6 +141,7 @@ public class GameManagerImpl implements GameManager {
                 || player.getCurrentState() instanceof InGulagState
                 || !gulagManager.gulagIsAvailable(game.getGulag())) {
                 // they're out
+                playerInfo.setAlive(false);
                 playerManager.setState(player, PlayerStates::spectatingState);
             } else {
                 gulagManager.addToGulag(game.getGulag(), player);
