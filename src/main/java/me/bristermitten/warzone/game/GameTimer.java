@@ -18,7 +18,7 @@ public class GameTimer {
         return durationMillis;
     }
 
-    private boolean isInitialised() {
+    public boolean isInitialised() {
         return startTimeMillis != 0;
     }
 

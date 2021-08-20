@@ -58,6 +58,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .getOrElse(NOT_IN_GAME);
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(Game::getTimer)
+                    .filter(GameTimer::isInitialised)
                     .map(GameTimer::getTimeRemaining)
                     .map(DurationFormatter::format)
                     .getOrElse(NOT_IN_GAME);
