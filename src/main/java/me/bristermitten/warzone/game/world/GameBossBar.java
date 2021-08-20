@@ -32,6 +32,6 @@ public class GameBossBar {
     }
 
     public double getProgress() {
-        return (double) game.getTimer().getTimeRemaining() / game.getTimer().getStartTimeMillis();
+        return (double) game.getTimer().getTimeRemaining() / game.getTimer().getDuration();
     }
 }
