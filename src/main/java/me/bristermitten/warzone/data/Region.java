@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public record Region(Point min, Point max) {
 
+
     public static Region realiseRegion(Region region) {
         var x = Numbers.minMax(region.min().x(), region.max().x());
         var y = Numbers.minMax(region.min().y(), region.max().y());
@@ -34,6 +35,10 @@ public record Region(Point min, Point max) {
                         new Point((chunk.getX() << 4) + 16, chunk.getWorld().getMaxHeight(), (chunk.getZ() << 4) + 16)
                 )
         );
+    }
+
+    public static Region of(Point point, Point point1) {
+        return realiseRegion(new Region(point, point1));
     }
 
     public Region realised() {
@@ -81,5 +86,16 @@ public record Region(Point min, Point max) {
                 max.x() - min.x(),
                 max.z() - min.z()
         );
+    }
+
+    /**
+     * Returns true if any blocks in this region are also in a given chunk,
+     * otherwise returns false
+     */
+    public boolean contains(Chunk chunk) {
+        var chunkRegion = fromChunk(chunk);
+        return min().x() <= chunkRegion.min().x() || max().x() >= chunkRegion.max().x()
+               || min().y() <= chunkRegion.min().y() || max().y() >= chunkRegion.max().y()
+               || min().z() <= chunkRegion.min().z() || max().z() >= chunkRegion.max().z();
     }
 }

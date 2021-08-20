@@ -3,6 +3,7 @@ package me.bristermitten.warzone.game.init;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.task.Task;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -26,14 +27,17 @@ public class ArenaChestFiller extends Task {
 
     public void add(@NotNull final Arena arena) {
         var world = arena.forceGetWorld();
-        BlockFinder.getChunks(world, arena.playableArea())
-                .stream()
+        BlockFinder.getLoadedChunks(world, arena.playableArea())
                 .map(chunk -> new Entry(chunk, arena))
                 .forEach(chunksToProcess::add);
 
         start();
     }
 
+
+    public void add(Chunk chunk, @NotNull final Arena arena) {
+        chunksToProcess.add(new Entry(chunk.getChunkSnapshot(), arena));
+    }
 
     @Override
     protected void schedule() {
@@ -42,8 +46,11 @@ public class ArenaChestFiller extends Task {
             if (next == null) {
                 return;
             }
-
-            filler.fill(next.chunk(), next.arena().lootTable(), next.arena().gameConfig().chestRate());
+            var world = next.arena().forceGetWorld();
+            var chunk = next.chunk();
+            if (world.isChunkLoaded(chunk.getX(), chunk.getZ())) {
+                filler.fill(world.getChunkAt(chunk.getX(), chunk.getZ()), next.arena().lootTable(), next.arena().gameConfig().chestRate());
+            }
             if (running) {
                 schedule();
             }

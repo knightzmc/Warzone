@@ -53,6 +53,6 @@ public class WarzoneCommand extends BaseCommand {
     @Subcommand("test")
     public void test(Player sender, @Default("0.5") float chestChance, @Default("basic") String lootTableName) {
         var table = lootTableManager.getTables().apply(lootTableName);
-        chunkChestFiller.fill(sender.getChunk().getChunkSnapshot(), table, chestChance);
+        chunkChestFiller.fill(sender.getChunk(), table, chestChance);
     }
 }

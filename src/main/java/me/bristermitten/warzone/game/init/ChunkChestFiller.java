@@ -1,18 +1,18 @@
 package me.bristermitten.warzone.game.init;
 
-import io.vavr.Tuple;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.data.Point;
-import me.bristermitten.warzone.data.Region;
 import me.bristermitten.warzone.data.pdc.ListDataType;
 import me.bristermitten.warzone.data.pdc.PointDataType;
 import me.bristermitten.warzone.loot.LootGenerator;
 import me.bristermitten.warzone.loot.LootTable;
 import me.bristermitten.warzone.util.Sync;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
@@ -23,8 +23,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.SplittableRandom;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ChunkChestFiller {
     private static final NamespacedKey KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "chunk_chests");
@@ -49,31 +49,24 @@ public class ChunkChestFiller {
         }
     }
 
-    private Future<List<Point>> readPointsFromPDC(Chunk chunk) {
-        return Sync.run(
-                () -> chunk.getPersistentDataContainer().get(KEY, new ListDataType<>(PointDataType.INSTANCE))
-                , plugin);
+    private List<Point> readPointsFromPDC(Chunk chunk) {
+        return chunk.getPersistentDataContainer().get(KEY, new ListDataType<>(PointDataType.INSTANCE));
     }
 
-    public void fill(ChunkSnapshot chunkSnapshot, LootTable table, float chestChance) {
-        var world = Bukkit.getWorld(chunkSnapshot.getWorldName());
-        Objects.requireNonNull(world, "World cannot be null");
+    public void fill(Chunk chunk, LootTable table, float chestChance) {
+        var oldChestPoints = readPointsFromPDC(chunk);
+        cleanupOldPoints(chunk, oldChestPoints);
+        var snapshot = chunk.getChunkSnapshot(true, false, false);
 
-        Future.fromCompletableFuture(world.getChunkAtAsync(chunkSnapshot.getX(), chunkSnapshot.getZ()))
-                .onSuccess(chunk -> readPointsFromPDC(chunk)
-                        .onSuccess(existingPoints -> cleanupOldPoints(chunk, existingPoints)))
-
-                .map(chunk -> Tuple.of(chunk, BlockFinder.findBlocks(chunk.getWorld(), Region.fromChunk(chunk), Material.AIR) // we can only place chests where there's air
-                        .filter(block -> block.getLocation().getBlockY() <= block.getWorld().getHighestBlockYAt(block.getLocation()) + 1)
-                        .filter(block -> block.getRelative(BlockFace.UP).getType().isAir()) // has to have a free spot above it
-                        .filter(block -> !block.getRelative(BlockFace.DOWN).getType().isAir()) //must have a solid block below it
-                        .sequential() // this should be small enough that parallel isn't needed and it means random can be used properly
-                        .filter(block -> random.nextDouble() * 100f < chestChance)
-                        .toList()))
-                .flatMap(t -> Sync.run(() -> {
-                    var chunk = t._1;
-                    var blocks = t._2;
-                    blocks.forEach(block -> {
+        Future.of(() -> BlockFinder.getBlocks(snapshot)
+                .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()).isAir()) // we can only place chests where there's air
+                .filter(point -> snapshot.getBlockType(point.x(), point.y() + 1, point.z()).isAir()) // has to have a free spot above it
+                .filter(point -> snapshot.getBlockType(point.x(), point.y() - 1, point.z()).isSolid())  //must have a solid block below it
+                .filter(block -> ThreadLocalRandom.current().nextDouble() * 100f < chestChance)
+                .toList())
+                .flatMap(points -> Sync.run(() -> {
+                    points.forEach(point -> {
+                        var block = chunk.getWorld().getBlockAt(point.toLocation(chunk.getWorld()));
                         block.setType(Material.CHEST, false);
                         BlockState state = block.getState();
                         if (!(state instanceof Chest chest)) {
@@ -84,7 +77,7 @@ public class ChunkChestFiller {
 
                     chunk.getPersistentDataContainer().set(KEY,
                             new ListDataType<>(PointDataType.INSTANCE),
-                            blocks.stream().map(Block::getLocation).map(Point::fromLocation).toList());
+                            points);
                 }, plugin));
     }
 
