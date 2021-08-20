@@ -50,7 +50,7 @@ public class ChunkChestFiller {
                         existingPoints.stream()
                                 .map(point -> point.toLocation(chunk.getWorld()))
                                 .map(Location::getBlock)
-                                .forEach(loc -> Sync.run(() -> loc.setType(Material.AIR), plugin));
+                                .forEach(loc -> Sync.run(() -> loc.setType(Material.AIR, false), plugin));
                     }
 
 
@@ -65,7 +65,7 @@ public class ChunkChestFiller {
 
                     blockPoints.onSuccess(blocks -> Bukkit.getScheduler().runTask(plugin, () -> {
                         blocks.forEach(block -> {
-                            block.setType(Material.CHEST);
+                            block.setType(Material.CHEST, false);
                             BlockState state = block.getState();
                             if (!(state instanceof Chest chest)) {
                                 throw new IllegalStateException("what the hell");
