@@ -4,10 +4,7 @@ import io.vavr.collection.List;
 import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.data.Region;
 import org.bukkit.ChunkSnapshot;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -31,38 +28,17 @@ public class BlockFinder {
                 }
             }
         }
+        System.out.println(list);
         return list;
     }
 
-    public static Stream<Block> findBlocks(World world, Region region, Material type) {
-        return findBlocks(world, region)
-                .filter(block -> block.getType() == type);
-    }
-
     public static Stream<Point> getBlocks(ChunkSnapshot chunkSnapshot) {
-        return IntStream.range(0, 15)
+        return IntStream.rangeClosed(0, 15)
                 .boxed()
-                .flatMap(x -> IntStream.range(0, 15)
+                .flatMap(x -> IntStream.rangeClosed(0, 15)
                         .boxed()
-                        .flatMap(z -> IntStream.range(0, chunkSnapshot.getHighestBlockYAt(x, z))
+                        .flatMap(z -> IntStream.rangeClosed(0, chunkSnapshot.getHighestBlockYAt(x, z))
                                 .mapToObj(y -> new Point(x, y, z))));
     }
 
-    public static Stream<Point> findPoints(Region region) {
-        return IntStream.range(region.min().x(), region.max().x())
-                .boxed()
-                .parallel()
-                .flatMap(x -> IntStream.range(region.min().y(), region.max().y())
-                        .parallel()
-                        .boxed()
-                        .flatMap(y -> IntStream.range(region.min().z(), region.max().z())
-                                .parallel()
-                                .mapToObj(z -> new Point(x, y, z))));
-    }
-
-    public static Stream<Block> findBlocks(World world, Region region) {
-        return findPoints(region)
-                .map(point -> point.toLocation(world))
-                .map(Location::getBlock);
-    }
 }
