@@ -1,6 +1,5 @@
 package me.bristermitten.warzone.game.init;
 
-import io.vavr.collection.Stream;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.data.Point;
@@ -10,7 +9,6 @@ import me.bristermitten.warzone.loot.LootGenerator;
 import me.bristermitten.warzone.loot.LootTable;
 import me.bristermitten.warzone.util.Sync;
 import org.bukkit.Chunk;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockFace;
@@ -44,12 +42,13 @@ public class ChunkChestFiller {
         if (existingPoints == null) {
             return Future.successful(null); // Server might have crashed, clean up from the last time
         }
-        return Stream.ofAll(existingPoints)
-                .map(point -> point.toLocation(chunk.getWorld()))
-                .map(Location::getBlock)
-                .map(loc -> Sync.run(() -> loc.setType(Material.AIR, false), plugin))
-                .transform(Future::sequence)
-                .map(dontCare -> null);
+        return Sync.run(() -> {
+            for (Point existingPoint : existingPoints) {
+                var location = existingPoint.toLocation(chunk);
+                var block = location.getBlock();
+                block.setType(Material.AIR);
+            }
+        }, plugin);
     }
 
     private List<Point> readPointsFromPDC(Chunk chunk) {
@@ -89,7 +88,7 @@ public class ChunkChestFiller {
                                 .map(this::filterAdjacent)
                                 .flatMap(points -> Sync.run(() -> {
                                     points.forEach(point -> {
-                                        var block = chunk.getBlock(point.x(), point.y(), point.z());
+                                        var block = point.toLocation(chunk).getBlock();
                                         block.setType(Material.CHEST);
                                         BlockState state = block.getState();
                                         if (!(state instanceof Chest chest)) {
