@@ -6,7 +6,7 @@ import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.world.GameBorder;
-import me.bristermitten.warzone.game.world.GameBossBar;
+import me.bristermitten.warzone.game.bossbar.GameBossBar;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.state.Stateful;

@@ -50,9 +50,8 @@ public class WarzoneCommand extends BaseCommand {
 
     @Subcommand("leave")
     public void leave(Player sender) {
-//        gameManager.getGameContaining(sender.getUniqueId())
-//                .peek(game -> gameManager.jo)
-        throw new UnsupportedOperationException("TODO");
+        gameManager.getGameContaining(sender.getUniqueId())
+                .peek(game -> gameManager.leave(game, sender.getUniqueId(), true));
     }
 
     @Subcommand("test")

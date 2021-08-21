@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.party;
 
+import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.lang.LangService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -7,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import javax.inject.Inject;
-
 import javax.inject.Singleton;
 import java.util.*;
 
@@ -17,14 +17,22 @@ public class PartyManager {
     private final Map<UUID, Party> partiesByMember = new HashMap<>();
     private final LangService langService;
 
+    private final GameManager gameManager;
+
     @Inject
-    public PartyManager(LangService langService) {
+    public PartyManager(LangService langService, GameManager gameManager) {
         this.langService = langService;
+        this.gameManager = gameManager;
     }
 
     @NotNull
     public Party getParty(@NotNull Player partyOwner) {
-        return partiesByMember.computeIfAbsent(partyOwner.getUniqueId(),
+        return getParty(partyOwner.getUniqueId());
+    }
+
+    @NotNull
+    public Party getParty(@NotNull UUID partyOwner) {
+        return partiesByMember.computeIfAbsent(partyOwner,
                 uid -> new Party(uid, new HashSet<>()));
     }
 
@@ -82,7 +90,7 @@ public class PartyManager {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().invalidInvite());
             return;
         }
-        if (invite.invitingTo().isLocked()) {
+        if (!gameManager.getGameContaining(invite.invitingTo()).isEmpty()) {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame());
             return;
         }

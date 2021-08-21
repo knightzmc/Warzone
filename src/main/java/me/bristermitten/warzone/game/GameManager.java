@@ -38,6 +38,8 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
 
     Option<Game> getGameContaining(UUID uuid);
 
+    Option<Game> getGameContaining(Party party);
+
     void addToGame(Game game, Party party);
 
 
@@ -53,4 +55,13 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      */
     @Contract("_, _ -> new")
     Game createNewGame(Arena arena, PartySize acceptedSize);
+
+    /**
+     * Makes a player leave a game.
+     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
+     * @param game The game to leave
+     * @param playerUUID The player to leave
+     * @param includeParty Whether or not the player's party members should also leave the game
+     */
+    void leave(Game game, UUID playerUUID, boolean includeParty);
 }

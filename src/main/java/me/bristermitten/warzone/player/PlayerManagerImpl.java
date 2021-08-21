@@ -29,7 +29,7 @@ public class PlayerManagerImpl implements PlayerManager {
     }
 
     public void setState(WarzonePlayer player, Function<PlayerStates, PlayerState> newStateFunction) {
-        Sync.run(() -> {
+        Runnable run = () -> {
             var newState = newStateFunction.apply(playerStates);
             var event = new PlayerStateChangeEvent(player.getCurrentState(), newState, player);
             Bukkit.getPluginManager().callEvent(event);
@@ -37,7 +37,12 @@ public class PlayerManagerImpl implements PlayerManager {
                 return;
             }
             player.setCurrentState(newState);
-        }, plugin);
+        };
+        if(Bukkit.isPrimaryThread()) {
+            run.run();
+        } else {
+            Sync.run(run, plugin).get();
+        }
     }
 
     public void loadPlayer(@NotNull UUID id, @NotNull Consumer<WarzonePlayer> onSuccess) {

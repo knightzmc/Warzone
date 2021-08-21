@@ -1,6 +1,8 @@
 package me.bristermitten.warzone.player.state.game;
 
 import me.bristermitten.warzone.chat.channel.ChatChannel;
+import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.bossbar.BossBarManager;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
@@ -20,8 +22,8 @@ public class SpectatingState extends InGameState {
     private final LangService langService;
 
     @Inject
-    SpectatingState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel, LangService langService) {
-        super(scoreboardManager, channel);
+    SpectatingState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel, LangService langService, GameManager gameManager, BossBarManager bossBarManager) {
+        super(scoreboardManager, channel, gameManager, bossBarManager);
         this.langService = langService;
     }
 
@@ -49,5 +51,18 @@ public class SpectatingState extends InGameState {
             langService.sendTitle(player, config -> config.gameLang().playerOut());
         });
         // TODO remove from game and stuff
+    }
+
+    @Override
+    public void onLeave(WarzonePlayer warzonePlayer) {
+        super.onLeave(warzonePlayer);
+        warzonePlayer.getPlayer().peek(player -> {
+            player.setAllowFlight(false);
+            player.setFireTicks(0);
+            player.setFlying(false);
+            player.setInvisible(false);
+            player.setInvulnerable(false);
+            player.removePotionEffect(PotionEffectType.SPEED);
+        });
     }
 }

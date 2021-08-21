@@ -105,7 +105,6 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
         this.currentState.onLeave(this);
         this.currentState = currentState;
         this.currentState.onEnter(this);
-
     }
 
     @Override

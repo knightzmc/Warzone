@@ -10,11 +10,13 @@ import me.bristermitten.warzone.game.gulag.GulagManager;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.party.Party;
+import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGulagState;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ public class GameManagerImpl implements GameManager {
 
     private final GameStates states;
     private final PlayerManager playerManager;
+    private final PartyManager partyManager;
     private final ArenaManager arenaManager;
     private final GulagManager gulagManager;
     private final GameWorldUpdateTask gameWorldUpdateTask;
@@ -38,11 +41,12 @@ public class GameManagerImpl implements GameManager {
     @Inject
     public GameManagerImpl(GameStates states,
                            PlayerManager playerManager,
-                           ArenaManager arenaManager,
+                           PartyManager partyManager, ArenaManager arenaManager,
                            GulagManager gulagManager,
                            GameWorldUpdateTask gameWorldUpdateTask) {
         this.states = states;
         this.playerManager = playerManager;
+        this.partyManager = partyManager;
         this.arenaManager = arenaManager;
         this.gulagManager = gulagManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
@@ -66,6 +70,38 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
+    public void leave(Game game, UUID playerUUID, boolean includeParty) {
+        if (!gameContains(game, playerUUID)) {
+            throw new IllegalArgumentException("Player is not in this game");
+        }
+        var player = Bukkit.getPlayer(playerUUID);
+        if (player == null) {
+            throw new IllegalStateException("Player is offline");
+        }
+        if (game.getState() instanceof IdlingState) {
+            // This shouldn't happen, just fail silently
+            return;
+        }
+        var party = partyManager.getParty(playerUUID);
+        if (includeParty || party.getSize() == PartySize.SINGLES) {
+            Future.sequence(
+                    List.ofAll(party.getAllMembers())
+                            .map(playerManager::loadPlayer))
+                    .onSuccess(players -> {
+                        players.forEach(warzonePlayer ->
+                                playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
+                        game.getParties().remove(party);
+                    });
+        } else {
+            playerManager.loadPlayer(playerUUID)
+                    .onSuccess(warzonePlayer -> {
+                        playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
+                        partyManager.leave(party, player);
+                    });
+        }
+    }
+
+    @Override
     public void addToGame(Game game, Party party) {
         if (game.getState() instanceof InProgressState) {
             return; // this should never really happen so i'm not too concerned about a user friendly error message here
@@ -77,11 +113,11 @@ public class GameManagerImpl implements GameManager {
 
         if (game.getState() instanceof InLobbyState) {
             game.getParties().add(party);
-            party.getAllMembers().forEach(uuid -> game.getPlayerInformationMap().put(uuid, new PlayerInformation(uuid)));
-            party.setLocked(true); // TODO unlock
-            party.getAllMembers().forEach(uuid ->
-                    playerManager.loadPlayer(uuid, player ->
-                            playerManager.setState(player, PlayerStates::inPreGameLobbyState)));
+            party.getAllMembers().forEach(uuid -> {
+                game.getPlayerInformationMap().put(uuid, new PlayerInformation(uuid));
+                playerManager.loadPlayer(uuid, player ->
+                        playerManager.setState(player, PlayerStates::inPreGameLobbyState));
+            });
 
             if (game.isFull()) {
                 setState(game, GameStates::inProgressStateProvider);
@@ -94,6 +130,13 @@ public class GameManagerImpl implements GameManager {
     public Option<Game> getGameContaining(UUID uuid) {
         return List.ofAll(getGames())
                 .filter(game -> gameContains(game, uuid))
+                .headOption();
+    }
+
+    @Override
+    public Option<Game> getGameContaining(Party party) {
+        return List.ofAll(getGames())
+                .filter(game -> game.getParties().contains(party))
                 .headOption();
     }
 

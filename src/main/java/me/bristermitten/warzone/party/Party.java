@@ -16,7 +16,6 @@ public class Party {
     private final @NotNull Set<UUID> otherPlayers;
     private final Set<PartyInvite> outgoingInvites = new HashSet<>();
     private UUID owner;
-    private boolean locked = false;
 
     Party(UUID owner, @NotNull Set<UUID> otherPlayers) {
         this.owner = owner;
@@ -57,14 +56,6 @@ public class Party {
         var set = new HashSet<>(otherPlayers);
         set.add(owner);
         return set;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
     }
 
     public PartySize getSize() {
