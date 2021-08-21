@@ -15,6 +15,7 @@ import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.game.GameAspect;
+import me.bristermitten.warzone.game.leavemenu.LeaveRequeueMenu;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
@@ -47,6 +48,7 @@ public class Warzone extends JavaPlugin {
                     , LeaderboardMenu.CONFIG
                     , ArenasConfigDAO.CONFIG
                     , LootTablesConfig.CONFIG
+                    , LeaveRequeueMenu.CONFIG
             ));
 
             var aspects = List.of(

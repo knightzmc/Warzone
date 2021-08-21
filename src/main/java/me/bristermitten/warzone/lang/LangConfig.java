@@ -15,6 +15,8 @@ public record LangConfig(
 
     public record GameLang(
             @SerializedName("player-out-title") TitleConfig playerOut
+            , @SerializedName("not-in-game") String notInGame
+            , @SerializedName("already-in-game") String alreadyInGame
     ) {
     }
 

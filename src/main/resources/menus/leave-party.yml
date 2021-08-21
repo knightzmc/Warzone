@@ -1,0 +1,47 @@
+####
+# Configuration for the Leave Party / Re-Queue menu
+#
+# Context specific placeholders:
+# {action} - the action that the player is trying to do - either "Leave Game" or "Queue"
+
+main:
+  title: '<red>Confirm {action}'
+  size: 9
+  items:
+    background1:
+      item:
+        type: RED_STAINED_GLASS_PANE
+        name: ''
+      slots: [ 0, 2 ]
+    background2:
+      item:
+        type: YELLOW_STAINED_GLASS_PANE
+        name: ''
+      slots: [ 3, 5 ]
+    background3:
+      item:
+        type: GREEN_STAINED_GLASS_PANE
+        name: ''
+      slots: [ 6, 8 ]
+    cancel:
+      item:
+        type: BARRIER
+        name: '<red><bold>Cancel'
+      action: CLOSE_MENU
+      slots: [ 1 ]
+    leave-party:
+      item:
+        type: DIAMOND_SWORD
+        name: '<yellow><bold>Leave Party'
+        lore:
+          - '<gray>Leave your party and {action}'
+      action: LEAVE_PARTY_ACTION
+      slots: [ 4 ]
+    with-party:
+      item:
+        type: SHIELD
+        name: '<green><bold>Bring Party'
+        lore:
+          - '<gray>{action}, bringing your party with you'
+      action: LEAVE_PARTY_ACTION
+      slots: [ 7 ]

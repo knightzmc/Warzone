@@ -33,6 +33,7 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.10.10")
 
     implementation("com.google.inject:guice:5.0.1")
+    implementation("com.google.inject.extensions:guice-assistedinject:5.0.1")
     implementation("com.google.code.gson:gson:2.8.7")
     implementation("io.vavr:vavr:0.9.0")
     implementation("com.zaxxer:HikariCP:5.0.0")

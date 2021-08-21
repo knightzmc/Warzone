@@ -2,6 +2,7 @@ package me.bristermitten.warzone.party;
 
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.lang.LangService;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -26,13 +27,18 @@ public class PartyManager {
     }
 
     @NotNull
-    public Party getParty(@NotNull Player partyOwner) {
-        return getParty(partyOwner.getUniqueId());
+    public Party getParty(@NotNull Player partyMember) {
+        return getParty(partyMember.getUniqueId());
     }
 
     @NotNull
-    public Party getParty(@NotNull UUID partyOwner) {
-        return partiesByMember.computeIfAbsent(partyOwner,
+    public Party getParty(@NotNull WarzonePlayer partyMember) {
+        return getParty(partyMember.getPlayerId());
+    }
+
+    @NotNull
+    public Party getParty(@NotNull UUID partyMember) {
+        return partiesByMember.computeIfAbsent(partyMember,
                 uid -> new Party(uid, new HashSet<>()));
     }
 

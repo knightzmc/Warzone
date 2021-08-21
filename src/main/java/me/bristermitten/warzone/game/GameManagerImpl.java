@@ -17,6 +17,7 @@ import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -70,19 +71,15 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void leave(Game game, UUID playerUUID, boolean includeParty) {
-        if (!gameContains(game, playerUUID)) {
+    public void leave(Game game, Player player, boolean includeParty) {
+        if (!gameContains(game, player.getUniqueId())) {
             throw new IllegalArgumentException("Player is not in this game");
-        }
-        var player = Bukkit.getPlayer(playerUUID);
-        if (player == null) {
-            throw new IllegalStateException("Player is offline");
         }
         if (game.getState() instanceof IdlingState) {
             // This shouldn't happen, just fail silently
             return;
         }
-        var party = partyManager.getParty(playerUUID);
+        var party = partyManager.getParty(player);
         if (includeParty || party.getSize() == PartySize.SINGLES) {
             Future.sequence(
                     List.ofAll(party.getAllMembers())
@@ -93,7 +90,7 @@ public class GameManagerImpl implements GameManager {
                         game.getParties().remove(party);
                     });
         } else {
-            playerManager.loadPlayer(playerUUID)
+            playerManager.loadPlayer(player.getUniqueId())
                     .onSuccess(warzonePlayer -> {
                         playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
                         partyManager.leave(party, player);
@@ -127,14 +124,14 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Option<Game> getGameContaining(UUID uuid) {
+    public @NotNull Option<Game> getGameContaining(UUID uuid) {
         return List.ofAll(getGames())
                 .filter(game -> gameContains(game, uuid))
                 .headOption();
     }
 
     @Override
-    public Option<Game> getGameContaining(Party party) {
+    public @NotNull Option<Game> getGameContaining(Party party) {
         return List.ofAll(getGames())
                 .filter(game -> game.getParties().contains(party))
                 .headOption();

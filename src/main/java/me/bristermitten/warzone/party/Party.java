@@ -44,7 +44,7 @@ public class Party {
         return otherPlayers;
     }
 
-    UUID getOwner() {
+    public UUID getOwner() {
         return owner;
     }
 

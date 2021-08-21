@@ -5,6 +5,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 public enum MenuAction {
     NEXT_PAGE,
     PREVIOUS_PAGE,
+    LEAVE_PARTY_ACTION,
+    BRING_PARTY_ACTION,
     NOTHING {
         @Override
         public void execute(InventoryClickEvent event) {

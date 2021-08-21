@@ -13,6 +13,7 @@ import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.StateManager;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -36,9 +37,9 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      */
     List<WarzonePlayer> getPlayers(Game game);
 
-    Option<Game> getGameContaining(UUID uuid);
+    @NotNull Option<Game> getGameContaining(UUID uuid);
 
-    Option<Game> getGameContaining(Party party);
+    @NotNull Option<Game> getGameContaining(Party party);
 
     void addToGame(Game game, Party party);
 
@@ -58,10 +59,11 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
 
     /**
      * Makes a player leave a game.
-     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
-     * @param game The game to leave
-     * @param playerUUID The player to leave
+     *
+     * @param game         The game to leave
+     * @param player       The player to leave
      * @param includeParty Whether or not the player's party members should also leave the game
+     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
      */
-    void leave(Game game, UUID playerUUID, boolean includeParty);
+    void leave(Game game, Player player, boolean includeParty);
 }
