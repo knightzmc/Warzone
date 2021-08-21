@@ -16,8 +16,7 @@ import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGulagState;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -71,7 +70,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void leave(Game game, Player player, boolean includeParty) {
+    public void leave(Game game, OfflinePlayer player, boolean includeParty) {
         if (!gameContains(game, player.getUniqueId())) {
             throw new IllegalArgumentException("Player is not in this game");
         }
@@ -79,7 +78,7 @@ public class GameManagerImpl implements GameManager {
             // This shouldn't happen, just fail silently
             return;
         }
-        var party = partyManager.getParty(player);
+        var party = partyManager.getParty(player.getUniqueId());
         if (includeParty || party.getSize() == PartySize.SINGLES) {
             Future.sequence(
                     List.ofAll(party.getAllMembers())

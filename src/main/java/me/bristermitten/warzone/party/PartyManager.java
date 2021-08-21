@@ -1,9 +1,12 @@
 package me.bristermitten.warzone.party;
 
+import io.vavr.control.Option;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import me.bristermitten.warzone.util.Null;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -15,6 +18,7 @@ import java.util.*;
 @Singleton
 public class PartyManager {
     public static final String PLAYER_PLACEHOLDER = "{player}";
+    public static final String UNKNOWN_NAME = "Unknown Name";
     private final Map<UUID, Party> partiesByMember = new HashMap<>();
     private final LangService langService;
 
@@ -106,10 +110,14 @@ public class PartyManager {
     }
 
     private void add(@NotNull Party party, @NotNull Player joining) {
+        var owner = Bukkit.getPlayer(party.getOwner());
+        if (owner == null) {
+            leave(party, Bukkit.getOfflinePlayer(party.getOwner()));
+        }
         if (party.isFull()) {
             langService.sendMessage(joining,
                     langConfig -> langConfig.partyLang().partyFullJoin(),
-                    Map.of(PLAYER_PLACEHOLDER, Bukkit.getPlayer(party.getOwner()).getName()));
+                    Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(party.getOwner()).getName(), UNKNOWN_NAME)));
             return;
         }
         party.getAllMembers().stream()
@@ -124,17 +132,20 @@ public class PartyManager {
 
         langService.sendMessage(joining,
                 config -> config.partyLang().partyJoined(),
-                Map.of("{owner}", Bukkit.getPlayer(party.getOwner()).getName()));
+                Map.of("{owner}", Null.get(Bukkit.getOfflinePlayer(party.getOwner()).getName(), UNKNOWN_NAME)));
     }
 
-    public void leave(@NotNull Party party, @NotNull Player leaver) {
+    public void leave(@NotNull Party party, @NotNull OfflinePlayer leaver) {
 
         if (party.isEmpty()) { // This is a bit of a lie, everyone is in a party, but if a party is just you, can it really be considered a party?
-            langService.sendMessage(leaver, langConfig -> langConfig.partyLang().noParty());
+            Option.of(leaver.getPlayer()).peek(
+                    player -> langService.sendMessage(player, langConfig -> langConfig.partyLang().noParty())
+            );
             return;
         }
+        Option.of(leaver.getPlayer())
+                .peek(player -> langService.sendMessage(player, config -> config.partyLang().partyYouLeft()));
 
-        langService.sendMessage(leaver, config -> config.partyLang().partyYouLeft());
 
         party.getOtherPlayers().remove(leaver.getUniqueId());
         partiesByMember.remove(leaver.getUniqueId());
@@ -144,7 +155,7 @@ public class PartyManager {
                 .filter(Objects::nonNull)
                 .forEach(player ->
                         langService.sendMessage(player, config -> config.partyLang().partyUserLeft(),
-                                Map.of("{leaver}", leaver.getName())));
+                                Map.of("{leaver}", Null.get(leaver.getName(), UNKNOWN_NAME))));
 
         if (leaver.getUniqueId().equals(party.getOwner())) {
             // destroy one and another will take its place
@@ -163,7 +174,7 @@ public class PartyManager {
 
             party.getOtherPlayers().remove(nextOwner.getUniqueId());
             langService.sendMessage(nextOwner, config -> config.partyLang().partyPromotedLeft(),
-                    Map.of("{owner}", leaver.getName()));
+                    Map.of("{owner}", Null.get(leaver.getName(), UNKNOWN_NAME)));
         }
 
     }

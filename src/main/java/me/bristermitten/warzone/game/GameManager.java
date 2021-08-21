@@ -13,7 +13,7 @@ import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.StateManager;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -65,5 +65,5 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      * @param includeParty Whether or not the player's party members should also leave the game
      * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
      */
-    void leave(Game game, Player player, boolean includeParty);
+    void leave(Game game, OfflinePlayer player, boolean includeParty);
 }
