@@ -14,7 +14,7 @@ public record LangConfig(
     }
 
     public record GameLang(
-            @SerializedName("player-out") TitleConfig playerOut
+            @SerializedName("player-out-title") TitleConfig playerOut
     ) {
     }
 

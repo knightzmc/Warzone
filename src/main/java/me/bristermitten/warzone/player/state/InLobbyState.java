@@ -4,6 +4,7 @@ import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -25,7 +26,12 @@ public class InLobbyState implements PlayerState {
 
     @Override
     public void onEnter(@NotNull WarzonePlayer player) {
-        player.getPlayer().peek(p -> scoreboardManager.show(p, ScoreboardConfig::lobby));
+        player.getPlayer().peek(p -> {
+            for (PotionEffect potionEffect : p.getActivePotionEffects()) {
+                p.removePotionEffect(potionEffect.getType());
+            }
+            scoreboardManager.show(p, ScoreboardConfig::lobby);
+        });
     }
 
     @Override

@@ -61,6 +61,7 @@ public class InProgressState implements GameState {
     }
 
     private final ArenaChestFiller arenaChestFiller;
+
     @Override
     public void onLeave(Game game) {
         gameWorldUpdateTask.remove(game);

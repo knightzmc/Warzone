@@ -41,12 +41,17 @@ public class WarzoneCommand extends BaseCommand {
 
     @Subcommand("start")
     public void start(Player sender) {
-        gameManager.getGames().forEach(game -> game.setCurrentState(inProgressState));
+        gameManager.getGames().forEach(game -> {
+            if (!(game.getState() instanceof InProgressState))
+                game.setCurrentState(inProgressState);
+        });
     }
 
 
     @Subcommand("leave")
     public void leave(Player sender) {
+//        gameManager.getGameContaining(sender.getUniqueId())
+//                .peek(game -> gameManager.jo)
         throw new UnsupportedOperationException("TODO");
     }
 

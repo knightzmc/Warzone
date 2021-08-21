@@ -70,3 +70,8 @@ tasks {
         }
     }
 }
+
+tasks.register<Copy>("copyJarToServerPlugins") {
+    from(tasks.getByPath("shadowJar"))
+    into(layout.projectDirectory.dir("server/plugins"))
+}

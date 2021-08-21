@@ -1,0 +1,142 @@
+arenas:
+    donor-1:
+        world: warzonedonor1
+        permission: warzone.donor
+        priority: 100.0
+        gulag:
+            fighting-area-1:
+                x: 127.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 0.0
+            fighting-area-2:
+                x: 140.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 90.0
+            spawn-area:
+                x: 160.0
+                y: 30.0
+                z: 500.0
+                yaw: 0.0
+                pitch: 0.0
+        playable-area:
+            min:
+                x: 0.0
+                y: 0.0
+                z: 0.0
+            max:
+                x: 250.0
+                y: 128.0
+                z: 250.0
+        loot: basic
+        game:
+            time-limit: 600.0
+            player-limit: 28.0
+            border-damage: 1.0
+            border-damage-time: 40.0
+            chest-rate: 0.5
+            max-gulag-entries: 2.0
+            boss-bar:
+                format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+                color: BLUE
+                style: PROGRESS
+                flags: [
+                    ]
+    donor-2:
+        world: warzonedonor2
+        permission: warzone.donor
+        priority: 99.0
+        gulag:
+            fighting-area-1:
+                x: 127.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 0.0
+            fighting-area-2:
+                x: 140.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 90.0
+            spawn-area:
+                x: 160.0
+                y: 30.0
+                z: 500.0
+                yaw: 0.0
+                pitch: 0.0
+        playable-area:
+            min:
+                x: 0.0
+                y: 0.0
+                z: 0.0
+            max:
+                x: 250.0
+                y: 128.0
+                z: 250.0
+        loot: basic
+        game:
+            time-limit: 600.0
+            player-limit: 28.0
+            border-damage: 1.0
+            border-damage-time: 40.0
+            chest-rate: 0.5
+            boss-bar:
+                format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+    main:
+        world: mainarena
+        priority: -1.0
+        gulag:
+            fighting-area-1:
+                x: 127.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 0.0
+            fighting-area-2:
+                x: 140.0
+                y: 50.0
+                z: 512.0
+                yaw: 0.0
+                pitch: 90.0
+            spawn-area:
+                x: 160.0
+                y: 30.0
+                z: 500.0
+                yaw: 0.0
+                pitch: 0.0
+        playable-area:
+            min:
+                x: 0.0
+                y: 0.0
+                z: 0.0
+            max:
+                x: 250.0
+                y: 128.0
+                z: 250.0
+        loot: basic
+        game:
+            time-limit: 600.0
+            player-limit: 28.0
+            border-damage: 1.0
+            border-damage-time: 40.0
+            chest-rate: 0.5
+            boss-bar:
+                format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+lobby-spawnpoint:
+    world: lobby
+    x: 300.0
+    y: 60.0
+    z: 128.0
+    yaw: 0.0
+    pitch: 0.0
+pre-game-lobby-spawnpoint:
+    world: pregamelobby
+    x: 300.0
+    y: 60.0
+    z: 128.0
+    yaw: 0.0
+    pitch: 0.0

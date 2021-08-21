@@ -40,6 +40,7 @@ public class SpectatingState extends InGameState {
             player.getInventory().clear();
 
             player.setAllowFlight(true);
+            player.setFireTicks(0);
             player.setFlying(true);
             player.setInvisible(true);
             player.setInvulnerable(true);
