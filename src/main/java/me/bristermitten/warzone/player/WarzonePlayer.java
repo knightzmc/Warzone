@@ -13,6 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * Holds warzone-related data about a player
+ * <p>
+ * Care should be taken when dealing with WarzonePlayers for which {@link WarzonePlayer#getPlayer()} returns {@link Option#none()},
+ * as the majority of code will assume that the player is online.
+ */
 public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
     private final UUID playerId;
     private int kills;
