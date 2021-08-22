@@ -9,12 +9,14 @@ import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.gulag.GulagManager;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
+import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -36,20 +38,24 @@ public class GameManagerImpl implements GameManager {
     private final ArenaManager arenaManager;
     private final GulagManager gulagManager;
     private final GameWorldUpdateTask gameWorldUpdateTask;
+    private final LangService langService;
 
 
     @Inject
     public GameManagerImpl(GameStates states,
                            PlayerManager playerManager,
-                           PartyManager partyManager, ArenaManager arenaManager,
+                           PartyManager partyManager,
+                           ArenaManager arenaManager,
                            GulagManager gulagManager,
-                           GameWorldUpdateTask gameWorldUpdateTask) {
+                           GameWorldUpdateTask gameWorldUpdateTask,
+                           LangService langService) {
         this.states = states;
         this.playerManager = playerManager;
         this.partyManager = partyManager;
         this.arenaManager = arenaManager;
         this.gulagManager = gulagManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
+        this.langService = langService;
     }
 
     public @NotNull Set<Game> getGames() {
@@ -182,8 +188,24 @@ public class GameManagerImpl implements GameManager {
                 playerInfo.setAlive(false);
                 // they're out
                 playerManager.setState(player, PlayerStates::spectatingState);
+                checkForWinner(game);
             } else {
                 gulagManager.addToGulag(game.getGulag(), player);
+            }
+        });
+    }
+
+
+    private void checkForWinner(Game game) {
+        getAllPlayers(game).onSuccess(players -> {
+            var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
+            var remainingParties = stillAlive.groupBy(partyManager::getParty);
+            if (remainingParties.keySet().size() == 1) {
+                var winningParty = remainingParties.keySet().head();
+                winningParty.getAllMembers().forEach(winnerId -> {
+                    // TODO
+//                    langService.sendMessage();
+                });
             }
         });
     }
