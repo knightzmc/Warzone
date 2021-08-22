@@ -22,7 +22,6 @@ public class Cached<@NotNull T> implements Supplier<T> {
     }
 
     public void invalidate() {
-        System.out.println("Invaliding cache...");
         t = null;
     }
 
