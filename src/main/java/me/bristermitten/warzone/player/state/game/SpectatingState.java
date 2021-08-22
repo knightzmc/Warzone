@@ -71,6 +71,8 @@ public class SpectatingState extends InGameState {
     public void onLeave(WarzonePlayer warzonePlayer) {
         super.onLeave(warzonePlayer);
         warzonePlayer.getPlayer().peek(player -> {
+            player.clearTitle();
+            player.getInventory().clear();
             player.setAllowFlight(false);
             player.setFireTicks(0);
             player.setFlying(false);

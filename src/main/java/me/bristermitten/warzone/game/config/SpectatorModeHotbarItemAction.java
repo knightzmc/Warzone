@@ -1,6 +1,6 @@
 package me.bristermitten.warzone.game.config;
 
 public enum SpectatorModeHotbarItemAction {
-    LEAVE,
+    LEAVE_GAME,
     REQUEUE
 }
