@@ -11,7 +11,4 @@ public class ScoreboardAspect implements Aspect {
         return new ScoreboardModule();
     }
 
-    @Override
-    public void finalizeInjections(@NotNull Injector injector) {
-    }
 }
