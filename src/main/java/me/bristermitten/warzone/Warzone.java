@@ -6,32 +6,28 @@ import com.google.inject.TypeLiteral;
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.arena.ArenasConfigDAO;
-import me.bristermitten.warzone.aspect.Aspect;
-import me.bristermitten.warzone.chat.ChatAspect;
 import me.bristermitten.warzone.chat.ChatConfig;
-import me.bristermitten.warzone.commands.CommandsAspect;
-import me.bristermitten.warzone.config.ConfigurationAspect;
-import me.bristermitten.warzone.database.DatabaseAspect;
-import me.bristermitten.warzone.database.DatabaseConfig;
-import me.bristermitten.warzone.database.Persistence;
-import me.bristermitten.warzone.database.StorageException;
-import me.bristermitten.warzone.file.FileWatcherAspect;
-import me.bristermitten.warzone.game.GameAspect;
+import me.bristermitten.warzone.chat.ChatModule;
+import me.bristermitten.warzone.commands.CommandsModule;
+import me.bristermitten.warzone.config.ConfigModule;
+import me.bristermitten.warzone.database.*;
+import me.bristermitten.warzone.file.FileWatcherService;
+import me.bristermitten.warzone.game.GameModule;
 import me.bristermitten.warzone.game.config.GameConfigDAO;
 import me.bristermitten.warzone.lang.LangConfig;
-import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
+import me.bristermitten.warzone.leaderboard.LeaderboardModule;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenu;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.loot.LootTablesConfig;
-import me.bristermitten.warzone.matchmaking.MatchmakingAspect;
-import me.bristermitten.warzone.papi.PAPIAspect;
+import me.bristermitten.warzone.matchmaking.MatchmakingModule;
+import me.bristermitten.warzone.papi.PAPIModule;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
-import me.bristermitten.warzone.player.PlayerAspect;
+import me.bristermitten.warzone.player.PlayerModule;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
 import me.bristermitten.warzone.player.xp.XPConfig;
-import me.bristermitten.warzone.scoreboard.ScoreboardAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
+import me.bristermitten.warzone.scoreboard.ScoreboardModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,7 +40,7 @@ public class Warzone extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            var configAspect = new ConfigurationAspect(Set.of(
+            var configModule = new ConfigModule(Set.of(
                     ScoreboardConfig.CONFIG
                     , DatabaseConfig.CONFIG
                     , XPConfig.CONFIG
@@ -57,26 +53,23 @@ public class Warzone extends JavaPlugin {
                     , GameConfigDAO.CONFIG
             ));
 
-            var aspects = List.of(
-                    configAspect,
-                    new ScoreboardAspect()
-                    , new PluginAspect(this)
-                    , new FileWatcherAspect()
-                    , new DatabaseAspect()
-                    , new PlayerAspect()
-                    , new ChatAspect()
-                    , new CommandsAspect()
-                    , new PAPIAspect()
-                    , new LeaderboardAspect()
-                    , new MatchmakingAspect()
-                    , new GameAspect()
+            var modules = List.of(
+                    configModule,
+                    new ScoreboardModule()
+                    , new PluginModule(this)
+                    , new DatabaseModule()
+                    , new PlayerModule()
+                    , new ChatModule()
+                    , new CommandsModule()
+                    , new PAPIModule()
+                    , new LeaderboardModule()
+                    , new MatchmakingModule()
+                    , new GameModule()
             );
-
-            var modules = aspects.map(Aspect::generateModule);
 
             var injector = Guice.createInjector(modules);
 
-            aspects.forEach(it -> it.finalizeInjections(injector));
+            injector.getInstance(FileWatcherService.class).watch();
 
             persistences = List.of(
                     injector.getInstance(PlayerPersistence.class)
