@@ -11,6 +11,7 @@ import redempt.crunch.functional.EvaluationEnvironment;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.function.ToIntFunction;
 
 @Singleton
 public class XPHandler {
@@ -33,6 +34,10 @@ public class XPHandler {
         return (long) levelAlgorithm.get().evaluate(level);
     }
 
+
+    public void addXP(@NotNull WarzonePlayer player, ToIntFunction<XPConfig> xp) {
+        addXP(player, xp.applyAsInt(this.xpConfig.get()));
+    }
 
     public void addXP(@NotNull WarzonePlayer player, int xp) {
         player.setXp(player.getXp() + xp);

@@ -18,6 +18,9 @@ import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
+import me.bristermitten.warzone.player.xp.XPConfig;
+import me.bristermitten.warzone.player.xp.XPHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,6 +42,7 @@ public class GameManagerImpl implements GameManager {
     private final GulagManager gulagManager;
     private final GameWorldUpdateTask gameWorldUpdateTask;
     private final LangService langService;
+    private final XPHandler xpHandler;
 
 
     @Inject
@@ -48,7 +52,7 @@ public class GameManagerImpl implements GameManager {
                            ArenaManager arenaManager,
                            GulagManager gulagManager,
                            GameWorldUpdateTask gameWorldUpdateTask,
-                           LangService langService) {
+                           LangService langService, XPHandler xpHandler) {
         this.states = states;
         this.playerManager = playerManager;
         this.partyManager = partyManager;
@@ -56,6 +60,7 @@ public class GameManagerImpl implements GameManager {
         this.gulagManager = gulagManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
         this.langService = langService;
+        this.xpHandler = xpHandler;
     }
 
     public @NotNull Set<Game> getGames() {
@@ -202,9 +207,12 @@ public class GameManagerImpl implements GameManager {
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
             if (remainingParties.keySet().size() == 1) {
                 var winningParty = remainingParties.keySet().head();
+                stillAlive.filter(p -> partyManager.getParty(p).equals(winningParty))
+                        .forEach(winner -> {
+                            xpHandler.addXP(winner, XPConfig::win);
+                        });
                 winningParty.getAllMembers().forEach(winnerId -> {
-                    // TODO
-//                    langService.sendMessage();
+
                 });
             }
         });
