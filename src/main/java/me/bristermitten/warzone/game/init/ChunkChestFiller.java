@@ -7,7 +7,7 @@ import me.bristermitten.warzone.data.pdc.ListDataType;
 import me.bristermitten.warzone.data.pdc.PointDataType;
 import me.bristermitten.warzone.loot.LootGenerator;
 import me.bristermitten.warzone.loot.LootTable;
-import me.bristermitten.warzone.util.Sync;
+import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -16,7 +16,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -30,25 +29,25 @@ public class ChunkChestFiller {
     private final LootGenerator generator;
     private final SplittableRandom random = new SplittableRandom();
 
-    private final Plugin plugin;
+    private final Schedule schedule;
 
     @Inject
-    public ChunkChestFiller(LootGenerator generator, Plugin plugin) {
+    public ChunkChestFiller(LootGenerator generator, Schedule schedule) {
         this.generator = generator;
-        this.plugin = plugin;
+        this.schedule = schedule;
     }
 
     private Future<Void> cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
         if (existingPoints == null) {
             return Future.successful(null); // Server might have crashed, clean up from the last time
         }
-        return Sync.run(() -> {
+        return schedule.runSync(() -> {
             for (Point existingPoint : existingPoints) {
                 var location = existingPoint.toLocation(chunk);
                 var block = location.getBlock();
                 block.setType(Material.AIR);
             }
-        }, plugin);
+        });
     }
 
     private List<Point> readPointsFromPDC(Chunk chunk) {
@@ -86,7 +85,7 @@ public class ChunkChestFiller {
                                 .filter(block -> ThreadLocalRandom.current().nextDouble(0, 100) < chestChance)
                                 .collect(Collectors.toSet()))
                                 .map(this::filterAdjacent)
-                                .flatMap(points -> Sync.run(() -> {
+                                .flatMap(points -> schedule.runSync(() -> {
                                     points.forEach(point -> {
                                         var block = point.toLocation(chunk).getBlock();
                                         block.setType(Material.CHEST);
@@ -100,7 +99,7 @@ public class ChunkChestFiller {
                                     chunk.getPersistentDataContainer().set(KEY,
                                             new ListDataType<>(PointDataType.INSTANCE),
                                             List.copyOf(points));
-                                }, plugin)));
+                                })));
     }
 
     public void fill(LootTable table, Chest chest) {

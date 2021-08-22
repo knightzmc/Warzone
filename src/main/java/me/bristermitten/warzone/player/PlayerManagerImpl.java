@@ -6,9 +6,8 @@ import me.bristermitten.warzone.player.state.PlayerState;
 import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.storage.PlayerStorage;
-import me.bristermitten.warzone.util.Sync;
+import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -17,15 +16,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class PlayerManagerImpl implements PlayerManager {
-    private final Plugin plugin;
     private final PlayerStorage playerStorage;
     private final PlayerStates playerStates;
+    private final Schedule schedule;
 
     @Inject
-    public PlayerManagerImpl(Plugin plugin, PlayerStorage playerStorage, PlayerStates playerStates) {
-        this.plugin = plugin;
+    public PlayerManagerImpl(PlayerStorage playerStorage, PlayerStates playerStates, Schedule schedule) {
         this.playerStorage = playerStorage;
         this.playerStates = playerStates;
+        this.schedule = schedule;
     }
 
     public void setState(WarzonePlayer player, Function<PlayerStates, PlayerState> newStateFunction) {
@@ -38,10 +37,10 @@ public class PlayerManagerImpl implements PlayerManager {
             }
             player.setCurrentState(newState);
         };
-        if(Bukkit.isPrimaryThread()) {
+        if (Bukkit.isPrimaryThread()) {
             run.run();
         } else {
-            Sync.run(run, plugin).get();
+            schedule.runSync(run).get();
         }
     }
 
