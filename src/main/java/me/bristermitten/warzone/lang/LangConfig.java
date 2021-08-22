@@ -10,35 +10,35 @@ public record LangConfig(
 ) {
     public static final Configuration<LangConfig> CONFIG = new Configuration<>(LangConfig.class, "lang.yml");
 
-    public record TitleConfig(@NotNull String title, @NotNull String subtitle) {
+    public record TitleConfig(@NotNull LangElement title, @NotNull LangElement subtitle) {
     }
 
     public record GameLang(
-            @SerializedName("player-out-title") TitleConfig playerOut
-            , @SerializedName("not-in-game") String notInGame
-            , @SerializedName("already-in-game") String alreadyInGame
+            @SerializedName("player-out-title") LangElement playerOut
+            , @SerializedName("not-in-game") LangElement notInGame
+            , @SerializedName("already-in-game") LangElement alreadyInGame
     ) {
     }
 
     public record PartyLang(
-            @SerializedName("invite-received") String inviteReceived
-            , @SerializedName("invite-already-sent") String inviteAlreadySent
-            , @SerializedName("invite-sent") String inviteSent
-            , @SerializedName("no-invites") String noInvites
-            , @SerializedName("no-invites-from-player") String noInvitesFromPlayer
-            , @SerializedName("invalid-invite") String invalidInvite
-            , @SerializedName("multiple-invites") String multipleInvites
-            , @SerializedName("no-party") String noParty
-            , @SerializedName("party-promoted-left") String partyPromotedLeft
-            , @SerializedName("party-user-left") String partyUserLeft
-            , @SerializedName("party-you-left") String partyYouLeft
-            , @SerializedName("party-joined") String partyJoined
-            , @SerializedName("party-joined-broadcast") String partyJoinedBroadcast
-            , @SerializedName("cant-invite-self") String cannotInviteSelf
-            , @SerializedName("already-in-party") String alreadyInParty
-            , @SerializedName("party-full") String partyFull
-            , @SerializedName("party-full-join") String partyFullJoin
-            , @SerializedName("party-is-in-game") String partyIsInGame
+            @SerializedName("invite-received") LangElement inviteReceived
+            , @SerializedName("invite-already-sent") LangElement inviteAlreadySent
+            , @SerializedName("invite-sent") LangElement inviteSent
+            , @SerializedName("no-invites") LangElement noInvites
+            , @SerializedName("no-invites-from-player") LangElement noInvitesFromPlayer
+            , @SerializedName("invalid-invite") LangElement invalidInvite
+            , @SerializedName("multiple-invites") LangElement multipleInvites
+            , @SerializedName("no-party") LangElement noParty
+            , @SerializedName("party-promoted-left") LangElement partyPromotedLeft
+            , @SerializedName("party-user-left") LangElement partyUserLeft
+            , @SerializedName("party-you-left") LangElement partyYouLeft
+            , @SerializedName("party-joined") LangElement partyJoined
+            , @SerializedName("party-joined-broadcast") LangElement partyJoinedBroadcast
+            , @SerializedName("cant-invite-self") LangElement cannotInviteSelf
+            , @SerializedName("already-in-party") LangElement alreadyInParty
+            , @SerializedName("party-full") LangElement partyFull
+            , @SerializedName("party-full-join") LangElement partyFullJoin
+            , @SerializedName("party-is-in-game") LangElement partyIsInGame
     ) {
     }
 }
