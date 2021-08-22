@@ -1,0 +1,21 @@
+# Generic game configuration
+
+spectator-mode:
+  allow-flight: true # If players should be allowed to fly when in spectator mode
+  invisible: true
+  potion-effects: # Potion effects to give when a player is in spectator mode
+    - type: SPEED
+      amplifier: 1
+    - type: NIGHT_VISION
+      amplifier: 1
+  items: # items that will be placed in a player's hotbar when in spectator mode
+    '3':
+      item:
+        type: RED_TERRACOTTA
+        name: '<red>Leave Game'
+      action: LEAVE_GAME
+    '5':
+      item:
+        type: GREEN_TERRACOTTA
+        name: 'Queue Again'
+      action: REQUEUE

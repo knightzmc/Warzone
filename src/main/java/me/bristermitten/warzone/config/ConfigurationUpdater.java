@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.config;
 
 
+import me.bristermitten.warzone.util.Functions;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,7 +13,8 @@ import java.util.Map;
  * any elements that aren't set from the default
  */
 public class ConfigurationUpdater {
-    public @Nullable Map<Object, Object> update(@NotNull Map<Object, Object> source, @Nullable Map<Object, Object> destination) {
+    @Nullable
+    public Map<Object, Object> update(@NotNull Map<Object, Object> source, @Nullable Map<Object, Object> destination) {
         if (destination == null) {
             return source;
         }
@@ -27,8 +29,7 @@ public class ConfigurationUpdater {
                 //noinspection unchecked
                 inSource = update((Map<Object, Object>) inSource, (Map<Object, Object>) inDestination);
             }
-            Object finalInSource = inSource;
-            destination.computeIfAbsent(key, lol -> finalInSource);
+            destination.computeIfAbsent(key, Functions.constant(inSource));
         }
         return destination;
     }

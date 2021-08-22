@@ -46,6 +46,7 @@ public class SpectatingState extends InGameState {
             player.setFlying(true);
             player.setInvisible(true);
             player.setInvulnerable(true);
+
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, false, false));
 
             langService.sendTitle(player, config -> config.gameLang().playerOut());

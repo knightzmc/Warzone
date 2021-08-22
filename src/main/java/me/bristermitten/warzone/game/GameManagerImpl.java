@@ -179,8 +179,8 @@ public class GameManagerImpl implements GameManager {
             if (playerInfo.getDeathCount() > game.getArena().gameConfig().maxGulagEntries()
                 || player.getCurrentState() instanceof InGulagState
                 || !gulagManager.gulagIsAvailable(game.getGulag())) {
-                // they're out
                 playerInfo.setAlive(false);
+                // they're out
                 playerManager.setState(player, PlayerStates::spectatingState);
             } else {
                 gulagManager.addToGulag(game.getGulag(), player);

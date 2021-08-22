@@ -2,6 +2,8 @@ package me.bristermitten.warzone.player;
 
 import me.bristermitten.warzone.config.ConfigurationProvider;
 import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.player.state.game.InGulagArenaState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import org.bukkit.Bukkit;
@@ -48,12 +50,15 @@ public class PlayerKillDeathListener implements Listener {
         if (killerPlayer == null) {
             return;
         }
-        playerManager.loadPlayer(killerPlayer.getUniqueId(), (killer -> {
+        playerManager.loadPlayer(killerPlayer.getUniqueId(), killer -> {
             killer.setKills(killer.getKills() + 1);
             xpHandler.addXP(killer, xpConfig.get().kill());
+            if(killer.getCurrentState() instanceof InGulagArenaState){
+                playerManager.setState(killer, PlayerStates::aliveState);
+            }
             gameManager.getGameContaining(killerPlayer.getUniqueId())
                     .flatMap(game -> game.getInfo(killerPlayer.getUniqueId()))
                     .peek(information -> information.setKills(information.getKills() + 1));
-        }));
+        });
     }
 }
