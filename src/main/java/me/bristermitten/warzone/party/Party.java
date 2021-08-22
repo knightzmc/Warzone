@@ -3,10 +3,7 @@ package me.bristermitten.warzone.party;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
@@ -38,6 +35,18 @@ public class Party {
 
     public boolean isEmpty() {
         return otherPlayers.isEmpty();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Party party)) return false;
+        return getOwner().equals(party.getOwner());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getOwner());
     }
 
     @NotNull Set<UUID> getOtherPlayers() {
