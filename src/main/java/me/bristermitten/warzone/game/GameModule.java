@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import me.bristermitten.warzone.game.bossbar.BossBarManager;
 import me.bristermitten.warzone.game.bossbar.BossBarManagerImpl;
+import me.bristermitten.warzone.game.config.GameConfigModule;
 import me.bristermitten.warzone.game.init.ChunkLoadFiller;
 import me.bristermitten.warzone.game.leavemenu.LeaveRequeueMenuFactory;
 
@@ -17,5 +18,7 @@ public class GameModule extends AbstractModule {
 
         install(new FactoryModuleBuilder()
                 .build(LeaveRequeueMenuFactory.class));
+
+        install(new GameConfigModule());
     }
 }

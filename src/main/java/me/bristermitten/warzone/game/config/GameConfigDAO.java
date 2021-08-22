@@ -8,7 +8,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.Map;
 
-public record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode) {
+record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode) {
     public static final Configuration<GameConfigDAO> CONFIG = new Configuration<>(GameConfigDAO.class, "game.yml");
 
     public record SpectatorConfigDAO(

@@ -10,10 +10,21 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.Nullable;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 public class ItemRenderer {
+    private final ChatFormatter defaultFormatter;
 
+    @Inject
+    public ItemRenderer(ChatFormatter defaultFormatter) {
+        this.defaultFormatter = defaultFormatter;
+    }
+
+
+    public ItemStack render(ItemConfig config, @Nullable OfflinePlayer viewer) {
+        return render(config, defaultFormatter, viewer);
+    }
 
     public ItemStack render(ItemConfig config, ChatFormatter formatter, @Nullable OfflinePlayer viewer) {
         var item = new ItemStack(
