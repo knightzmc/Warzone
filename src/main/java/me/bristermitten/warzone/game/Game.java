@@ -2,11 +2,12 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
+import me.bristermitten.warzone.game.bossbar.GameBossBar;
 import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
+import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.world.GameBorder;
-import me.bristermitten.warzone.game.bossbar.GameBossBar;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.state.Stateful;
@@ -17,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class Game implements Stateful<Game, GameState> {
+    private final UUID uuid;
     private final Arena arena;
     private final Set<Party> players;
     private final PartySize acceptedSize;
@@ -28,6 +30,7 @@ public class Game implements Stateful<Game, GameState> {
     private GameState state = IdlingState.INSTANCE;
 
     public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
+        this.uuid = UUID.randomUUID();
         this.arena = arena;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
@@ -36,7 +39,7 @@ public class Game implements Stateful<Game, GameState> {
         this.gameBorder = new GameBorder(arena);
         this.gameBossBar = new GameBossBar(this);
         players.stream().map(Party::getAllMembers).flatMap(Collection::stream)
-                .forEach(uuid -> playerInformationMap.put(uuid, new PlayerInformation(uuid)));
+                .forEach(playerUUID -> playerInformationMap.put(playerUUID, new PlayerInformation(playerUUID)));
     }
 
     public GameBorder getGameBorder() {
@@ -59,6 +62,9 @@ public class Game implements Stateful<Game, GameState> {
         return players;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
 
     Map<UUID, PlayerInformation> getPlayerInformationMap() {
         return playerInformationMap;

@@ -8,6 +8,7 @@ import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.gulag.GulagManager;
 import me.bristermitten.warzone.game.state.*;
+import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.party.Party;
@@ -20,7 +21,6 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 

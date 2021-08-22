@@ -4,7 +4,6 @@ import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Database;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.WarzonePlayerBuilder;
-import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -78,19 +77,19 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
         return database.execute("""
                 CREATE TABLE IF NOT EXISTS players
                 (
-                    uuid   VARCHAR (36) UNIQUE PRIMARY KEY,
+                    uuid   TEXT(36) PRIMARY KEY,
                     kills  INT,
                     deaths INT,
                     level  INT,
                     xp     BIGINT,
-                    wins INT,
+                    wins   INT,
                     losses INT
                 );
-                """.stripIndent(), NoOp.consumer());
+                """.stripIndent());
     }
 
     @Override
     public @NotNull Future<Void> cleanup() {
-        return Future.run(NoOp.runnable());
+        return Future.successful(null);
     }
 }

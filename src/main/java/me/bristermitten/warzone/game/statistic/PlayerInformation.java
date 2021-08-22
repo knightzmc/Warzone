@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.statistic;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -7,6 +7,8 @@ import java.util.UUID;
  * Stores player information during a game
  * It can be assumed that any object of this type will be actively mutated by the plugin
  * Once a game finishes, this is transformed into a statistics report
+ *
+ * Mutable counterpart of {@link PlayerStatistic}
  */
 public class PlayerInformation {
     private final UUID player;
