@@ -1,3 +1,18 @@
+# Lang Config
+#
+# *Any* message is made up of a message, title, and subtitle. Title and subtitle are optional
+# For just a message, simply do key: 'message here'
+# For a title and subtitle, do
+# key:
+#    title: 'title'
+#    subtitle: 'subtitle'
+#
+# and for a message AND title, do
+# key:
+#    title: 'title'
+#    subtitle: 'subtitle'
+#    message: 'message'
+
 party:
   invite-already-sent: "&cYou've already invited {player} to a party!"
   invite-sent: "&a{player} has been invited to your party!"
@@ -20,6 +35,6 @@ party:
 game:
   already-in-game: '<red>You can''t queue for a game when you''re already in a game!'
   not-in-game: '<red>You''re not in a game'
-  player-out-title:
+  player-out:
     title: '<red>You''re out!'
     subtitle: '<gray>You can find a new game, or spectate this one'

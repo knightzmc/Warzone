@@ -14,7 +14,7 @@ public record LangConfig(
     }
 
     public record GameLang(
-            @SerializedName("player-out-title") LangElement playerOut
+            @SerializedName("player-out") LangElement playerOut
             , @SerializedName("not-in-game") LangElement notInGame
             , @SerializedName("already-in-game") LangElement alreadyInGame
     ) {
