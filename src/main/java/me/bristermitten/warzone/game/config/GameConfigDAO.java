@@ -8,16 +8,16 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 import java.util.Map;
 
-record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode) {
+public record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode) {
     public static final Configuration<GameConfigDAO> CONFIG = new Configuration<>(GameConfigDAO.class, "game.yml");
 
-    public record SpectatorConfigDAO(
+    record SpectatorConfigDAO(
             @SerializedName("allow-flight") Boolean allowFlight,
             @SerializedName("invisible") Boolean invisible,
             @SerializedName("potion-effects") List<PotionEffectDAO> potionEffects,
             @SerializedName("items") Map<Integer, SpectatorModeHotbarItemDAO> items
     ) {
-        public record SpectatorModeHotbarItemDAO(
+        record SpectatorModeHotbarItemDAO(
                 ItemConfig item,
                 SpectatorModeHotbarItemAction action
         ) {
@@ -25,7 +25,7 @@ record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO specta
 
     }
 
-    public record PotionEffectDAO(
+    record PotionEffectDAO(
             PotionEffectType type,
             int amplifier
     ) {
