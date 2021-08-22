@@ -39,20 +39,24 @@ public class XPHandler {
         addXP(player, xp.applyAsInt(this.xpConfig.get()));
     }
 
-    public void addXP(@NotNull WarzonePlayer player, int xp) {
-        player.setXp(player.getXp() + xp);
-        var xpToNextLevel = xpRequiredForLevel(player.getLevel() + 1);
-        if (player.getXp() >= xpToNextLevel) {
-            levelUp(player);
+    public void addXP(@NotNull WarzonePlayer warzonePlayer, int xp) {
+        warzonePlayer.setXp(warzonePlayer.getXp() + xp);
+        var xpToNextLevel = xpRequiredForLevel(warzonePlayer.getLevel() + 1);
+        Option.of(xpConfig.get().xpGainSound())
+                .peek(xpGainSound ->
+                        warzonePlayer.getPlayer().peek(player ->
+                                player.playSound(player.getLocation(), xpGainSound, 1f, 1f)));
+        if (warzonePlayer.getXp() >= xpToNextLevel) {
+            levelUp(warzonePlayer);
         }
     }
 
     private void levelUp(@NotNull WarzonePlayer warzonePlayer) {
         warzonePlayer.setLevel(warzonePlayer.getLevel() + 1);
         Option.of(xpConfig.get().levelUpSound())
-                .forEach(levelUpSound ->
+                .peek(levelUpSound ->
                         warzonePlayer.getPlayer()
-                                .forEach(player ->
+                                .peek(player ->
                                         player.playSound(player.getLocation(), levelUpSound, 1f, 1f)));
     }
 }
