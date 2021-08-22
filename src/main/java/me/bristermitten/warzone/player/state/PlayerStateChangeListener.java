@@ -1,24 +1,21 @@
 package me.bristermitten.warzone.player.state;
 
 import me.bristermitten.warzone.arena.ArenasConfigDAO;
-import org.bukkit.Bukkit;
+import me.bristermitten.warzone.listener.EventListener;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
-public class PlayerStateChangeListener implements Listener {
+public class PlayerStateChangeListener implements EventListener {
 
     private final Provider<ArenasConfigDAO> arenasConfigProvider;
 
     @Inject
-    PlayerStateChangeListener(@NotNull Plugin plugin, Provider<ArenasConfigDAO> arenasConfigProvider) {
+    PlayerStateChangeListener(Provider<ArenasConfigDAO> arenasConfigProvider) {
         this.arenasConfigProvider = arenasConfigProvider;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

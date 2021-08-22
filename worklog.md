@@ -153,6 +153,7 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 2 hours 15 minutes spent today
 
 ## 2021-08-05
+
 - 12:30 - start work
 - 13:40 - pause
 - 15:30 - resume
@@ -165,6 +166,7 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 **Second Payment Sent**
 
 ## 2021-08-06
+
 - 12:35 - start work
 - 13:40 - pause for research
 - 16:25 - resume
@@ -177,12 +179,14 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 4 hours 15 minutes spent today
 
 ## 2021-08-10
+
 - 17:15 - start work
 - 17:50 - pause
 
 35 minutes spent today
 
 ## 2021-08-11
+
 - 16:05 - start work
 - 16:40 - pause
 - 19:50 - resume
@@ -193,6 +197,7 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 3 hours 30 minutes spent today
 
 ## 2021-08-12
+
 - 17:10 - start work
 - 17:20 - pause
 - 21:00 - resume
@@ -205,25 +210,50 @@ bugfixes, update configs with default keys if needed, and party system fully wor
 1 hour 10 minutes spent today
 
 ## 2021-08-13
+
 - 22:10 - start work
 - 00:20 - pause
 
 2 hours 10 minutes spent today
 
+**Third Payment Sent**
+
 ## 2021-08-17
+
 - 22:30 - start work
 - 23:30 - pause
 
 exactly 1 hour spent today
 
 ## 2021-08-19
+
 - 21:50 - start work
 - 23:45 - pause
 
+1 hour 55 minutes spent today
+
 ## 2021-08-20
+
 - 14:20 - start work
 - 17:00 - pause
 - 19:45 - resume
 - 22:20 - pause
 - 22:50 - resume
 - 23:40 - pause
+
+6 hours 5 minutes spent today
+
+## 2021-08-21
+
+- 13:50 - start
+- 15:55 - pause
+- 17:15 - resume
+- 19:45 - pause
+
+4 hours 35 minutes spent today
+
+## 2021-08-22
+
+- 15:25 - start work
+- 15:40 - pause
+- 17:00 - resume

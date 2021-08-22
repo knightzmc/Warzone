@@ -2,6 +2,7 @@ package me.bristermitten.warzone.chat.channel;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import me.bristermitten.warzone.listener.ListenerBinding;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Named;
@@ -9,7 +10,7 @@ import javax.inject.Named;
 public class ChannelModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(ChatChannelListener.class).asEagerSingleton();
+        ListenerBinding.bindListener(binder()).to(ChatChannelListener.class);
     }
 
     @Provides

@@ -14,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 @Singleton
 public class PlayerStorage implements Persistence {

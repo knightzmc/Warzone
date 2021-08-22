@@ -1,6 +1,8 @@
 package me.bristermitten.warzone;
 
 import com.google.inject.Guice;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.arena.ArenasConfigDAO;
@@ -15,10 +17,11 @@ import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherAspect;
 import me.bristermitten.warzone.game.GameAspect;
-import me.bristermitten.warzone.game.leavemenu.LeaveRequeueMenu;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardAspect;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
+import me.bristermitten.warzone.leavemenu.LeaveRequeueMenu;
+import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.loot.LootTablesConfig;
 import me.bristermitten.warzone.matchmaking.MatchmakingAspect;
 import me.bristermitten.warzone.papi.PAPIAspect;
@@ -28,6 +31,7 @@ import me.bristermitten.warzone.player.storage.PlayerPersistence;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardAspect;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
@@ -75,6 +79,9 @@ public class Warzone extends JavaPlugin {
             persistences = List.of(
                     injector.getInstance(PlayerPersistence.class)
             );
+
+            injector.getInstance(Key.get(new TypeLiteral<Set<EventListener>>() {
+            })).forEach(eventListener -> Bukkit.getPluginManager().registerEvents(eventListener, this));
 
             Future.sequence(persistences
                     .map(Persistence::initialise))

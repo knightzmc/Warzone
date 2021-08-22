@@ -1,25 +1,22 @@
 package me.bristermitten.warzone.scoreboard;
 
+import me.bristermitten.warzone.listener.EventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
-import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 
 /**
  * Starts / stops the scoreboard update task based on if there are any players on the server or not
  */
-public class ScoreboardUpdateJoinQuitListener implements Listener {
+public class ScoreboardUpdateJoinQuitListener implements EventListener {
     private final ScoreboardUpdateTask task;
 
     @Inject
-    public ScoreboardUpdateJoinQuitListener(ScoreboardUpdateTask task, @NotNull Plugin plugin) {
+    public ScoreboardUpdateJoinQuitListener(ScoreboardUpdateTask task) {
         this.task = task;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
