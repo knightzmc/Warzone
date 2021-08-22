@@ -10,7 +10,6 @@ import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -38,32 +37,34 @@ public class SpectatingState extends InGameState {
     @Override
     public void onEnter(@NotNull WarzonePlayer warzonePlayer) {
         super.onEnter(warzonePlayer);
-        warzonePlayer.getPlayer().peek(player -> {
-            player.getLocation().getBlock().setType(Material.CHEST);
-            var chest = (Chest) player.getLocation().getBlock().getState();
-            chest.getBlockInventory().setContents(
+        var player = warzonePlayer.getPlayer().getOrElseThrow(
+                () -> new IllegalStateException("Player must be online!")
+        );
 
-                    Arrays.stream(player.getInventory().getContents())
-                            .filter(Objects::nonNull)
-                            .toArray(ItemStack[]::new)
-            );
-            player.getInventory().clear();
+        player.getLocation().getBlock().setType(Material.CHEST);
+        var chest = (Chest) player.getLocation().getBlock().getState();
+        chest.getBlockInventory().setContents(
 
-            var spectatorConfig = gameConfigProvider.get().spectatorConfig();
-            if (spectatorConfig.allowFlight()) {
-                player.setAllowFlight(true);
-                player.setFlying(true);
-            }
-            player.setInvisible(spectatorConfig.invisible());
+                Arrays.stream(player.getInventory().getContents())
+                        .filter(Objects::nonNull)
+                        .toArray(ItemStack[]::new)
+        );
+        player.getInventory().clear();
 
-            player.setFireTicks(0);
-            player.setInvulnerable(true);
+        var spectatorConfig = gameConfigProvider.get().spectatorConfig();
+        if (spectatorConfig.allowFlight()) {
+            player.setAllowFlight(true);
+            player.setFlying(true);
+        }
+        player.setInvisible(spectatorConfig.invisible());
 
-            spectatorConfig.potionEffects().forEach(player::addPotionEffect);
-            spectatorConfig.hotbarItems().forEach((slot, item) -> player.getInventory().setItem(slot, item.item()));
+        player.setFireTicks(0);
+        player.setInvulnerable(true);
 
-            langService.sendTitle(player, config -> config.gameLang().playerOut());
-        });
+        spectatorConfig.potionEffects().forEach(player::addPotionEffect);
+        spectatorConfig.hotbarItems().forEach((slot, item) -> player.getInventory().setItem(slot, item.item()));
+
+        langService.sendTitle(player, config -> config.gameLang().playerOut());
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SpectatingState extends InGameState {
             player.setFlying(false);
             player.setInvisible(false);
             player.setInvulnerable(false);
-            player.removePotionEffect(PotionEffectType.SPEED);
+            player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
         });
     }
 }
