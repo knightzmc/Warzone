@@ -5,22 +5,29 @@ import com.google.gson.reflect.TypeToken;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import me.bristermitten.warzone.config.gson.GsonProvider;
-import me.bristermitten.warzone.config.loading.*;
+import me.bristermitten.warzone.config.loading.ObjectLoader;
+import me.bristermitten.warzone.config.loading.YamlObjectLoader;
 import me.bristermitten.warzone.config.mapper.GsonObjectMapper;
 import me.bristermitten.warzone.config.mapper.ObjectMapper;
 import me.bristermitten.warzone.config.saving.ObjectSaver;
 import me.bristermitten.warzone.config.saving.YamlObjectSaver;
 import me.bristermitten.warzone.config.yaml.SnakeYamlProvider;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Provider;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ConfigModule extends AbstractModule {
     private final Map<Class<?>, ConfigurationProvider<?>> configs;
 
-    public ConfigModule(Map<Class<?>, ConfigurationProvider<?>> configs) {
-        this.configs = configs;
+    public ConfigModule(@NotNull Set<Configuration<?>> configurations) {
+        configs = new HashMap<>();
+        for (Configuration<?> configuration : configurations) {
+            configs.put(configuration.type(), new SimpleConfigurationProvider<>(configuration));
+        }
     }
 
     @Override
