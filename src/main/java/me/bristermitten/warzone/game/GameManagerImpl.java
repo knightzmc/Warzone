@@ -263,12 +263,16 @@ public class GameManagerImpl implements GameManager {
                 Objects.requireNonNull(player); // if they're offline they should've been removed from the party
                 langService.sendMessage(player, config -> config.gameLang().winner());
             });
-            players.forEach(warzonePlayer ->
-                    warzonePlayer.getPlayer().peek(player ->
-                            langService.sendMessage(player,
-                                    config -> config.gameLang().winnerBroadcast(),
-                                    Map.of("{winner}",
-                                            Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName()))));
+            players.forEach(warzonePlayer -> {
+                warzonePlayer.getPlayer().peek(player ->
+                        langService.sendMessage(player,
+                                config -> config.gameLang().winnerBroadcast(),
+                                Map.of("{winner}",
+                                        Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName())));
+                playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
+            });
+            setState(game, GameStates::idlingState);
+            arenaManager.free(game.getArena());
         });
     }
 

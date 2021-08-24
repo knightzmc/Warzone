@@ -6,7 +6,8 @@ import me.bristermitten.warzone.state.States;
 import javax.inject.Inject;
 
 public record GameStates(InProgressState inProgressStateProvider,
-                         InLobbyState inLobbyStateProvider) implements States<Game, GameState> {
+                         InLobbyState inLobbyStateProvider,
+                         IdlingState idlingState) implements States<Game, GameState> {
     @Inject
     public GameStates {
     }
