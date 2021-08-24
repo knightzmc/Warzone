@@ -260,7 +260,8 @@ public class GameManagerImpl implements GameManager {
                     warzonePlayer.getPlayer().peek(player ->
                             langService.sendMessage(player,
                                     config -> config.gameLang().winnerBroadcast(),
-                                    Map.of("{winner}", Bukkit.getPlayer(winningParty.getOwner()).getName()))));
+                                    Map.of("{winner}",
+                                            Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName()))));
         });
     }
 
