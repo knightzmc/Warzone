@@ -7,6 +7,7 @@ import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.GameTimer;
+import me.bristermitten.warzone.game.GameTimerRenderer;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -14,7 +15,6 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGameState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.state.game.SpectatingState;
-import me.bristermitten.warzone.util.DurationFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -33,12 +33,14 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
             SpectatingState.class, ChatColor.RED.toString()
     );
     private final PlayerManager playerManager;
+    private final GameTimerRenderer gameTimerRenderer;
     private final GameManager gameManager;
     private final PartyManager partyManager;
 
     @Inject
-    public GameStatusPlaceholder(PlayerManager playerManager, GameManager gameManager, PartyManager partyManager) {
+    public GameStatusPlaceholder(PlayerManager playerManager, GameTimerRenderer gameTimerRenderer, GameManager gameManager, PartyManager partyManager) {
         this.playerManager = playerManager;
+        this.gameTimerRenderer = gameTimerRenderer;
         this.gameManager = gameManager;
         this.partyManager = partyManager;
     }
@@ -59,8 +61,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(Game::getTimer)
                     .filter(GameTimer::isInitialised)
-                    .map(GameTimer::getTimeRemaining)
-                    .map(DurationFormatter::format)
+                    .map(gameTimerRenderer::render)
                     .getOrElse(NOT_IN_GAME);
             case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(game -> game.getPartiesInGame().stream()

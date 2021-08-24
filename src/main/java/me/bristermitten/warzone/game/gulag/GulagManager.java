@@ -18,6 +18,7 @@ public class GulagManager {
     private final GameManager gameManager;
     private final PlayerManager playerManager;
 
+
     @Inject
     public GulagManager(GameManager gameManager, PlayerManager playerManager) {
         this.gameManager = gameManager;
@@ -26,7 +27,7 @@ public class GulagManager {
 
     public boolean gulagIsAvailable(Gulag gulag) {
         var game = gulag.getGame();
-        if(!game.getTimer().isInitialised()) {
+        if (!game.getTimer().isInitialised()) {
             return false;
         }
         if (game.getTimer().getTimeRemaining() < GULAG_MIN_TIME) {

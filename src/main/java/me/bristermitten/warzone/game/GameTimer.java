@@ -22,7 +22,7 @@ public class GameTimer {
         return startTimeMillis != 0;
     }
 
-    public long getTimeRemaining() {
+     public long getTimeRemaining() {
         if (!isInitialised()) {
             throw new IllegalStateException("Timer not started yet");
         }

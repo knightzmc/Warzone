@@ -42,8 +42,6 @@ public class GameConfigLoader implements Provider<GameConfig> {
     public GameConfig get() {
         var dao = daoProvider.get();
         var spectator = loadSpectatorConfig(dao.spectatorMode());
-        return new GameConfig(
-                spectator
-        );
+        return new GameConfig(spectator);
     }
 }

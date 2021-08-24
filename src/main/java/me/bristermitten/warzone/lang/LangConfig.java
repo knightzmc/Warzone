@@ -26,6 +26,7 @@ public record LangConfig(
             , @SerializedName("already-in-game") LangElement alreadyInGame
             , @SerializedName("winner") LangElement winner
             , @SerializedName("winner-broadcast") LangElement winnerBroadcast
+            , @SerializedName("no-time-remaining") LangElement noTimeRemaining
     ) {
     }
 

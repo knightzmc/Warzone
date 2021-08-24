@@ -41,6 +41,8 @@ game:
   winner:
     title: '<gold>Victory!'
   winner-broadcast: '<gold>{winner}''s party wins!'
+  ## IMPORTANT: no-time-remaining does not support titles
+  no-time-remaining: 'Final Circle' # Used for %warzone_time_remaining% when there is no time left
 errors:
   xp-not-positive: '<red>XP must be positive!'
 admin:

@@ -15,7 +15,11 @@ public final class GameBossBar implements CustomBossBar {
     }
 
     public float getProgress() {
-        return (float) game.getTimer().getTimeRemaining() / game.getTimer().getDuration();
+        long timeRemaining = game.getTimer().getTimeRemaining();
+        if (timeRemaining <= 0) {
+            return 0;
+        }
+        return (float) timeRemaining / game.getTimer().getDuration();
     }
 
     @Override
