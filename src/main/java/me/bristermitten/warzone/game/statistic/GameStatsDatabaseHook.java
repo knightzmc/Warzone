@@ -18,6 +18,7 @@ public class GameStatsDatabaseHook implements GamePersistence {
     @Override
     public Future<Void> initialise() {
         return database.execute("""
+                PRAGMA foreign_keys = ON;
                 CREATE TABLE IF NOT EXISTS arenas
                 (
                     arena_name VARCHAR PRIMARY KEY DEFAULT '[deleted'
