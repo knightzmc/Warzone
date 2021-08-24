@@ -43,4 +43,7 @@ public class GameBorder {
     }
 
 
+    public void pause() {
+        border.setSize(border.getSize());
+    }
 }
