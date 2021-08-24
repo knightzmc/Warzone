@@ -111,6 +111,7 @@ public class GameManagerImpl implements GameManager {
                         players.forEach(warzonePlayer ->
                                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
                         game.getParties().remove(party);
+                        cleanup(game);
                         return Unit.INSTANCE;
                     });
         } else {
@@ -118,6 +119,7 @@ public class GameManagerImpl implements GameManager {
                     .map(warzonePlayer -> {
                         playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
                         partyManager.leave(party, player);
+                        cleanup(game);
                         return Unit.INSTANCE;
                     });
         }
