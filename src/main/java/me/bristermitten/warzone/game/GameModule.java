@@ -6,6 +6,7 @@ import me.bristermitten.warzone.game.bossbar.BossBarManager;
 import me.bristermitten.warzone.game.bossbar.BossBarManagerImpl;
 import me.bristermitten.warzone.game.config.GameConfigModule;
 import me.bristermitten.warzone.game.init.ChunkLoadFiller;
+import me.bristermitten.warzone.game.statistic.GamePersistenceModule;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
 import me.bristermitten.warzone.listener.ListenerBinding;
 
@@ -21,5 +22,6 @@ public class GameModule extends AbstractModule {
                 .build(LeaveRequeueMenuFactory.class));
 
         install(new GameConfigModule());
+        install(new GamePersistenceModule());
     }
 }
