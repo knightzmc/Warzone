@@ -27,7 +27,6 @@ import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -201,9 +200,10 @@ public class GameManagerImpl implements GameManager {
 
         game.getDeaths().add(new PlayerDeath(
                 died,
-                Option.of(Bukkit.getPlayer(died)).map(LivingEntity::getKiller).map(Player::getUniqueId).getOrNull(),
+                Option.of(Bukkit.getPlayer(died)).flatMap(p -> Option.of(p.getKiller())).map(Player::getUniqueId).getOrNull(),
                 Instant.now(),
-                Option.of(event.getEntity().getLastDamageCause()).map(EntityDamageEvent::getCause)
+                Option.of(event.getEntity().getLastDamageCause())
+                        .map(EntityDamageEvent::getCause)
                         .map(cause -> switch (cause) {
                             case FALL -> PlayerDeath.DeathCause.FALL_DAMAGE;
                             case CUSTOM -> PlayerDeath.DeathCause.BORDER;

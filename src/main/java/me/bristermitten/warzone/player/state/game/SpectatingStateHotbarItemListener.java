@@ -25,24 +25,26 @@ public class SpectatingStateHotbarItemListener implements EventListener {
 
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
-        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.LEFT_CLICK_AIR) {
+        if (event.getAction() == Action.PHYSICAL) {
             return;
         }
         var item = event.getItem();
         if (item == null) {
             return;
         }
+        var clickedItem = gameConfigProvider.get().spectatorConfig().hotbarItems()
+                .get(event.getPlayer().getInventory().getHeldItemSlot());
+        if (clickedItem == null) {
+            return;
+        }
+        if (!item.equals(clickedItem.item())) {
+            return;
+        }
+        event.setCancelled(true);
+
         playerManager.loadPlayer(event.getPlayer().getUniqueId())
                 .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof SpectatingState)
                 .onSuccess(warzonePlayer -> {
-                    var clickedItem = gameConfigProvider.get().spectatorConfig().hotbarItems()
-                            .get(event.getPlayer().getInventory().getHeldItemSlot());
-                    if (clickedItem == null) {
-                        return;
-                    }
-                    if (!item.equals(clickedItem.item())) {
-                        return;
-                    }
                     var command = switch (clickedItem.action()) {
                         case LEAVE_GAME -> "warzone leave";
                         case REQUEUE -> "warzone requeue";
