@@ -2,7 +2,7 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
-import me.bristermitten.warzone.game.bossbar.GameBossBar;
+import me.bristermitten.warzone.bossbar.GameBossBar;
 import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;

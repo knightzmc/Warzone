@@ -1,7 +1,7 @@
 package me.bristermitten.warzone.arena;
 
 import io.vavr.collection.HashMap;
-import me.bristermitten.warzone.game.bossbar.BossBarConfig;
+import me.bristermitten.warzone.bossbar.BossBarConfig;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.util.Null;
 import net.kyori.adventure.bossbar.BossBar;

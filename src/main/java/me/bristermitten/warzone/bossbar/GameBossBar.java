@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game.bossbar;
+package me.bristermitten.warzone.bossbar;
 
 import me.bristermitten.warzone.game.Game;
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game.bossbar;
+package me.bristermitten.warzone.bossbar;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;

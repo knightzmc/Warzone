@@ -2,8 +2,8 @@ package me.bristermitten.warzone.game;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
-import me.bristermitten.warzone.game.bossbar.BossBarManager;
-import me.bristermitten.warzone.game.bossbar.BossBarManagerImpl;
+import me.bristermitten.warzone.bossbar.BossBarManager;
+import me.bristermitten.warzone.bossbar.BossBarManagerImpl;
 import me.bristermitten.warzone.game.config.GameConfigModule;
 import me.bristermitten.warzone.game.init.ChunkLoadFiller;
 import me.bristermitten.warzone.game.state.IdlingState;

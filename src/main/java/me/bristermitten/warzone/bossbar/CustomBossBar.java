@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game.bossbar;
+package me.bristermitten.warzone.bossbar;
 
 public interface CustomBossBar {
     BossBarConfig getBossBar();

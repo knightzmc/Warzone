@@ -2,8 +2,8 @@ package me.bristermitten.warzone.game.world;
 
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-import me.bristermitten.warzone.game.bossbar.BossBarManager;
-import me.bristermitten.warzone.game.bossbar.GameBossBar;
+import me.bristermitten.warzone.bossbar.BossBarManager;
+import me.bristermitten.warzone.bossbar.GameBossBar;
 import me.bristermitten.warzone.task.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;

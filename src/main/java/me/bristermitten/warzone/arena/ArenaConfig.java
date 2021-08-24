@@ -2,10 +2,7 @@ package me.bristermitten.warzone.arena;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.data.AngledPoint;
-import me.bristermitten.warzone.game.bossbar.BossBarConfig;
-import net.kyori.adventure.bossbar.BossBar;
-
-import java.util.Set;
+import me.bristermitten.warzone.bossbar.BossBarConfig;
 
 public interface ArenaConfig {
     record GulagConfig(
