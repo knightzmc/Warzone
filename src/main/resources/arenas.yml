@@ -28,7 +28,7 @@ arenas:
       boss-bar:
         format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
         color: BLUE # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Color.html
-        style: PROGRESS # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Overlay.html
+        overlay: PROGRESS # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Overlay.html
         flags: [ ] # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Flag.html
     playable-area:
       min:

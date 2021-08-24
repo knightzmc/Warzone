@@ -13,7 +13,7 @@ in-game:
     - "&4Time Remaining: &7%warzone_time_remaining%"
     - "&4Players Left: &7%warzone_players_remaining%"
     - "&4Kills: &7%warzone_kill_count%"
-    - "&2&lParty:\n &7%warzone_party_members_gameformat%"
+    - "&2&lParty:\n&7%warzone_party_members_gameformat%"
 
 # Format used when players are in the lobby
 lobby:
@@ -29,4 +29,4 @@ lobby:
 
 # How often the scoreboard should update in ticks. Smaller values mean the scoreboard is more responsive but might cause lag
 # 20 ticks = 1 second
-update-time: 20
+update-time: 10
