@@ -77,6 +77,10 @@ public class WarzoneExpansion extends PlaceholderExpansion {
                     .map(player1 -> xpHandler.xpRequiredForLevel(player1.getLevel() + 1))
                     .map(Object::toString)
                     .getOrElse(NOT_LOADED_YET);
+            case "xp" -> warzonePlayer
+                    .map(WarzonePlayer::getXp)
+                    .map(Object::toString)
+                    .getOrElse(NOT_LOADED_YET);
             default -> null;
         };
         if (simple != null) {
