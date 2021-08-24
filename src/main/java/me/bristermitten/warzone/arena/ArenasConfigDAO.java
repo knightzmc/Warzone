@@ -31,6 +31,7 @@ public record ArenasConfigDAO(
                 @SerializedName("time-limit") int timeLimit,
                 @SerializedName("player-limit") int playerLimit,
                 @SerializedName("border-damage") int borderDamage,
+                @SerializedName("min-border-size") Double minBorderSize,
                 @SerializedName("border-damage-time") int borderDamageTime,
                 @SerializedName("chest-rate") float chestRate,
                 @SerializedName("max-gulag-entries") @Nullable Integer maxGulagEntries,

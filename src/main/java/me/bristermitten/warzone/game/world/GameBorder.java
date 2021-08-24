@@ -37,7 +37,7 @@ public class GameBorder {
     public void begin() {
         border.setCenter(around.playableArea().center().toLocation(world));
         border.setSize(around.playableArea().longestSizeLength());
-        border.setSize(0, around.gameConfig().timeLimit()); // this probably won't work
+        border.setSize(around.gameConfig().minBorderSize(), around.gameConfig().timeLimit()); // this probably won't work
         border.setDamageAmount(0);
         border.setDamageBuffer(0);
     }

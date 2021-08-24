@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class ArenaLoader {
     private static final int DEFAULT_PRIORITY = 0;
+    public static final double DEFAULT_MINIMUM_BORDER_SIZE = 15;
 
     private final LootTableManager manager;
 
@@ -59,6 +60,7 @@ public class ArenaLoader {
                 configuration.timeLimit(),
                 configuration.playerLimit(),
                 configuration.borderDamage(),
+                Null.get(configuration.minBorderSize(), DEFAULT_MINIMUM_BORDER_SIZE),
                 configuration.borderDamageTime(),
                 configuration.chestRate(),
                 Null.get(configuration.maxGulagEntries(), 1),

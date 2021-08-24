@@ -16,6 +16,7 @@ public interface ArenaConfig {
             int timeLimit,
             int playerLimit,
             int borderDamage,
+            double minBorderSize,
             int borderDamageTime,
             float chestRate,
             int maxGulagEntries,
