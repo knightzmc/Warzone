@@ -2,7 +2,6 @@ package me.bristermitten.warzone.player;
 
 import com.google.inject.AbstractModule;
 import me.bristermitten.warzone.listener.ListenerBinding;
-import me.bristermitten.warzone.player.state.PlayerStateChangeListener;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.PlayerStatesImpl;
 import me.bristermitten.warzone.player.state.game.SpectatingStateHotbarItemListener;
@@ -17,7 +16,6 @@ public class PlayerModule extends AbstractModule {
         bind(PlayerManager.class).to(PlayerManagerImpl.class);
 
         ListenerBinding.bindListener(binder()).to(PlayerJoinQuitListener.class);
-        ListenerBinding.bindListener(binder()).to(PlayerStateChangeListener.class);
         ListenerBinding.bindListener(binder()).to(PlayerKillDeathListener.class);
         ListenerBinding.bindListener(binder()).to(SpectatingStateHotbarItemListener.class);
     }
