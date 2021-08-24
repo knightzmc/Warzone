@@ -26,6 +26,7 @@ import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerModule;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
 import me.bristermitten.warzone.player.xp.XPConfig;
+import me.bristermitten.warzone.protocol.ProtocolModule;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
 import org.bukkit.Bukkit;
@@ -65,6 +66,7 @@ public class Warzone extends JavaPlugin {
                     , new LeaderboardModule()
                     , new MatchmakingModule()
                     , new GameModule()
+                    , new ProtocolModule()
             );
 
             var injector = Guice.createInjector(modules);
