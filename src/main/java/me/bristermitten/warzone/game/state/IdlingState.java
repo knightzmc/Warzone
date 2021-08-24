@@ -7,7 +7,7 @@ import me.bristermitten.warzone.game.Game;
  * A game will rarely be in this state as generally it's either in the lobby or in an actual game
  */
 public class IdlingState implements GameState {
-    public static final GameState INSTANCE = new IdlingState();
+    public static final IdlingState INSTANCE = new IdlingState();
 
     private IdlingState() {
     }
