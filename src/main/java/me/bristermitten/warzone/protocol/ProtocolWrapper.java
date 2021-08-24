@@ -17,14 +17,23 @@ public class ProtocolWrapper {
         this.protocolManager = protocolManager;
     }
 
-    public void makePlayerGlowing(Player target, Player viewer){
+    public void makePlayerGlowing(Player target, Player viewer) {
+
         var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
+
+        packet.getModifier().writeDefaults();
         packet.getIntegers().write(0, target.getEntityId());
-        WrappedDataWatcher watcher = new WrappedDataWatcher(); //Create data watcher, the Entity Metadata packet requires this
-        WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Byte.class); //Found this through google, needed for some stupid reason
+
+        WrappedDataWatcher watcher = WrappedDataWatcher.getEntityWatcher(target);
+        WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Byte.class);
+
+        byte mask = watcher.getByte(0);
+        mask |= 0x40;
+
         watcher.setEntity(target); //Set the new data watcher's target
-        watcher.setObject(0, serializer, (byte) (0x40)); //Set status to glowing, found on protocol page
-        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects()); //Make the packet's datawatcher the one we created
+        watcher.setObject(0, serializer, mask); //Set status to glowing, found on protocol page
+        packet.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
+
         try {
             protocolManager.sendServerPacket(viewer, packet);
         } catch (InvocationTargetException e) {

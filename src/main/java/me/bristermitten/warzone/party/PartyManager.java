@@ -100,7 +100,7 @@ public class PartyManager {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().invalidInvite());
             return;
         }
-        if (!gameManager.getGameContaining(invite.invitingTo()).isEmpty()) {
+        if (gameManager.getGameContaining(invite.invitingTo()).isDefined()) {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame());
             return;
         }

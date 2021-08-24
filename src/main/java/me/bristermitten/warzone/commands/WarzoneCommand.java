@@ -2,18 +2,16 @@ package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-import me.bristermitten.warzone.game.init.ChunkChestFiller;
 import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
-import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
+import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import me.bristermitten.warzone.util.Consumers;
 import org.bukkit.entity.Player;
 
@@ -22,25 +20,23 @@ import java.util.function.BiConsumer;
 
 @CommandAlias("warzone")
 public class WarzoneCommand extends BaseCommand {
-    private final ChunkChestFiller chunkChestFiller;
-    private final LootTableManager lootTableManager;
     private final MatchmakingService matchmakingService;
     private final PartyManager partyManager;
     private final InProgressState inProgressState;
     private final GameManager gameManager;
     private final LeaveRequeueMenuFactory leaveRequeueMenuFactory;
     private final LangService langService;
+    private final ProtocolWrapper protocolWrapper;
 
     @Inject
-    public WarzoneCommand(ChunkChestFiller chunkChestFiller, LootTableManager lootTableManager, MatchmakingService matchmakingService, PartyManager partyManager, InProgressState inProgressState, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService) {
-        this.chunkChestFiller = chunkChestFiller;
-        this.lootTableManager = lootTableManager;
+    public WarzoneCommand(MatchmakingService matchmakingService, PartyManager partyManager, InProgressState inProgressState, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService, ProtocolWrapper protocolWrapper) {
         this.matchmakingService = matchmakingService;
         this.partyManager = partyManager;
         this.inProgressState = inProgressState;
         this.gameManager = gameManager;
         this.leaveRequeueMenuFactory = leaveRequeueMenuFactory;
         this.langService = langService;
+        this.protocolWrapper = protocolWrapper;
     }
 
     @Subcommand("join")
@@ -101,8 +97,7 @@ public class WarzoneCommand extends BaseCommand {
     }
 
     @Subcommand("test")
-    public void test(Player sender, @Default("0.5") float chestChance, @Default("basic") String lootTableName) {
-        var table = lootTableManager.getTables().apply(lootTableName);
-        chunkChestFiller.fill(sender.getChunk(), table, chestChance);
+    public void test(Player sender, Player target) {
+        protocolWrapper.makePlayerGlowing(target, sender);
     }
 }
