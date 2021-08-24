@@ -238,6 +238,7 @@ public class GameManagerImpl implements GameManager {
                 return;
             }
             game.getGameBorder().pause();
+            game.getGameBossBar().setPaused(true);
 
             var winningParty = remainingParties.keySet().head();
             var stats = new GameStatistic(

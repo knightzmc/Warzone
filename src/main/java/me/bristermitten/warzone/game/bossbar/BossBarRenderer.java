@@ -1,6 +1,5 @@
 package me.bristermitten.warzone.game.bossbar;
 
-import me.bristermitten.warzone.arena.ArenaConfig;
 import me.bristermitten.warzone.chat.ChatFormatter;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -19,23 +18,23 @@ public class BossBarRenderer {
     }
 
 
-    public void renderInto(BossBar bar, Player player, GameBossBar gameBossBar) {
-        var bossBarConfig = gameBossBar.game().getArena().gameConfig().bossBarConfig();
-        render(bar, player, bossBarConfig, (float) gameBossBar.getProgress());
+    public void renderInto(BossBar bar, Player player, CustomBossBar customBossBar) {
+        var bossBarConfig = customBossBar.getBossBar();
+        render(bar, player, bossBarConfig);
     }
 
-    public BossBar render(Player player, GameBossBar gameBossBar) {
+    public BossBar render(Player player, CustomBossBar customBossBar) {
         var bar = emptyBossBar.get();
-        renderInto(bar, player, gameBossBar);
+        renderInto(bar, player, customBossBar);
         return bar;
     }
 
-    private void render(BossBar bar, Player player, ArenaConfig.GameConfig.BossBarConfig config, float progress) {
-        var formatted = formatter.format(config.format(), player);
+    private void render(BossBar bar, Player player, BossBarConfig config) {
+        var formatted = formatter.format(config.name(), player);
         bar.name(formatted);
-        bar.progress(progress);
+        bar.progress(config.progress());
         bar.color(config.color());
-        bar.overlay(config.style());
+        bar.overlay(config.overlay());
         bar.flags(config.flags());
     }
 

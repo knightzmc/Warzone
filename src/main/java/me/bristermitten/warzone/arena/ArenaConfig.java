@@ -2,6 +2,7 @@ package me.bristermitten.warzone.arena;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.data.AngledPoint;
+import me.bristermitten.warzone.game.bossbar.BossBarConfig;
 import net.kyori.adventure.bossbar.BossBar;
 
 import java.util.Set;
@@ -23,12 +24,6 @@ public interface ArenaConfig {
             int maxGulagEntries,
             BossBarConfig bossBarConfig
     ) {
-        public record BossBarConfig(
-                String format,
-                BossBar.Color color,
-                BossBar.Overlay style,
-                Set<BossBar.Flag> flags
-        ) {
-        }
+
     }
 }
