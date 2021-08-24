@@ -4,8 +4,8 @@ import java.util.List;
 
 public record PlayerStatistic(
         int shotsFired,
+        int shotsHit,
         List<String> weaponsPickedUp,
-        double accuracy,
         int medkitsUsed,
         int timesReloaded
 ) {
