@@ -4,6 +4,7 @@ package me.bristermitten.warzone.game.config;
 import com.google.inject.Inject;
 import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import me.bristermitten.warzone.game.spawning.PlayerSpawningMethod;
 import me.bristermitten.warzone.item.ItemRenderer;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.potion.PotionEffect;
@@ -42,6 +43,6 @@ public class GameConfigLoader implements Provider<GameConfig> {
     public GameConfig get() {
         var dao = daoProvider.get();
         var spectator = loadSpectatorConfig(dao.spectatorMode());
-        return new GameConfig(spectator);
+        return new GameConfig(spectator, Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA));
     }
 }

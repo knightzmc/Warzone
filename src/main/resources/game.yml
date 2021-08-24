@@ -19,3 +19,9 @@ spectator-mode:
         type: GREEN_TERRACOTTA
         name: 'Queue Again'
       action: REQUEUE
+
+# How players should drop in to a game
+# "ELYTRA": spawn in the center of the map in the sky with elytras
+# "TELEPORT": spawn in a random location in the map, close to their party
+# defaults to ELYTRA
+drop-in-method: ELYTRA
