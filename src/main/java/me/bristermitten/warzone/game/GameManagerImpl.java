@@ -233,6 +233,11 @@ public class GameManagerImpl implements GameManager {
             var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
 
+            if (remainingParties.isEmpty()) {
+                //pack it up boys
+                cleanup(game);
+                return;
+            }
             if (remainingParties.keySet().size() != 1) {
                 // The game isn't over yet!
                 return;
@@ -271,9 +276,13 @@ public class GameManagerImpl implements GameManager {
                                         Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName())));
                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
             });
-            setState(game, GameStates::idlingState);
-            arenaManager.free(game.getArena());
+            cleanup(game);
         });
+    }
+
+    private void cleanup(Game game) {
+        setState(game, GameStates::idlingState);
+        arenaManager.free(game.getArena());
     }
 
 
