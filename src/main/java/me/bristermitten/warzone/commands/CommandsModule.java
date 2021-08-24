@@ -16,6 +16,7 @@ public class CommandsModule extends AbstractModule {
 
         var commandBinder = Multibinder.newSetBinder(binder(), BaseCommand.class);
         commandBinder.addBinding().to(WarzoneCommand.class);
+        commandBinder.addBinding().to(WarzoneAdminCommand.class);
         commandBinder.addBinding().to(PartyCommand.class);
         commandBinder.addBinding().to(LeaderboardCommand.class);
     }

@@ -41,3 +41,8 @@ game:
   winner:
     title: '<gold>Victory!'
   winner-broadcast: '<gold>{winner}''s party wins!'
+errors:
+  xp-not-positive: '<red>XP must be positive!'
+admin:
+  stats-reset: '<green>Stats reset for {player}!'
+  xp-set: '<green>Set {player}''s xp to {value}!'

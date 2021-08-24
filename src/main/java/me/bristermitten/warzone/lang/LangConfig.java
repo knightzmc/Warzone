@@ -6,11 +6,18 @@ import org.jetbrains.annotations.NotNull;
 
 public record LangConfig(
         @SerializedName("party") PartyLang partyLang,
-        @SerializedName("game") GameLang gameLang
+        @SerializedName("game") GameLang gameLang,
+        @SerializedName("admin") AdminLang adminLang,
+        @SerializedName("errors") ErrorLang errorLang
 ) {
     public static final Configuration<LangConfig> CONFIG = new Configuration<>(LangConfig.class, "lang.yml");
 
     public record TitleConfig(@NotNull LangElement title, @NotNull LangElement subtitle) {
+    }
+
+    public record ErrorLang(
+            @SerializedName("xp-not-positive") LangElement xpNotPositive
+    ) {
     }
 
     public record GameLang(
@@ -19,6 +26,11 @@ public record LangConfig(
             , @SerializedName("already-in-game") LangElement alreadyInGame
             , @SerializedName("winner") LangElement winner
             , @SerializedName("winner-broadcast") LangElement winnerBroadcast
+    ) {
+    }
+
+    public record AdminLang(
+            @SerializedName("stats-reset") LangElement statsReset
     ) {
     }
 
