@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.arena;
 
 import io.vavr.collection.HashMap;
+import me.bristermitten.warzone.game.bossbar.BossBarConfig;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.util.Null;
 import net.kyori.adventure.bossbar.BossBar;
@@ -43,9 +44,10 @@ public class ArenaLoader {
         );
     }
 
-    public ArenaConfig.GameConfig.BossBarConfig loadBossBarConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO.BossBarConfigDAO configuration) {
-        return new ArenaConfig.GameConfig.BossBarConfig(
+    public BossBarConfig loadBossBarConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO.BossBarConfigDAO configuration) {
+        return new BossBarConfig(
                 configuration.format(),
+                1f,
                 Null.get(configuration.color(), BossBar.Color.WHITE),
                 Null.get(configuration.style(), BossBar.Overlay.PROGRESS),
                 Null.get(configuration.flags(), Set.<BossBar.Flag>of()).stream().filter(Objects::nonNull).collect(Collectors.toSet())
