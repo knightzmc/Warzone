@@ -14,7 +14,6 @@ public class SnakeYamlProvider implements Provider<Yaml> {
         options.setPrettyFlow(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setSplitLines(false);
-        options.setDefaultScalarStyle(DumperOptions.ScalarStyle.SINGLE_QUOTED);
         return new Yaml(options);
     }
 }
