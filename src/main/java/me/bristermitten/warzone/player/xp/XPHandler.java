@@ -39,20 +39,46 @@ public class XPHandler {
         addXP(player, xp.applyAsInt(this.xpConfig.get()));
     }
 
-    public void addXP(@NotNull WarzonePlayer warzonePlayer, int xp) {
-        warzonePlayer.setXp(warzonePlayer.getXp() + xp);
-        var xpToNextLevel = xpRequiredForLevel(warzonePlayer.getLevel() + 1);
-        Option.of(xpConfig.get().xpGainSound())
-                .peek(xpGainSound ->
-                        warzonePlayer.getPlayer().peek(player ->
-                                player.playSound(player.getLocation(), xpGainSound, 1f, 1f)));
-        if (warzonePlayer.getXp() >= xpToNextLevel) {
-            levelUp(warzonePlayer);
+    public void addXP(@NotNull WarzonePlayer warzonePlayer, long xp) {
+        setXP(warzonePlayer, warzonePlayer.getXp() + xp);
+    }
+
+    public void setXP(@NotNull WarzonePlayer warzonePlayer, long newXP) {
+        if (newXP < 0) {
+            throw new IllegalArgumentException("XP cannot be negative");
+        }
+
+        // find the new level that they should be at
+        int newLevel = -1;
+        if (newXP == 0) {
+            newLevel = 0;
+        } else {
+            for (int i = 0; i < Integer.MAX_VALUE; i++) {
+                var xpForLevel = xpRequiredForLevel(i); // should we cache this?
+                if (xpForLevel <= newXP) {
+                    newLevel = i;
+                } else {
+                    break;
+                }
+            }
+        }
+        if (newLevel == -1) {
+            throw new IllegalStateException("Could not determine new level for XP value " + newXP);
+        }
+        var oldLevel = warzonePlayer.getLevel();
+        warzonePlayer.setLevel(newLevel);
+        warzonePlayer.setXp(newXP);
+        if (newLevel > oldLevel) {
+            levelUp(warzonePlayer, newLevel);
         }
     }
 
-    private void levelUp(@NotNull WarzonePlayer warzonePlayer) {
-        warzonePlayer.setLevel(warzonePlayer.getLevel() + 1);
+    private void levelUp(@NotNull WarzonePlayer warzonePlayer, int newLevel) {
+        warzonePlayer.setLevel(newLevel);
+        playLevelUpSound(warzonePlayer);
+    }
+
+    private void playLevelUpSound(@NotNull WarzonePlayer warzonePlayer) {
         Option.of(xpConfig.get().levelUpSound())
                 .peek(levelUpSound ->
                         warzonePlayer.getPlayer()
