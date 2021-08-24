@@ -25,6 +25,7 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
+import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -53,6 +54,7 @@ public class GameManagerImpl implements GameManager {
     private final LangService langService;
     private final GamePersistence gamePersistence;
     private final XPHandler xpHandler;
+    private final Schedule schedule;
 
 
     @Inject
@@ -64,7 +66,7 @@ public class GameManagerImpl implements GameManager {
                            GameWorldUpdateTask gameWorldUpdateTask,
                            LangService langService,
                            XPHandler xpHandler,
-                           GamePersistence gamePersistence) {
+                           GamePersistence gamePersistence, Schedule schedule) {
         this.states = states;
         this.playerManager = playerManager;
         this.partyManager = partyManager;
@@ -74,6 +76,7 @@ public class GameManagerImpl implements GameManager {
         this.langService = langService;
         this.gamePersistence = gamePersistence;
         this.xpHandler = xpHandler;
+        this.schedule = schedule;
     }
 
     public @NotNull Set<Game> getGames() {
@@ -104,9 +107,7 @@ public class GameManagerImpl implements GameManager {
         }
         var party = partyManager.getParty(player.getUniqueId());
         if (includeParty || party.getSize() == PartySize.SINGLES) {
-            return Future.sequence(
-                    List.ofAll(party.getAllMembers())
-                            .map(playerManager::loadPlayer))
+            return Future.sequence(List.ofAll(party.getAllMembers()).map(playerManager::loadPlayer))
                     .map(players -> {
                         players.forEach(warzonePlayer ->
                                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
@@ -231,7 +232,7 @@ public class GameManagerImpl implements GameManager {
 
 
     private void checkForWinner(Game game) {
-        getAllPlayers(game).onSuccess(players -> {
+        getAllPlayers(game).flatMap(schedule.runSync(players -> {
             var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
 
@@ -279,7 +280,7 @@ public class GameManagerImpl implements GameManager {
                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
             });
             cleanup(game);
-        });
+        }));
     }
 
     private void cleanup(Game game) {
