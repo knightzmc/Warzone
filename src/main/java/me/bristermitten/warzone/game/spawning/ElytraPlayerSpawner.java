@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game.spawning;
 
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
+import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,9 +12,11 @@ import javax.inject.Inject;
 
 public class ElytraPlayerSpawner implements PlayerSpawner {
     private static final int ELYTRA_Y = 100;
+    private final ProtocolWrapper protocolWrapper;
 
     @Inject
-    public ElytraPlayerSpawner() {
+    public ElytraPlayerSpawner(ProtocolWrapper protocolWrapper) {
+        this.protocolWrapper = protocolWrapper;
     }
 
     @Override
@@ -27,7 +30,16 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
             if (player == null) {
                 return;
             }
-
+            party.getAllMembers().forEach(otherUUID -> {
+                if (otherUUID.equals(uuid)) {
+                    return;
+                }
+                var otherPlayer = Bukkit.getPlayer(otherUUID);
+                if (otherPlayer == null) {
+                    return;
+                }
+                protocolWrapper.makePlayerGlowing(otherPlayer, player);
+            });
             player.getInventory().setChestplate(new ItemStack(Material.ELYTRA));
             player.teleport(center.toLocation(world));
         });

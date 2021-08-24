@@ -23,12 +23,14 @@ repositories {
     maven("https://jitpack.io")
     maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://repo.aikar.co/content/groups/aikar/")
+    maven("https://repo.dmulloy2.net/repository/public/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     compileOnly("me.zombie_striker:QualityArmory:1.1.169")
     compileOnly("org.jetbrains:annotations:21.0.1")
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
 
     compileOnly("me.clip:placeholderapi:2.10.10")
 
