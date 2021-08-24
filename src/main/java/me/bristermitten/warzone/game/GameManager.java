@@ -8,12 +8,12 @@ import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.GameStates;
-import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.StateManager;
+import me.bristermitten.warzone.util.Unit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.Contract;
@@ -66,6 +66,7 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      * @param player       The player to leave
      * @param includeParty Whether or not the player's party members should also leave the game
      * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
+     * @return A Future that will complete once the player has left the game
      */
-    void leave(Game game, OfflinePlayer player, boolean includeParty);
+    Future<Unit> leave(Game game, OfflinePlayer player, boolean includeParty);
 }

@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.game.statistic;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class PlayerInformation {
     private int shotsHit;
     private int medkitsUsed;
     private int timesReloaded;
-    private List<String> weaponsPickedUp;
+    private List<String> weaponsPickedUp = new ArrayList<>();
 
     public PlayerInformation(UUID player) {
         this.player = player;

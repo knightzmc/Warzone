@@ -25,6 +25,7 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
+import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -93,29 +94,31 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void leave(Game game, OfflinePlayer player, boolean includeParty) {
+    public Future<Unit> leave(Game game, OfflinePlayer player, boolean includeParty) {
         if (!gameContains(game, player.getUniqueId())) {
             throw new IllegalArgumentException("Player is not in this game");
         }
         if (game.getState() instanceof IdlingState) {
             // This shouldn't happen, just fail silently
-            return;
+            return Future.successful(Unit.INSTANCE);
         }
         var party = partyManager.getParty(player.getUniqueId());
         if (includeParty || party.getSize() == PartySize.SINGLES) {
-            Future.sequence(
+            return Future.sequence(
                     List.ofAll(party.getAllMembers())
                             .map(playerManager::loadPlayer))
-                    .onSuccess(players -> {
+                    .map(players -> {
                         players.forEach(warzonePlayer ->
                                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
                         game.getParties().remove(party);
+                        return Unit.INSTANCE;
                     });
         } else {
-            playerManager.loadPlayer(player.getUniqueId())
-                    .onSuccess(warzonePlayer -> {
+            return playerManager.loadPlayer(player.getUniqueId())
+                    .map(warzonePlayer -> {
                         playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
                         partyManager.leave(party, player);
+                        return Unit.INSTANCE;
                     });
         }
     }
@@ -229,6 +232,7 @@ public class GameManagerImpl implements GameManager {
         getAllPlayers(game).onSuccess(players -> {
             var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
+
             if (remainingParties.keySet().size() != 1) {
                 // The game isn't over yet!
                 return;

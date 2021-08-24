@@ -14,6 +14,7 @@ import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
+import me.bristermitten.warzone.util.Consumers;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
@@ -95,10 +96,8 @@ public class WarzoneCommand extends BaseCommand {
     @Subcommand("requeue")
     public void requeue(Player sender) {
         processGameLeave(sender,
-                (game, isPartyOwner) -> {
-                    gameManager.leave(game, sender, isPartyOwner);
-                    join(sender);
-                }, "Requeue");
+                (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner)
+                        .onSuccess(Consumers.run(() -> join(sender))), "Requeue");
     }
 
     @Subcommand("test")
