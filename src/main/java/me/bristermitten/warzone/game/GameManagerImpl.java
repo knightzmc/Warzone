@@ -286,6 +286,7 @@ public class GameManagerImpl implements GameManager {
     private void cleanup(Game game) {
         setState(game, GameStates::idlingState);
         arenaManager.free(game.getArena());
+        games.remove(game);
     }
 
 
