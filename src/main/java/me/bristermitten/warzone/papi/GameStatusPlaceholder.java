@@ -53,7 +53,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
         return switch (params) {
             case "kill_count" -> gameManager.getGameContaining(player.getUniqueId())
                     .flatMap(game -> game.getInfo(player.getUniqueId()))
-                    .map(PlayerInformation::getKills)
+                    .map(PlayerInformation::getKillCount)
                     .map(Objects::toString)
                     .getOrElse(NOT_IN_GAME);
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())

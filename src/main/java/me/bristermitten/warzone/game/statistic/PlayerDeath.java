@@ -18,6 +18,7 @@ public record PlayerDeath(
         OTHER,
         /**
          * Used in the case when an invalid value is used in the database
+         * or the death cause could not be determined
          */
         UNKNOWN
     }

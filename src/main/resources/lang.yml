@@ -38,3 +38,6 @@ game:
   player-out:
     title: '<red>You''re out!'
     subtitle: '<gray>You can find a new game, or spectate this one'
+  winner:
+    title: '<gold>Victory!'
+  winner-broadcast: '<gold>{winner}''s party wins!'

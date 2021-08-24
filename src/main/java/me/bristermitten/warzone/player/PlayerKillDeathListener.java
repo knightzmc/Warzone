@@ -30,19 +30,19 @@ public class PlayerKillDeathListener implements EventListener {
     }
 
     @EventHandler
-    public void onKill(@NotNull PlayerDeathEvent e) {
-        e.setCancelled(true);
-        playerManager.loadPlayer(e.getEntity().getUniqueId(),
+    public void onKill(@NotNull PlayerDeathEvent event) {
+        event.setCancelled(true);
+        playerManager.loadPlayer(event.getEntity().getUniqueId(),
                 whoDied -> {
                     whoDied.setDeaths(whoDied.getDeaths() + 1);
                     var containingGame = gameManager.getGameContaining(whoDied.getPlayerId());
                     containingGame
                             .flatMap(game -> game.getInfo(whoDied.getPlayerId()))
                             .peek(playerInformation -> playerInformation.setDeathCount(playerInformation.getDeathCount() + 1))
-                            .peek(unused -> gameManager.handleDeath(containingGame.get(), whoDied.getPlayerId()));
+                            .peek(unused -> gameManager.handleDeath(containingGame.get(), whoDied.getPlayerId(), event));
                 });
 
-        Player killerPlayer = e.getEntity().getKiller();
+        Player killerPlayer = event.getEntity().getKiller();
         if (killerPlayer == null) {
             return;
         }
@@ -54,7 +54,7 @@ public class PlayerKillDeathListener implements EventListener {
             }
             gameManager.getGameContaining(killerPlayer.getUniqueId())
                     .flatMap(game -> game.getInfo(killerPlayer.getUniqueId()))
-                    .peek(information -> information.setKills(information.getKills() + 1));
+                    .peek(information -> information.setKillCount(information.getKillCount() + 1));
         });
     }
 }

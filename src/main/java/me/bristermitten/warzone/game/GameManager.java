@@ -8,12 +8,14 @@ import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.GameStates;
+import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.StateManager;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -24,7 +26,7 @@ import java.util.UUID;
 public interface GameManager extends StateManager<Game, GameState, GameStates> {
     @Unmodifiable @NotNull Set<@NotNull Game> getGames();
 
-    void handleDeath(Game game, UUID died);
+    void handleDeath(Game game, UUID died, PlayerDeathEvent event);
 
     boolean gameContains(Game game, UUID uuid);
 

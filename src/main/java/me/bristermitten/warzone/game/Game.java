@@ -6,6 +6,7 @@ import me.bristermitten.warzone.game.bossbar.GameBossBar;
 import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
+import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.world.GameBorder;
 import me.bristermitten.warzone.party.Party;
@@ -24,6 +25,7 @@ public class Game implements Stateful<Game, GameState> {
     private final PartySize acceptedSize;
     private final GameTimer timer;
     private final Map<UUID, PlayerInformation> playerInformationMap = new HashMap<>();
+    private final Set<PlayerDeath> deaths = new HashSet<>();
     private final Gulag gulag;
     private final GameBorder gameBorder;
     private final GameBossBar gameBossBar;
@@ -40,6 +42,10 @@ public class Game implements Stateful<Game, GameState> {
         this.gameBossBar = new GameBossBar(this);
         players.stream().map(Party::getAllMembers).flatMap(Collection::stream)
                 .forEach(playerUUID -> playerInformationMap.put(playerUUID, new PlayerInformation(playerUUID)));
+    }
+
+    Set<PlayerDeath> getDeaths() {
+        return deaths;
     }
 
     public GameBorder getGameBorder() {
