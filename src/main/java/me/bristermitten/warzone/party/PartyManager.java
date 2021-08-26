@@ -2,6 +2,7 @@ package me.bristermitten.warzone.party;
 
 import io.vavr.control.Option;
 import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.Null;
@@ -100,8 +101,10 @@ public class PartyManager {
             langService.sendMessage(receivingPlayer, config -> config.partyLang().invalidInvite());
             return;
         }
-        if (gameManager.getGameContaining(invite.invitingTo()).isDefined()) {
-            langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame());
+        var gameContainingInviter = gameManager.getGameContaining(invite.invitingTo());
+        if (gameContainingInviter.isDefined() && gameContainingInviter.get().getState() instanceof InProgressState) {
+            langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame(),
+                    Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(invite.invitingTo().getOwner()).getName(), UNKNOWN_NAME)));
             return;
         }
 

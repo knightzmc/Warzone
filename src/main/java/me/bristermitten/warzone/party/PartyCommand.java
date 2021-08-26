@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import co.aikar.commands.bukkit.contexts.OnlinePlayer;
+import com.google.common.collect.Iterables;
 import me.bristermitten.warzone.lang.LangService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -55,7 +56,7 @@ public class PartyCommand extends BaseCommand {
         }
 
         if (invites.size() == 1) {
-            var nextInvite = invites.iterator().next();
+            var nextInvite = Iterables.getOnlyElement(invites);
             partyManager.accept(nextInvite);
             return;
         }
