@@ -259,6 +259,9 @@ exactly 1 hour spent today
 - 17:00 - resume
 - 19:15 - pause
 - 20:05 - resume
+- 21:25 - pause
+
+3 hours 50 minutes spent today
 
 ## 2021-08-24
 
@@ -267,6 +270,11 @@ exactly 1 hour spent today
 - 20:40 - resume
 - 23:25 - finish for today
 
+5 hours 5 minutes spent today
+
 ## 2021-08-26
 
-22:35 - start work
+- 22:32 - start work
+- 23:30 - pause
+
+1 hour spent today
