@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +18,11 @@ public class ProtocolWrapper {
         this.protocolManager = protocolManager;
     }
 
-    public void makePlayerGlowing(Player target, Player viewer) {
+    public void makePlayerGlowing(@NotNull Player target, @NotNull Player viewer) {
+        sendMetadataPacket(target, viewer, mask -> (byte) (mask | 0x40)); // add glowing
+    }
+
+    private void sendMetadataPacket(@NotNull Player target, @NotNull Player viewer, @NotNull ByteUnaryOperator maskOp) {
 
         var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
 
@@ -28,7 +33,8 @@ public class ProtocolWrapper {
         WrappedDataWatcher.Serializer serializer = WrappedDataWatcher.Registry.get(Byte.class);
 
         byte mask = watcher.getByte(0);
-        mask |= 0x40;
+        mask = maskOp.applyAsByte(mask);
+
 
         watcher.setEntity(target); //Set the new data watcher's target
         watcher.setObject(0, serializer, mask); //Set status to glowing, found on protocol page
@@ -39,5 +45,14 @@ public class ProtocolWrapper {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public void undoPlayerGlowing(@NotNull Player target, @NotNull Player viewer) {
+        this.sendMetadataPacket(target, viewer, mask -> (byte) (mask & ~0x40)); // remove glowing effect
+    }
+
+    @FunctionalInterface
+    interface ByteUnaryOperator {
+        byte applyAsByte(byte operand);
     }
 }

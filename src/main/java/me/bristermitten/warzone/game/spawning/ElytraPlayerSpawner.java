@@ -1,17 +1,28 @@
 package me.bristermitten.warzone.game.spawning;
 
+import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.inject.Inject;
 
 public class ElytraPlayerSpawner implements PlayerSpawner {
+    public static final ItemStack ELYTRA_ITEM = new ItemStack(Material.ELYTRA);
     private static final int ELYTRA_Y = 100;
+    private static final NamespacedKey ELYTRA_KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "elytra_drop_in");
+
+    static {
+        ELYTRA_ITEM.editMeta(meta -> meta.getPersistentDataContainer().set(ELYTRA_KEY, PersistentDataType.BYTE, (byte) 1));
+    }
+
     private final ProtocolWrapper protocolWrapper;
 
     @Inject
@@ -40,7 +51,7 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
                 }
                 protocolWrapper.makePlayerGlowing(otherPlayer, player);
             });
-            player.getInventory().setChestplate(new ItemStack(Material.ELYTRA));
+            player.getInventory().setChestplate(ELYTRA_ITEM);
             player.teleport(center.toLocation(world));
         });
     }
