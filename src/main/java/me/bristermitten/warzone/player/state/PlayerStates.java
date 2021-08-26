@@ -1,14 +1,13 @@
 package me.bristermitten.warzone.player.state;
 
 import me.bristermitten.warzone.player.WarzonePlayer;
-import me.bristermitten.warzone.player.state.game.AliveState;
-import me.bristermitten.warzone.player.state.game.InGulagArenaState;
-import me.bristermitten.warzone.player.state.game.InGulagQueuingState;
-import me.bristermitten.warzone.player.state.game.SpectatingState;
+import me.bristermitten.warzone.player.state.game.*;
 import me.bristermitten.warzone.state.States;
 
 public interface PlayerStates extends States<WarzonePlayer, PlayerState> {
     AliveState aliveState();
+
+    InGameSpawningState inGameSpawningState();
 
     InGulagArenaState inGulagArenaState();
 

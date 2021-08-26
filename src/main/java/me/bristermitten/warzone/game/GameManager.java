@@ -41,6 +41,10 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
 
     @NotNull Option<Game> getGameContaining(UUID uuid);
 
+    default @NotNull Option<Game> getGameContaining(WarzonePlayer player) {
+        return getGameContaining(player.getPlayerId());
+    }
+
     @NotNull Option<Game> getGameContaining(Party party);
 
     void addToGame(Game game, Party party);
@@ -65,8 +69,8 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      * @param game         The game to leave
      * @param player       The player to leave
      * @param includeParty Whether or not the player's party members should also leave the game
-     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
      * @return A Future that will complete once the player has left the game
+     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
      */
     Future<Unit> leave(Game game, OfflinePlayer player, boolean includeParty);
 }

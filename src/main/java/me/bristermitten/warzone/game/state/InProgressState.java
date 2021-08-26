@@ -26,9 +26,9 @@ public class InProgressState implements GameState {
     @Override
     public void onEnter(Game game) {
         game.getPartiesInGame().forEach(party -> {
-            playerSpawner.spawn(game, party);
             party.getAllMembers().forEach(uuid ->
                     playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::aliveState)));
+            playerSpawner.spawn(game, party);
         });
         game.getTimer().start();
         game.getGameBorder().begin();

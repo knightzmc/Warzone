@@ -3,6 +3,8 @@ package me.bristermitten.warzone.game.spawning;
 import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
+import me.bristermitten.warzone.player.PlayerManager;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -24,23 +26,22 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
     }
 
     private final ProtocolWrapper protocolWrapper;
+    private final PlayerManager playerManager;
 
     @Inject
-    public ElytraPlayerSpawner(ProtocolWrapper protocolWrapper) {
+    public ElytraPlayerSpawner(ProtocolWrapper protocolWrapper, PlayerManager playerManager) {
         this.protocolWrapper = protocolWrapper;
+        this.playerManager = playerManager;
     }
 
     @Override
     public void spawn(Game game, Party party) {
-        var playableArea = game.getArena().playableArea();
-        var center = playableArea.center().setY(ELYTRA_Y);
-        var world = game.getArena().forceGetWorld(); // empty case should have been handled by now
-
         party.getAllMembers().forEach(uuid -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) {
                 return;
             }
+
             party.getAllMembers().forEach(otherUUID -> {
                 if (otherUUID.equals(uuid)) {
                     return;
@@ -51,8 +52,20 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
                 }
                 protocolWrapper.makePlayerGlowing(otherPlayer, player);
             });
-            player.getInventory().setChestplate(ELYTRA_ITEM);
-            player.teleport(center.toLocation(world));
+
+            playerManager.loadPlayer(uuid, warzonePlayer -> spawn(game, warzonePlayer));
         });
+    }
+
+
+    @Override
+    public void spawn(Game game, WarzonePlayer player) {
+        var playableArea = game.getArena().playableArea();
+        var center = playableArea.center().setY(ELYTRA_Y);
+        var world = game.getArena().forceGetWorld(); // empty case should have been handled by now
+        var bukkitPlayer = player.getPlayer().get();
+
+        bukkitPlayer.getInventory().setChestplate(ELYTRA_ITEM);
+        bukkitPlayer.teleport(center.toLocation(world));
     }
 }

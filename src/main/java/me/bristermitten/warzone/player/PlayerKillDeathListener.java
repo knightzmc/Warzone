@@ -2,6 +2,7 @@ package me.bristermitten.warzone.player;
 
 import me.bristermitten.warzone.config.ConfigurationProvider;
 import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGulagArenaState;
@@ -19,14 +20,15 @@ public class PlayerKillDeathListener implements EventListener {
     private final XPHandler xpHandler;
     private final ConfigurationProvider<XPConfig> xpConfig;
     private final GameManager gameManager;
-
+    private final PlayerSpawner playerSpawner;
 
     @Inject
-    public PlayerKillDeathListener(PlayerManager playerManager, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig, GameManager gameManager) {
+    public PlayerKillDeathListener(PlayerManager playerManager, XPHandler xpHandler, ConfigurationProvider<XPConfig> xpConfig, GameManager gameManager, PlayerSpawner playerSpawner) {
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
         this.xpConfig = xpConfig;
         this.gameManager = gameManager;
+        this.playerSpawner = playerSpawner;
     }
 
     @EventHandler
@@ -49,10 +51,14 @@ public class PlayerKillDeathListener implements EventListener {
         playerManager.loadPlayer(killerPlayer.getUniqueId(), killer -> {
             killer.setKills(killer.getKills() + 1);
             xpHandler.addXP(killer, xpConfig.get().kill());
-            if (killer.getCurrentState() instanceof InGulagArenaState) {
-                playerManager.setState(killer, PlayerStates::aliveState);
-            }
+
             gameManager.getGameContaining(killerPlayer.getUniqueId())
+                    .peek(containingGame -> {
+                        if (killer.getCurrentState() instanceof InGulagArenaState) {
+                            playerManager.setState(killer, PlayerStates::aliveState);
+                            playerSpawner.spawn(containingGame, killer);
+                        }
+                    })
                     .flatMap(game -> game.getInfo(killerPlayer.getUniqueId()))
                     .peek(information -> information.setKillCount(information.getKillCount() + 1));
         });

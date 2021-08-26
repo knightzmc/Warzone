@@ -1,13 +1,11 @@
 package me.bristermitten.warzone.player.state;
 
-import me.bristermitten.warzone.player.state.game.AliveState;
-import me.bristermitten.warzone.player.state.game.InGulagArenaState;
-import me.bristermitten.warzone.player.state.game.InGulagQueuingState;
-import me.bristermitten.warzone.player.state.game.SpectatingState;
+import me.bristermitten.warzone.player.state.game.*;
 
 import javax.inject.Inject;
 
 public record PlayerStatesImpl(AliveState aliveState,
+                               InGameSpawningState inGameSpawningState,
                                InGulagArenaState inGulagArenaState,
                                InGulagQueuingState inGulagQueuingState,
                                SpectatingState spectatingState,
