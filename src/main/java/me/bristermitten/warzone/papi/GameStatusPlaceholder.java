@@ -8,7 +8,7 @@ import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.timer.GameTimer;
-import me.bristermitten.warzone.game.timer.GameTimerRenderer;
+import me.bristermitten.warzone.lobby.PreGameLobbyTimer;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -16,6 +16,7 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.state.game.InGameState;
 import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.state.game.SpectatingState;
+import me.bristermitten.warzone.timer.TimerRenderer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -34,14 +35,14 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
             SpectatingState.class, ChatColor.RED.toString()
     );
     private final PlayerManager playerManager;
-    private final GameTimerRenderer gameTimerRenderer;
+    private final TimerRenderer timerRenderer;
     private final GameManager gameManager;
     private final PartyManager partyManager;
 
     @Inject
-    public GameStatusPlaceholder(PlayerManager playerManager, GameTimerRenderer gameTimerRenderer, GameManager gameManager, PartyManager partyManager) {
+    public GameStatusPlaceholder(PlayerManager playerManager, TimerRenderer timerRenderer, GameManager gameManager, PartyManager partyManager) {
         this.playerManager = playerManager;
-        this.gameTimerRenderer = gameTimerRenderer;
+        this.timerRenderer = timerRenderer;
         this.gameManager = gameManager;
         this.partyManager = partyManager;
     }
@@ -59,10 +60,15 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .map(PlayerInformation::getKillCount)
                     .map(Objects::toString)
                     .getOrElse(NOT_IN_GAME);
+            case "lobby_time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
+                    .map(Game::getPreGameLobbyTimer)
+                    .filter(PreGameLobbyTimer::hasStarted)
+                    .map(timer -> timerRenderer.render(timer, "Waiting for Players"))
+                    .getOrElse(NOT_IN_GAME);
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(Game::getTimer)
-                    .filter(GameTimer::isInitialised)
-                    .map(gameTimerRenderer::render)
+                    .filter(GameTimer::hasStarted)
+                    .map(timerRenderer::render)
                     .getOrElse(NOT_IN_GAME);
             case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(game -> game.getPartiesInGame()

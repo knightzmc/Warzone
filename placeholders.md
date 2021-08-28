@@ -1,6 +1,7 @@
 | Placeholder                        | Description                                                                                                             | Example                                    |
 |------------------------------------|-------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|
-| %warzone_time_remaining%           | How long is left in a player's game, or "N/A"                                                                           | 5m 32s                                     |
+| %warzone_time_remaining%           | How long is left in a player's game, or "Final Circle"                                                                           | 5m 32s                                     |
+| %warzone_lobby_time_remaining%     | How long is left until the game starts, or "Waiting for Players"                                                                           | 5m 32s                                     |
 | %warzone_players_remaining%        | How many players are left in a game, or "N/A"                                                                           | 8                                          |
 | %warzone_kill_count%               | How many kills the player has in their current game, or "N/A"                                                           | 3                                          |
 | %warzone_party_members_gameformat% | All the players in the player's party formatted based on their status in the game (gulag, alive, dead), separated by \n | &aAlivePlayer &ePlayerInGulag &cDeadPlayer |

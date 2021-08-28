@@ -35,6 +35,6 @@ game-start-timer:
   # Default value is 60 seconds / 1 minute
   length: 60
   boss-bar:
-    name: '<blue>Game starting in <yellow>{time}'
+    name: '<blue>Game starting in <yellow>%warzone_lobby_time_remaining%'
     color: PINK
     overlay: PROGRESS
