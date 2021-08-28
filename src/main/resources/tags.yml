@@ -1,0 +1,6 @@
+tag-rate: 5 # every 5 levels they have a chance
+chance: 25 # 25% chance of getting a tag
+tags:
+  - eternaltags.tag.test
+  - eternaltags.tag.another_tag
+  - eternaltags.tag.etc

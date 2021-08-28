@@ -8,7 +8,8 @@ public record LangConfig(
         @SerializedName("party") PartyLang partyLang,
         @SerializedName("game") GameLang gameLang,
         @SerializedName("admin") AdminLang adminLang,
-        @SerializedName("errors") ErrorLang errorLang
+        @SerializedName("errors") ErrorLang errorLang,
+        @SerializedName("tags") TagsLang tagsLang
 ) {
     public static final Configuration<LangConfig> CONFIG = new Configuration<>(LangConfig.class, "lang.yml");
 
@@ -23,6 +24,11 @@ public record LangConfig(
             , @SerializedName("unknown-player") String unknownPlayer
     ) {
     }
+
+    public record TagsLang (
+            @SerializedName("tag-gained") LangElement tagGained
+            , @SerializedName("no-more-tags") LangElement noMoreTags
+    ){}
 
     public record GameLang(
             @SerializedName("player-out") LangElement playerOut

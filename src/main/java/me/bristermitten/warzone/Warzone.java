@@ -10,7 +10,10 @@ import me.bristermitten.warzone.chat.ChatConfig;
 import me.bristermitten.warzone.chat.ChatModule;
 import me.bristermitten.warzone.commands.CommandsModule;
 import me.bristermitten.warzone.config.ConfigModule;
-import me.bristermitten.warzone.database.*;
+import me.bristermitten.warzone.database.DatabaseConfig;
+import me.bristermitten.warzone.database.DatabaseModule;
+import me.bristermitten.warzone.database.Persistence;
+import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.game.GameModule;
 import me.bristermitten.warzone.game.config.GameConfigDAO;
@@ -29,6 +32,8 @@ import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.protocol.ProtocolModule;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
+import me.bristermitten.warzone.tags.TagsModule;
+import me.bristermitten.warzone.vault.VaultModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -67,6 +72,8 @@ public class Warzone extends JavaPlugin {
                     , new MatchmakingModule()
                     , new GameModule()
                     , new ProtocolModule()
+                    , new TagsModule()
+                    , new VaultModule()
             );
 
             var injector = Guice.createInjector(modules);
