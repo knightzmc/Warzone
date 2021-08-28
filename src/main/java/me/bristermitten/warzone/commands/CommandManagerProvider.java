@@ -37,14 +37,15 @@ public class CommandManagerProvider implements Provider<PaperCommandManager> {
     @Override
     public @NotNull PaperCommandManager get() {
         PaperCommandManager paperCommandManager = new PaperCommandManager(plugin);
-        commands.forEach(paperCommandManager::registerCommand);
-
         for (ArgumentProcessor<?> argumentProcessor : argumentProcessors) {
             registerProcessor(paperCommandManager, argumentProcessor);
         }
         for (ArgumentCondition<?> argumentCondition : argumentConditions) {
             registerCondition(paperCommandManager, argumentCondition);
         }
+
+
+        commands.forEach(paperCommandManager::registerCommand);
         return paperCommandManager;
     }
 }
