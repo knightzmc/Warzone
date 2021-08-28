@@ -57,5 +57,5 @@ admin:
   xp-set: '<green>Set {player}''s xp to {value}!'
 
 tags:
-  tag-gained: '<green> You gained the tag {tag} from levelling up!'
+  tag-gained: '<green> You gained the tag {tag} <green>from levelling up!'
   no-more-tags: '<yellow>You would have gained a tag from this level up, but you have them all!'
