@@ -6,7 +6,6 @@ import me.bristermitten.warzone.game.death.GameDeathHandler;
 import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
-import me.bristermitten.warzone.player.state.game.InGulagArenaState;
 import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.slf4j.Logger;
@@ -48,20 +47,7 @@ public class GulagDeathHandler implements GameDeathHandler {
                 gulagManager.addToGulag(gameOpt.get().getGulag(), warzonePlayer);
                 return;
             }
-            if (!(warzonePlayer.getCurrentState() instanceof InGulagArenaState)) {
-                return;
-            }
-            var game = gameOpt
-                    .getOrElseThrow(() -> new IllegalStateException("Player is in gulag state but not in a game!"));
 
-
-            var gulagPlayers = game.getGulag().getGulagPlayers();
-            if (gulagPlayers == null) {
-                throw new IllegalStateException("Player is in gulag stat but gulag players is null!");
-            }
-            if (!gulagPlayers.contains(warzonePlayer)) {
-                throw new IllegalStateException("Player is in gulag state but isn't a player in gulag for " + game);
-            }
             playerManager.setState(warzonePlayer, PlayerStates::spectatingState);
         });
 
