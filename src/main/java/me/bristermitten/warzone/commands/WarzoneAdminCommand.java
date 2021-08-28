@@ -34,6 +34,7 @@ public class WarzoneAdminCommand extends BaseCommand {
 
     @Subcommand("reset")
     @CommandPermission("warzone.admin.reset")
+    @CommandCompletion("@offlinePlayers")
     public void reset(CommandSender sender, OfflinePlayer target) {
         playerManager.loadPlayer(target.getUniqueId(), targetPlayer -> {
             targetPlayer.setLevel(0);
