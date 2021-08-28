@@ -5,6 +5,7 @@ import me.bristermitten.warzone.bossbar.BossBarManager;
 import me.bristermitten.warzone.chat.channel.ChatChannel;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 import org.bukkit.GameMode;
 
@@ -16,6 +17,7 @@ import javax.inject.Provider;
 public class InPreGameLobbyState implements PlayerState {
 
 
+    private final ScoreboardManager scoreboardManager;
     private final ChatChannel channel;
 
     private final Provider<ArenasConfigDAO> arenaConfigProvider;
@@ -24,6 +26,7 @@ public class InPreGameLobbyState implements PlayerState {
 
     @Inject
     public InPreGameLobbyState(ScoreboardManager scoreboardManager, @Named("preGameLobby") ChatChannel channel, Provider<ArenasConfigDAO> arenaConfigProvider, GameManager gameManager, BossBarManager bossBarManager) {
+        this.scoreboardManager = scoreboardManager;
         this.channel = channel;
         this.arenaConfigProvider = arenaConfigProvider;
         this.gameManager = gameManager;
@@ -33,6 +36,7 @@ public class InPreGameLobbyState implements PlayerState {
     @Override
     public void onEnter(WarzonePlayer warzonePlayer) {
         warzonePlayer.getPlayer().peek(player -> {
+            scoreboardManager.show(player, ScoreboardConfig::preGameLobby);
             player.teleport(arenaConfigProvider.get().preGameLobbySpawnpoint().toLocation());
             player.setGameMode(GameMode.ADVENTURE);
             var game = gameManager.getGameContaining(warzonePlayer)
