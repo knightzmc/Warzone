@@ -24,6 +24,7 @@ public class PreGameLobbyTimer extends Timer {
         this.configProvider = configProvider;
         bossBar = new PreGameLobbyBossBar(this, configProvider);
         this.schedule = schedule;
+        this.durationMillis = loadDuration();
     }
 
 
@@ -38,6 +39,9 @@ public class PreGameLobbyTimer extends Timer {
         this.managing = game;
     }
 
+    private long loadDuration() {
+        return configProvider.get().gameStartTimerConfig().lengthMillis();
+    }
 
     /**
      * Checks if the managed game has enough players to start the timer
@@ -68,7 +72,7 @@ public class PreGameLobbyTimer extends Timer {
         if (!canStart()) {
             return;
         }
-        this.durationMillis = configProvider.get().gameStartTimerConfig().lengthMillis();
+        this.durationMillis = loadDuration();
         super.start();
         schedule.runLater(durationMillis, () -> onComplete.forEach(Runnable::run));
     }
