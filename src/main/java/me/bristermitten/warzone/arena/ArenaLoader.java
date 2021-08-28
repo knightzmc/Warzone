@@ -45,15 +45,6 @@ public class ArenaLoader {
         );
     }
 
-    public BossBarConfig loadBossBarConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO.BossBarConfigDAO configuration) {
-        return new BossBarConfig(
-                configuration.format(),
-                1f,
-                Null.get(configuration.color(), BossBar.Color.WHITE),
-                Null.get(configuration.style(), BossBar.Overlay.PROGRESS),
-                Null.get(configuration.flags(), Set.<BossBar.Flag>of()).stream().filter(Objects::nonNull).collect(Collectors.toSet())
-        );
-    }
 
     public ArenaConfig.GameConfig loadGameConfig(ArenasConfigDAO.ArenaConfigDAO.GameConfigDAO configuration) {
         return new ArenaConfig.GameConfig(
@@ -64,7 +55,7 @@ public class ArenaLoader {
                 configuration.borderDamageTime(),
                 configuration.chestRate(),
                 Null.get(configuration.maxGulagEntries(), 1),
-                loadBossBarConfig(configuration.bossBarConfigDAO())
+                configuration.bossBarConfigDAO().loadBossBarConfig()
         );
     }
 

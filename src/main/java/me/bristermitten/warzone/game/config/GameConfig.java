@@ -17,7 +17,9 @@ public record GameConfig(
             double threshold,
             int lengthMillis,
             BossBarConfig bossBarConfig
-    ){}
+    ) {
+    }
+
     public record SpectatorConfig(
             boolean allowFlight,
             boolean invisible,

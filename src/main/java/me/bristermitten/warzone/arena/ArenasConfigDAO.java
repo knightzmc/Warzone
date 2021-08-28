@@ -1,16 +1,21 @@
 package me.bristermitten.warzone.arena;
 
 import com.google.gson.annotations.SerializedName;
+import me.bristermitten.warzone.bossbar.BossBarConfig;
+import me.bristermitten.warzone.bossbar.BossBarConfigDAO;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.data.AngledPoint;
 import me.bristermitten.warzone.data.Region;
 import me.bristermitten.warzone.data.WorldAngledPoint;
+import me.bristermitten.warzone.util.Null;
 import net.kyori.adventure.bossbar.BossBar;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public record ArenasConfigDAO(
         Map<String, ArenaConfigDAO> arenas,
@@ -37,13 +42,7 @@ public record ArenasConfigDAO(
                 @SerializedName("max-gulag-entries") @Nullable Integer maxGulagEntries,
                 @SerializedName("boss-bar") BossBarConfigDAO bossBarConfigDAO
         ) {
-            record BossBarConfigDAO(
-                    @NotNull String format,
-                    @Nullable BossBar.Color color,
-                    @Nullable BossBar.Overlay style,
-                    @Nullable Set<BossBar.Flag> flags
-            ) {
-            }
+
         }
 
         record GulagConfigDAO(

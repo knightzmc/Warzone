@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game.config;
 
 import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.bossbar.BossBarConfig;
+import me.bristermitten.warzone.bossbar.BossBarConfigDAO;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.game.spawning.PlayerSpawningMethod;
 import me.bristermitten.warzone.item.ItemConfig;
@@ -19,7 +20,7 @@ public record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO
     record GameStartTimerConfigDAO(
             double threshold,
             int length,
-            @SerializedName("boss-bar") BossBarConfig bossBar
+            @SerializedName("boss-bar") BossBarConfigDAO bossBar
     ) {
     }
 

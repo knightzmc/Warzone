@@ -44,7 +44,7 @@ public class GameConfigLoader implements Provider<GameConfig> {
         return new GameConfig.GameStartTimerConfig(
                 dao.threshold() / 100, // convert to a percentage
                 Math.toIntExact(TimeUnit.SECONDS.toMillis(dao.length())),
-                dao.bossBar()
+                dao.bossBar().loadBossBarConfig()
         );
     }
 
