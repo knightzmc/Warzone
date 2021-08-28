@@ -8,6 +8,7 @@ import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -15,18 +16,17 @@ import javax.inject.Inject;
  * Processes a death when a player is in the gulag
  */
 public class GulagDeathHandler implements GameDeathHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GulagDeathHandler.class);
     private final PlayerManager playerManager;
     private final GameManager gameManager;
     private final PlayerSpawner playerSpawner;
-    private final Logger logger;
     private final GulagManager gulagManager;
 
     @Inject
-    public GulagDeathHandler(PlayerManager playerManager, GameManager gameManager, PlayerSpawner playerSpawner, Logger logger, GulagManager gulagManager) {
+    public GulagDeathHandler(PlayerManager playerManager, GameManager gameManager, PlayerSpawner playerSpawner, GulagManager gulagManager) {
         this.playerManager = playerManager;
         this.gameManager = gameManager;
         this.playerSpawner = playerSpawner;
-        this.logger = logger;
         this.gulagManager = gulagManager;
     }
 
@@ -67,7 +67,7 @@ public class GulagDeathHandler implements GameDeathHandler {
                             playerManager.setState(killerW, PlayerStates::aliveState);
                             playerSpawner.spawn(game, killerW);
                         }))
-                .onEmpty(() -> logger.warn("Player {} killed {} in a gulag even though they aren't in a game", killer.getName(), event.getEntity().getName()));
+                .onEmpty(() -> LOGGER.warn("Player {} killed {} in a gulag even though they aren't in a game", killer.getName(), event.getEntity().getName()));
     }
 
 
