@@ -183,7 +183,7 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public boolean gameContains(Game game, UUID uuid) {
-        return game.getPartiesInGame().toJavaStream().anyMatch(party -> party.getAllMembers().contains(uuid));
+        return game.getPartiesInGame().toStream().filter(party -> party.getAllMembers().contains(uuid)).nonEmpty();
     }
 
     @Override

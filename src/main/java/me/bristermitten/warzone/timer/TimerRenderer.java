@@ -2,7 +2,6 @@ package me.bristermitten.warzone.timer;
 
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.lang.LangConfig;
-import me.bristermitten.warzone.timer.Timer;
 import me.bristermitten.warzone.util.DurationFormatter;
 
 import javax.inject.Inject;
@@ -23,6 +22,9 @@ public class TimerRenderer {
     }
 
     public String render(Timer timer, String defaultMessage) {
+        if (!timer.hasStarted()) {
+            return chatFormatter.preFormat(defaultMessage, null);
+        }
         var timeRemaining = timer.getTimeRemaining();
         if (timeRemaining <= 0) {
             return chatFormatter.preFormat(defaultMessage, null);

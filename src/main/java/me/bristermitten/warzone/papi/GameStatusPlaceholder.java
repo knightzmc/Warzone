@@ -8,7 +8,6 @@ import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.timer.GameTimer;
-import me.bristermitten.warzone.lobby.PreGameLobbyTimer;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -62,7 +61,6 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .getOrElse(NOT_IN_GAME);
             case "lobby_time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
                     .map(Game::getPreGameLobbyTimer)
-                    .filter(PreGameLobbyTimer::hasStarted)
                     .map(timer -> timerRenderer.render(timer, "Waiting for Players"))
                     .getOrElse(NOT_IN_GAME);
             case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
