@@ -23,7 +23,9 @@ public class ProtocolWrapper {
     }
 
     private void sendMetadataPacket(@NotNull Player target, @NotNull Player viewer, @NotNull ByteUnaryOperator maskOp) {
-
+        if (target == viewer) {
+            return;
+        }
         var packet = new PacketContainer(PacketType.Play.Server.ENTITY_METADATA);
 
         packet.getModifier().writeDefaults();

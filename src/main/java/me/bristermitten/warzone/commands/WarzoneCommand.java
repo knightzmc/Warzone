@@ -3,6 +3,7 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.state.GameStates;
@@ -97,7 +98,7 @@ public class WarzoneCommand extends BaseCommand {
     }
 
     @Subcommand("test")
-    public void test(Player sender, Player target) {
-        protocolWrapper.makePlayerGlowing(target, sender);
+    public void test(Player sender, OnlinePlayer target) {
+        protocolWrapper.makePlayerGlowing(target.getPlayer(), sender);
     }
 }
