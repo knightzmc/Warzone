@@ -28,6 +28,7 @@ public class CommandManagerProvider implements Provider<PaperCommandManager> {
     private <T> void registerProcessor(PaperCommandManager commandManager, ArgumentProcessor<T> processor) {
         commandManager.getCommandContexts().registerContext(processor.getType(), processor);
         commandManager.getCommandCompletions().registerAsyncCompletion(processor.getId(), processor);
+        commandManager.getCommandCompletions().setDefaultCompletion(processor.getId(), processor.getType());
     }
 
     private <T> void registerCondition(PaperCommandManager commandManager, ArgumentCondition<T> condition) {
