@@ -48,6 +48,7 @@ game:
 errors:
   xp-not-positive: '<red>XP must be positive!'
   arena-in-use: '<red>Arena {arena} is in use!'
+  no-game-running: '<red>No game running in {arena}!'
 
 admin:
   stats-reset: '<green>Stats reset for {player}!'

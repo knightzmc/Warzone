@@ -3,7 +3,11 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Subcommand;
+import me.bristermitten.warzone.arena.Arena;
+import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.xp.XPHandler;
@@ -21,12 +25,14 @@ public class WarzoneAdminCommand extends BaseCommand {
     private final LangService langService;
     private final PlayerManager playerManager;
     private final XPHandler xpHandler;
+    private final GameManager gameManager;
 
     @Inject
-    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler) {
+    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameManager gameManager) {
         this.langService = langService;
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
+        this.gameManager = gameManager;
     }
 
     @Subcommand("reset")
@@ -39,6 +45,18 @@ public class WarzoneAdminCommand extends BaseCommand {
             langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
                     Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString())));
         });
+    }
+
+    @Subcommand("forcestart")
+    @CommandPermission("warzone.admin.forcestart")
+    public void forceStart(CommandSender sender, @Conditions("inuse") Arena arena) {
+        var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
+                .findFirst().orElseThrow();
+
+        if (!(gameToStart.getState() instanceof InLobbyState)) {
+            return;// TODO error
+        }
+        gameToStart.getPreGameLobbyTimer().forceStart();
     }
 
     @Subcommand("xp set")

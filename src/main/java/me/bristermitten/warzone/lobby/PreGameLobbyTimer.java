@@ -64,6 +64,12 @@ public class PreGameLobbyTimer extends Timer {
         return super.getTimeRemaining();
     }
 
+    public void forceStart() {
+        this.durationMillis = loadDuration();
+        super.start();
+        schedule.runLater(durationMillis, () -> onComplete.forEach(Runnable::run));
+    }
+
     @Override
     public void start() {
         if (hasStarted()) {
@@ -72,9 +78,8 @@ public class PreGameLobbyTimer extends Timer {
         if (!canStart()) {
             return;
         }
-        this.durationMillis = loadDuration();
-        super.start();
-        schedule.runLater(durationMillis, () -> onComplete.forEach(Runnable::run));
+        forceStart();
+
     }
 
     public PreGameLobbyBossBar getBossBar() {
