@@ -6,6 +6,7 @@ import me.bristermitten.warzone.game.death.GameDeathHandler;
 import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.player.state.game.InGameState;
 import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.slf4j.Logger;
@@ -47,8 +48,9 @@ public class GulagDeathHandler implements GameDeathHandler {
                 gulagManager.addToGulag(gameOpt.get().getGulag(), warzonePlayer);
                 return;
             }
-
-            playerManager.setState(warzonePlayer, PlayerStates::spectatingState);
+            if (warzonePlayer.getCurrentState() instanceof InGameState) {
+                playerManager.setState(warzonePlayer, PlayerStates::spectatingState);
+            }
         });
 
         var killer = event.getEntity().getKiller();
