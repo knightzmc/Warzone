@@ -44,8 +44,13 @@ public class PlayerManagerImpl implements PlayerManager {
         }
     }
 
-    public void loadPlayer(@NotNull UUID id, @NotNull Consumer<WarzonePlayer> onSuccess) {
+    public void loadPlayerAsync(@NotNull UUID id, @NotNull Consumer<WarzonePlayer> onSuccess) {
         playerStorage.load(id).onSuccess(onSuccess);
+    }
+
+    @Override
+    public void loadPlayer(@NotNull UUID id, @NotNull Consumer<@NotNull WarzonePlayer> onSuccess) {
+        loadPlayerAsync(id, player -> schedule.runSync(() -> onSuccess.accept(player)));
     }
 
     public @NotNull Future<@NotNull WarzonePlayer> loadPlayer(@NotNull UUID id) {

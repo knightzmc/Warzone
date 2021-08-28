@@ -20,6 +20,9 @@ public class Sync {
     }
 
     public static <T> Future<T> run(@NotNull Supplier<T> t, @NotNull Plugin p) {
+        if(Bukkit.isPrimaryThread()) {
+            return Future.successful(t.get());
+        }
         var javaFuture = new CompletableFuture<T>();
         Bukkit.getScheduler().runTask(p, () -> javaFuture.complete(t.get()));
         return Future.fromCompletableFuture(javaFuture);

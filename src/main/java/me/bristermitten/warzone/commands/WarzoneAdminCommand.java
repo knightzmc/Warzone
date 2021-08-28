@@ -70,7 +70,7 @@ public class WarzoneAdminCommand extends BaseCommand {
         playerManager.loadPlayer(target.getUniqueId(), targetPlayer -> {
             xpHandler.setXP(targetPlayer, newXP);
 
-            langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
+            langService.send(sender, langConfig -> langConfig.adminLang().xpSet(),
                     Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString()),
                             "{value}", newXP));
         });

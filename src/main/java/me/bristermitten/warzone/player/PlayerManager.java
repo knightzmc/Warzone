@@ -15,8 +15,8 @@ public interface PlayerManager extends StateManager<WarzonePlayer, PlayerState, 
 
     @NotNull Future<@NotNull WarzonePlayer> loadPlayer(@NotNull UUID id);
 
-    /**
-     * @apiNote The onSuccess consumer is <b>NOT</b> guaranteed to be ran on the Spigot main thread
-     */
+
     void loadPlayer(@NotNull UUID id, @NotNull Consumer<@NotNull WarzonePlayer> onSuccess);
+
+    void loadPlayerAsync(@NotNull UUID id, @NotNull Consumer<@NotNull WarzonePlayer> onSuccess);
 }
