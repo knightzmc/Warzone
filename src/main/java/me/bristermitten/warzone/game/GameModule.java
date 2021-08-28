@@ -5,6 +5,7 @@ import com.google.inject.assistedinject.FactoryModuleBuilder;
 import me.bristermitten.warzone.bossbar.BossBarManager;
 import me.bristermitten.warzone.bossbar.BossBarManagerImpl;
 import me.bristermitten.warzone.game.config.GameConfigModule;
+import me.bristermitten.warzone.game.death.DeathModule;
 import me.bristermitten.warzone.game.init.ChunkLoadFiller;
 import me.bristermitten.warzone.game.spawning.SpawningModule;
 import me.bristermitten.warzone.game.state.IdlingState;
@@ -31,5 +32,6 @@ public class GameModule extends AbstractModule {
         install(new GameConfigModule());
         install(new GamePersistenceModule());
         install(new SpawningModule());
+        install(new DeathModule());
     }
 }

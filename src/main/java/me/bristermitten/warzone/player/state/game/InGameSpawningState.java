@@ -6,6 +6,7 @@ import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * When a player is in an active game, whilst spawning
@@ -14,7 +15,7 @@ import javax.inject.Inject;
  */
 public class InGameSpawningState extends InGameState {
     @Inject
-    InGameSpawningState(ScoreboardManager scoreboardManager, ChatChannel channel, GameManager gameManager, BossBarManager bossBarManager) {
+    InGameSpawningState(ScoreboardManager scoreboardManager, @Named("inGame") ChatChannel channel, GameManager gameManager, BossBarManager bossBarManager) {
         super(scoreboardManager, channel, gameManager, bossBarManager);
     }
 }
