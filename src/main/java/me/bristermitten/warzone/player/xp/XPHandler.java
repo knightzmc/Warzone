@@ -4,6 +4,7 @@ import io.vavr.control.Option;
 import me.bristermitten.warzone.config.ConfigurationProvider;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.util.Cached;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import redempt.crunch.CompiledExpression;
 import redempt.crunch.Crunch;
@@ -69,12 +70,18 @@ public class XPHandler {
         warzonePlayer.setLevel(newLevel);
         warzonePlayer.setXp(newXP);
         if (newLevel > oldLevel) {
-            levelUp(warzonePlayer, newLevel);
+            levelUp(warzonePlayer, newXP, newLevel);
         }
     }
 
-    private void levelUp(@NotNull WarzonePlayer warzonePlayer, int newLevel) {
-        warzonePlayer.setLevel(newLevel);
+    private void levelUp(@NotNull WarzonePlayer warzonePlayer, long newXP, int newLevel) {
+        var event = new LevelUpEvent(warzonePlayer, newXP, newLevel);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return;
+        }
+        warzonePlayer.setXp(event.getNewXP());
+        warzonePlayer.setLevel(event.getNewLevel());
         playLevelUpSound(warzonePlayer);
     }
 
