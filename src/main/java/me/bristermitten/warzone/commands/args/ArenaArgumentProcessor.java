@@ -3,6 +3,7 @@ package me.bristermitten.warzone.commands.args;
 import co.aikar.commands.BukkitCommandCompletionContext;
 import co.aikar.commands.BukkitCommandExecutionContext;
 import co.aikar.commands.InvalidCommandArgument;
+import io.vavr.collection.List;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 
@@ -29,7 +30,15 @@ public class ArenaArgumentProcessor implements ArgumentProcessor<Arena> {
 
     @Override
     public Collection<String> getCompletions(BukkitCommandCompletionContext context) throws InvalidCommandArgument {
-        return arenaManager.getArenas().map(Arena::name).toJavaList();
+        List<Arena> arenas;
+        if (context.hasConfig("inUse")) {
+            arenas = arenaManager.getArenas().filter(arenaManager.arenaIsInUse());
+        } else if (context.hasConfig("free")) {
+            arenas = arenaManager.getArenas().filter(arenaManager.arenaIsInUse().negate());
+        } else {
+            arenas = arenaManager.getArenas();
+        }
+        return arenas.map(Arena::name).toJavaList();
     }
 
     @Override

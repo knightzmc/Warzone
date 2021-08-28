@@ -1,10 +1,7 @@
 package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Conditions;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.state.InLobbyState;
@@ -49,7 +46,8 @@ public class WarzoneAdminCommand extends BaseCommand {
 
     @Subcommand("forcestart")
     @CommandPermission("warzone.admin.forcestart")
-    public void forceStart(CommandSender sender, @Conditions("inuse") Arena arena) {
+    @CommandCompletion("@arenas=inUse")
+    public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena) {
         var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
                 .findFirst().orElseThrow();
 
