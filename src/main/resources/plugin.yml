@@ -8,3 +8,5 @@ depend:
   - ProtocolLib
   - QualityArmory
   - Vault
+softdepend:
+  - EternalTags
