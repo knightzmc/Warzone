@@ -32,6 +32,7 @@ import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.protocol.ProtocolModule;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
+import me.bristermitten.warzone.tags.TagsConfig;
 import me.bristermitten.warzone.tags.TagsModule;
 import me.bristermitten.warzone.vault.VaultModule;
 import org.bukkit.Bukkit;
@@ -57,6 +58,7 @@ public class Warzone extends JavaPlugin {
                     , LootTablesConfig.CONFIG
                     , LeaveRequeueMenu.CONFIG
                     , GameConfigDAO.CONFIG
+                    , TagsConfig.CONFIG
             ));
 
             var modules = List.of(
