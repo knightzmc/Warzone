@@ -7,6 +7,7 @@ import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGulagArenaState;
+import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,15 @@ public class GulagDeathHandler implements GameDeathHandler {
     private final GameManager gameManager;
     private final PlayerSpawner playerSpawner;
     private final GulagManager gulagManager;
+    private final Schedule schedule;
 
     @Inject
-    public GulagDeathHandler(PlayerManager playerManager, GameManager gameManager, PlayerSpawner playerSpawner, GulagManager gulagManager) {
+    public GulagDeathHandler(PlayerManager playerManager, GameManager gameManager, PlayerSpawner playerSpawner, GulagManager gulagManager, Schedule schedule) {
         this.playerManager = playerManager;
         this.gameManager = gameManager;
         this.playerSpawner = playerSpawner;
         this.gulagManager = gulagManager;
+        this.schedule = schedule;
     }
 
     /*
@@ -69,12 +72,11 @@ public class GulagDeathHandler implements GameDeathHandler {
         // Respawn the killer
         gameManager.getGameContaining(killer.getUniqueId())
                 .peek(game ->
-                        playerManager.loadPlayer(killer.getUniqueId(), killerW -> {
+                        playerManager.loadPlayer(killer.getUniqueId()).flatMap(schedule.runSync(killerW -> {
                             playerManager.setState(killerW, PlayerStates::aliveState);
                             playerSpawner.spawn(game, killerW);
-                        }))
+                        })))
                 .onEmpty(() -> LOGGER.warn("Player {} killed {} in a gulag even though they aren't in a game", killer.getName(), event.getEntity().getName()));
     }
-
 
 }
