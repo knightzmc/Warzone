@@ -34,13 +34,6 @@ public class WarzoneAdminCommand extends BaseCommand {
         this.gameManager = gameManager;
     }
 
-    @HelpCommand
-    @Default
-    public void help() {
-        //noinspection deprecation
-        showCommandHelp();
-    }
-
     @Subcommand("reset")
     @CommandPermission("warzone.admin.reset")
     @CommandCompletion("@offlinePlayers")
