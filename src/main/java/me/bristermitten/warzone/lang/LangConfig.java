@@ -16,7 +16,8 @@ public record LangConfig(
     }
 
     public record ErrorLang(
-            @SerializedName("xp-not-positive") LangElement xpNotPositive
+            @SerializedName("xp-not-positive") String xpNotPositive
+            , @SerializedName("arena-in-use") String arenaInUse
     ) {
     }
 
@@ -26,7 +27,7 @@ public record LangConfig(
             , @SerializedName("already-in-game") LangElement alreadyInGame
             , @SerializedName("winner") LangElement winner
             , @SerializedName("winner-broadcast") LangElement winnerBroadcast
-            , @SerializedName("no-time-remaining") LangElement noTimeRemaining
+            , @SerializedName("no-time-remaining") String noTimeRemaining
     ) {
     }
 

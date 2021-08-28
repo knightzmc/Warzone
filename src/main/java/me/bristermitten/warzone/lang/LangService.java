@@ -31,7 +31,7 @@ public class LangService {
 
         if (message.message() != null) {
             var replaced = applyPlaceholders.apply(message.message());
-            sendMessage(receiver, replaced);
+            send(receiver, replaced);
         }
 
         if (message.title() != null || message.subtitle() != null) {
@@ -43,15 +43,23 @@ public class LangService {
         }
     }
 
-    public void sendMessage(@NotNull CommandSender receiver, @NotNull Function<LangConfig, LangElement> message) {
+    public void send(@NotNull CommandSender receiver, @NotNull Function<LangConfig, LangElement> message) {
+        send(receiver, message, Map.of());
+    }
+
+    public void sendMessage(@NotNull CommandSender receiver, @NotNull Function<LangConfig, String> message) {
         sendMessage(receiver, message, Map.of());
     }
 
-    public void sendMessage(@NotNull CommandSender receiver, @NotNull Function<LangConfig, LangElement> message, @NotNull Map<String, Object> placeholders) {
+    public void sendMessage(@NotNull CommandSender receiver, @NotNull Function<LangConfig, String> message, @NotNull Map<String, Object> placeholders) {
+        send(receiver, new LangElement(message.apply(configProvider.get()), null, null), placeholders);
+    }
+
+    public void send(@NotNull CommandSender receiver, @NotNull Function<LangConfig, LangElement> message, @NotNull Map<String, Object> placeholders) {
         send(receiver, message.apply(configProvider.get()), placeholders);
     }
 
-    public void sendMessage(@NotNull CommandSender receiver, @NotNull String message) {
+    public void send(@NotNull CommandSender receiver, @NotNull String message) {
         receiver.sendMessage(formatter.format(message, Cast.safe(receiver, OfflinePlayer.class)));
     }
 

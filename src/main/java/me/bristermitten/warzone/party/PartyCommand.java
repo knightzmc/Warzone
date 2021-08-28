@@ -39,7 +39,7 @@ public class PartyCommand extends BaseCommand {
     public void join(@NotNull Player sender, @Optional @Nullable OnlinePlayer inviter) {
         var invites = partyManager.getInvitesFor(sender);
         if (invites.isEmpty()) {
-            langService.sendMessage(sender, config -> config.partyLang().noInvites());
+            langService.send(sender, config -> config.partyLang().noInvites());
             return;
         }
         if (inviter != null) {
@@ -47,7 +47,7 @@ public class PartyCommand extends BaseCommand {
                     .filter(invite -> invite.sender().equals(inviter.getPlayer().getUniqueId()))
                     .findFirst();
             if (fromPlayer.isEmpty()) {
-                langService.sendMessage(sender, config -> config.partyLang().noInvitesFromPlayer(),
+                langService.send(sender, config -> config.partyLang().noInvitesFromPlayer(),
                         Map.of("{inviter}", inviter.getPlayer().getName()));
                 return;
             }
@@ -61,7 +61,7 @@ public class PartyCommand extends BaseCommand {
             return;
         }
 
-        langService.sendMessage(sender, config -> config.partyLang().multipleInvites(),
+        langService.send(sender, config -> config.partyLang().multipleInvites(),
                 Map.of("{invitations}", invites.stream().map(PartyInvite::sender)
                         .map(Bukkit::getPlayer)
                         .filter(Objects::nonNull)

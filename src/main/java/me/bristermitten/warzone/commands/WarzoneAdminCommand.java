@@ -36,7 +36,7 @@ public class WarzoneAdminCommand extends BaseCommand {
             targetPlayer.setLevel(0);
             targetPlayer.setXp(0);
 
-            langService.sendMessage(sender, langConfig -> langConfig.adminLang().statsReset(),
+            langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
                     Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString())));
         });
     }
@@ -52,7 +52,7 @@ public class WarzoneAdminCommand extends BaseCommand {
         playerManager.loadPlayer(target.getUniqueId(), targetPlayer -> {
             xpHandler.setXP(targetPlayer, newXP);
 
-            langService.sendMessage(sender, langConfig -> langConfig.adminLang().statsReset(),
+            langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
                     Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString())));
         });
     }

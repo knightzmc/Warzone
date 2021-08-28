@@ -43,8 +43,12 @@ game:
   winner-broadcast: '<gold>{winner}''s party wins!'
   ## IMPORTANT: no-time-remaining does not support titles
   no-time-remaining: 'Final Circle' # Used for %warzone_time_remaining% when there is no time left
+
+# IMPORTANT: errors do not support titles
 errors:
   xp-not-positive: '<red>XP must be positive!'
+  arena-in-use: '<red>Arena {arena} is in use!'
+
 admin:
   stats-reset: '<green>Stats reset for {player}!'
   xp-set: '<green>Set {player}''s xp to {value}!'

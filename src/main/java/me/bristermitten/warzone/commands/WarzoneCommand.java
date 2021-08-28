@@ -42,7 +42,7 @@ public class WarzoneCommand extends BaseCommand {
     @Subcommand("join")
     public void join(Player sender) {
         if (!gameManager.getGameContaining(sender.getUniqueId()).isEmpty()) {
-            langService.sendMessage(sender, langConfig -> langConfig.gameLang().alreadyInGame());
+            langService.send(sender, langConfig -> langConfig.gameLang().alreadyInGame());
             return;
         }
         matchmakingService.queue(partyManager.getParty(sender));
@@ -70,7 +70,7 @@ public class WarzoneCommand extends BaseCommand {
     private void processGameLeave(Player sender, BiConsumer<Game, Boolean> onComplete, String actionName) {
         var gameOption = gameManager.getGameContaining(sender.getUniqueId());
         if (gameOption.isEmpty()) {
-            langService.sendMessage(sender, langConfig -> langConfig.gameLang().notInGame());
+            langService.send(sender, langConfig -> langConfig.gameLang().notInGame());
             return;
         }
         var game = gameOption.get();

@@ -18,7 +18,7 @@ public class TimerRenderer {
     }
 
     public String render(Timer timer) {
-        return render(timer, langConfigProvider.get().gameLang().noTimeRemaining().message());
+        return render(timer, langConfigProvider.get().gameLang().noTimeRemaining());
     }
 
     public String render(Timer timer, String defaultMessage) {

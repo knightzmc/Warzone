@@ -49,33 +49,33 @@ public class PartyManager {
 
     public void invite(@NotNull Player inviter, @NotNull Player receiver) {
         if (inviter.getUniqueId().equals(receiver.getUniqueId())) {
-            langService.sendMessage(inviter, langConfig -> langConfig.partyLang().cannotInviteSelf());
+            langService.send(inviter, langConfig -> langConfig.partyLang().cannotInviteSelf());
             return;
         }
         var party = getParty(inviter);
         if (party.isFull()) {
-            langService.sendMessage(inviter, config -> config.partyLang().partyFull());
+            langService.send(inviter, config -> config.partyLang().partyFull());
             return;
         }
         if (party.getOwner().equals(receiver.getUniqueId()) || party.getOtherPlayers().contains(receiver.getUniqueId())) {
-            langService.sendMessage(inviter, config -> config.partyLang().alreadyInParty(),
+            langService.send(inviter, config -> config.partyLang().alreadyInParty(),
                     Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
             return;
         }
         if (party.getOutgoingInvites().stream().anyMatch(i -> i.receiver().equals(receiver.getUniqueId()))) {
-            langService.sendMessage(
+            langService.send(
                     inviter, config -> config.partyLang().inviteAlreadySent(),
                     Map.of(PLAYER_PLACEHOLDER, receiver.getName())
             );
             return;
         }
 
-        langService.sendMessage(
+        langService.send(
                 receiver, config -> config.partyLang().inviteReceived(),
                 Map.of("{inviter}", inviter.getName())
         );
 
-        langService.sendMessage(inviter, config -> config.partyLang().inviteSent(),
+        langService.send(inviter, config -> config.partyLang().inviteSent(),
                 Map.of(PLAYER_PLACEHOLDER, receiver.getName()));
 
         party.getOutgoingInvites().add(new PartyInvite(
@@ -98,12 +98,12 @@ public class PartyManager {
             return;
         }
         if (!invite.invitingTo().getOutgoingInvites().contains(invite)) {
-            langService.sendMessage(receivingPlayer, config -> config.partyLang().invalidInvite());
+            langService.send(receivingPlayer, config -> config.partyLang().invalidInvite());
             return;
         }
         var gameContainingInviter = gameManager.getGameContaining(invite.invitingTo());
         if (gameContainingInviter.isDefined() && gameContainingInviter.get().getState() instanceof InProgressState) {
-            langService.sendMessage(receivingPlayer, config -> config.partyLang().partyIsInGame(),
+            langService.send(receivingPlayer, config -> config.partyLang().partyIsInGame(),
                     Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(invite.invitingTo().getOwner()).getName(), UNKNOWN_NAME)));
             return;
         }
@@ -118,7 +118,7 @@ public class PartyManager {
             leave(party, Bukkit.getOfflinePlayer(party.getOwner()));
         }
         if (party.isFull()) {
-            langService.sendMessage(joining,
+            langService.send(joining,
                     langConfig -> langConfig.partyLang().partyFullJoin(),
                     Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(party.getOwner()).getName(), UNKNOWN_NAME)));
             return;
@@ -126,14 +126,14 @@ public class PartyManager {
         party.getAllMembers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
-                .forEach(player -> langService.sendMessage(player, config -> config.partyLang().partyJoinedBroadcast(),
+                .forEach(player -> langService.send(player, config -> config.partyLang().partyJoinedBroadcast(),
                         Map.of(PLAYER_PLACEHOLDER, joining.getName())));
 
         party.add(joining.getUniqueId());
         partiesByMember.put(joining.getUniqueId(), party);
 
 
-        langService.sendMessage(joining,
+        langService.send(joining,
                 config -> config.partyLang().partyJoined(),
                 Map.of("{owner}", Null.get(Bukkit.getOfflinePlayer(party.getOwner()).getName(), UNKNOWN_NAME)));
     }
@@ -142,12 +142,12 @@ public class PartyManager {
 
         if (party.isEmpty()) { // This is a bit of a lie, everyone is in a party, but if a party is just you, can it really be considered a party?
             Option.of(leaver.getPlayer()).peek(
-                    player -> langService.sendMessage(player, langConfig -> langConfig.partyLang().noParty())
+                    player -> langService.send(player, langConfig -> langConfig.partyLang().noParty())
             );
             return;
         }
         Option.of(leaver.getPlayer())
-                .peek(player -> langService.sendMessage(player, config -> config.partyLang().partyYouLeft()));
+                .peek(player -> langService.send(player, config -> config.partyLang().partyYouLeft()));
 
 
         party.getOtherPlayers().remove(leaver.getUniqueId());
@@ -157,7 +157,7 @@ public class PartyManager {
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(player ->
-                        langService.sendMessage(player, config -> config.partyLang().partyUserLeft(),
+                        langService.send(player, config -> config.partyLang().partyUserLeft(),
                                 Map.of("{leaver}", Null.get(leaver.getName(), UNKNOWN_NAME))));
 
         if (leaver.getUniqueId().equals(party.getOwner())) {
@@ -176,7 +176,7 @@ public class PartyManager {
             party.setOwner(nextOwner.getUniqueId());
 
             party.getOtherPlayers().remove(nextOwner.getUniqueId());
-            langService.sendMessage(nextOwner, config -> config.partyLang().partyPromotedLeft(),
+            langService.send(nextOwner, config -> config.partyLang().partyPromotedLeft(),
                     Map.of("{owner}", Null.get(leaver.getName(), UNKNOWN_NAME)));
         }
 

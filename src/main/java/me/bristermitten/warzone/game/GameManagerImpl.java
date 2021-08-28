@@ -225,11 +225,11 @@ public class GameManagerImpl implements GameManager {
             winningParty.getAllMembers().forEach(winnerId -> {
                 var player = Bukkit.getPlayer(winnerId);
                 Objects.requireNonNull(player); // if they're offline they should've been removed from the party
-                langService.sendMessage(player, config -> config.gameLang().winner());
+                langService.send(player, config -> config.gameLang().winner());
             });
             players.forEach(warzonePlayer -> {
                 warzonePlayer.getPlayer().peek(player ->
-                        langService.sendMessage(player,
+                        langService.send(player,
                                 config -> config.gameLang().winnerBroadcast(),
                                 Map.of("{winner}",
                                         Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName())));

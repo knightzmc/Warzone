@@ -64,7 +64,7 @@ public class SpectatingState extends InGameState {
         spectatorConfig.potionEffects().forEach(player::addPotionEffect);
         spectatorConfig.hotbarItems().forEach((slot, item) -> player.getInventory().setItem(slot, item.item()));
 
-        langService.sendMessage(player, config -> config.gameLang().playerOut());
+        langService.send(player, config -> config.gameLang().playerOut());
     }
 
     @Override
