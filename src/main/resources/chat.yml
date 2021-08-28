@@ -11,3 +11,4 @@ stats-hover-message:
   - "<gold>Name: <gray>%player_name%"
   - "<gold>Level: <gray>%warzone_level%"
   - "<gold>Global Ranking: <gray>%warzone_global_ranking%"
+  - "<gray>Click to invite to your party"

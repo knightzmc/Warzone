@@ -6,6 +6,7 @@ import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,13 +32,16 @@ public class MiniMessagePlaceholders implements Provider<Map<String, Function<@N
     public @NotNull Map<String, Function<@Nullable OfflinePlayer, ComponentLike>> get() {
         var config = configProvider.get();
         return HashMap.of(
-                "player_name_hover_stats", player ->
-                        Component.text(Option.of(player)
-                                .map(OfflinePlayer::getName).getOrElse("[Server]")) // throw an exception?
-                                .hoverEvent(config.statsHoverMessage()
-                                        .stream()
-                                        .map(Function2.of(chatFormatter::format).reversed().apply(player))
-                                        .collect(toComponent(newline())).asHoverEvent())
+                "player_name_hover_stats", player -> {
+                    var playerName = Option.of(player)
+                            .map(OfflinePlayer::getName).getOrElseThrow(() -> new IllegalStateException("Player who is offline sent a message!"));
+                    return Component.text(playerName)
+                            .hoverEvent(config.statsHoverMessage()
+                                    .stream()
+                                    .map(Function2.of(chatFormatter::format).reversed().apply(player))
+                                    .collect(toComponent(newline())).asHoverEvent())
+                            .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/party invite " + playerName));
+                }
         );
     }
 }
