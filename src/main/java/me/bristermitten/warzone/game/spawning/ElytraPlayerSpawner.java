@@ -6,6 +6,7 @@ import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.protocol.ProtocolWrapper;
+import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -27,11 +28,13 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
 
     private final ProtocolWrapper protocolWrapper;
     private final PlayerManager playerManager;
+    private final Schedule schedule;
 
     @Inject
-    public ElytraPlayerSpawner(ProtocolWrapper protocolWrapper, PlayerManager playerManager) {
+    public ElytraPlayerSpawner(ProtocolWrapper protocolWrapper, PlayerManager playerManager, Schedule schedule) {
         this.protocolWrapper = protocolWrapper;
         this.playerManager = playerManager;
+        this.schedule = schedule;
     }
 
     @Override
@@ -53,10 +56,9 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
                 protocolWrapper.makePlayerGlowing(otherPlayer, player);
             });
 
-            playerManager.loadPlayer(uuid, warzonePlayer -> spawn(game, warzonePlayer));
+            playerManager.loadPlayer(uuid).flatMap(schedule.runSync(warzonePlayer -> spawn(game, warzonePlayer)));
         });
     }
-
 
     @Override
     public void spawn(Game game, WarzonePlayer player) {
