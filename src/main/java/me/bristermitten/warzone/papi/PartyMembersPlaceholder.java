@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -47,5 +48,10 @@ public class PartyMembersPlaceholder implements WarzonePlaceholder {
                 .map(HumanEntity::getName)
                 .map(s -> prefix + s + suffix)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @Override
+    public Set<String> getPlaceholders() {
+        return Set.of("party_members[:prefix][:suffix]");
     }
 }

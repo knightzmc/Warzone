@@ -13,7 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class WarzoneExpansion extends PlaceholderExpansion {
     public static final String NOT_LOADED_YET = "Not loaded yet";
@@ -55,6 +57,14 @@ public class WarzoneExpansion extends PlaceholderExpansion {
     @Override
     public boolean persist() {
         return true;
+    }
+
+    @Override
+    @NotNull public List<String> getPlaceholders() {
+        return Stream.concat(
+                Stream.of("level", "kdr", "wlr", "global_ranking", "xp_required", "xp"),
+                extraPlaceholders.stream().flatMap(p -> p.getPlaceholders().stream()))
+                .toList();
     }
 
     @Override

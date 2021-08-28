@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class LeaderboardPlaceholder implements WarzonePlaceholder {
@@ -18,6 +19,11 @@ public class LeaderboardPlaceholder implements WarzonePlaceholder {
     @Inject
     public LeaderboardPlaceholder(PlayerLeaderboard leaderboard) {
         this.leaderboard = leaderboard;
+    }
+
+    @Override
+    public @Nullable Pattern getPattern() {
+        return LEADERBOARD_PATTERN;
     }
 
     @Override
@@ -43,5 +49,10 @@ public class LeaderboardPlaceholder implements WarzonePlaceholder {
             case "kdr" -> Iterables.get(leaderboard.getPlayers(), index).getKDR().format();
             default -> null;
         };
+    }
+
+    @Override
+    public Set<String> getPlaceholders() {
+        return Set.of("leaderboard_name", "leaderboard_kdr");
     }
 }

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GameStatusPlaceholder implements WarzonePlaceholder {
@@ -100,5 +101,10 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
 
             default -> null;
         };
+    }
+
+    @Override
+    public Set<String> getPlaceholders() {
+        return Set.of("kill_count", "lobby_time_remaining", "time_remaining", "players_remaining", "party_members_gameformat");
     }
 }
