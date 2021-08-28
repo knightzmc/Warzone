@@ -18,6 +18,7 @@ public record LangConfig(
     public record ErrorLang(
             @SerializedName("xp-not-positive") String xpNotPositive
             , @SerializedName("arena-in-use") String arenaInUse
+            , @SerializedName("unknown-arena") String unknownArena
             , @SerializedName("no-game-running") String noGameRunning
     ) {
     }
