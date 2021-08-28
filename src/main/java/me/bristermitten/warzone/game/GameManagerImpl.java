@@ -81,7 +81,7 @@ public class GameManagerImpl implements GameManager {
         arenaManager.use(arena);
         var game = gameFactory.createGame(arena, new HashSet<>(), acceptedSize);
         game.getPreGameLobbyTimer().addCompletionHook(() ->
-                setState(game, GameStates::inProgressStateProvider));
+                setState(game, GameStates::inProgressState));
         games.add(game);
 
         gameWorldUpdateTask.start();
@@ -127,7 +127,7 @@ public class GameManagerImpl implements GameManager {
         }
         if (game.getState() instanceof IdlingState) {
             // fire it up!
-            setState(game, GameStates::inLobbyStateProvider);
+            setState(game, GameStates::inLobbyState);
         }
 
         if (game.getState() instanceof InLobbyState) {
@@ -139,7 +139,7 @@ public class GameManagerImpl implements GameManager {
             });
 
             if (game.isFull()) {
-                setState(game, GameStates::inProgressStateProvider);
+                setState(game, GameStates::inProgressState);
             }
         }
         // Otherwise people can't join

@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.state.GameStates;
 import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
@@ -22,17 +23,15 @@ import java.util.function.BiConsumer;
 public class WarzoneCommand extends BaseCommand {
     private final MatchmakingService matchmakingService;
     private final PartyManager partyManager;
-    private final InProgressState inProgressState;
     private final GameManager gameManager;
     private final LeaveRequeueMenuFactory leaveRequeueMenuFactory;
     private final LangService langService;
     private final ProtocolWrapper protocolWrapper;
 
     @Inject
-    public WarzoneCommand(MatchmakingService matchmakingService, PartyManager partyManager, InProgressState inProgressState, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService, ProtocolWrapper protocolWrapper) {
+    public WarzoneCommand(MatchmakingService matchmakingService, PartyManager partyManager, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService, ProtocolWrapper protocolWrapper) {
         this.matchmakingService = matchmakingService;
         this.partyManager = partyManager;
-        this.inProgressState = inProgressState;
         this.gameManager = gameManager;
         this.leaveRequeueMenuFactory = leaveRequeueMenuFactory;
         this.langService = langService;
@@ -52,8 +51,9 @@ public class WarzoneCommand extends BaseCommand {
     @Subcommand("start")
     public void start(Player sender) {
         gameManager.getGames().forEach(game -> {
-            if (!(game.getState() instanceof InProgressState))
-                game.setCurrentState(inProgressState);
+            if (!(game.getState() instanceof InProgressState)) {
+                gameManager.setState(game, GameStates::inProgressState);
+            }
         });
     }
 
