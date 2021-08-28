@@ -29,7 +29,7 @@ public class GulagManager {
 
     public boolean gulagIsAvailable(Gulag gulag) {
         var game = gulag.getGame();
-        if (!game.getTimer().isInitialised()) {
+        if (!game.getTimer().hasStarted()) {
             return false;
         }
         if (game.getTimer().getTimeRemaining() < GULAG_MIN_TIME) {
