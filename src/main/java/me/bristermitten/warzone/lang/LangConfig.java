@@ -20,6 +20,7 @@ public record LangConfig(
             , @SerializedName("arena-in-use") String arenaInUse
             , @SerializedName("unknown-arena") String unknownArena
             , @SerializedName("no-game-running") String noGameRunning
+            , @SerializedName("unknown-player") String unknownPlayer
     ) {
     }
 

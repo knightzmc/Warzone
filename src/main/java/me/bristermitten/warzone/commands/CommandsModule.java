@@ -25,6 +25,7 @@ public class CommandsModule extends AbstractModule {
         var argProcessorBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<ArgumentProcessor<?>>() {
         });
         argProcessorBinder.addBinding().to(ArenaArgumentProcessor.class);
+        argProcessorBinder.addBinding().to(OfflinePlayerProcessor.class);
 
         var conditionBinder = Multibinder.newSetBinder(binder(), new TypeLiteral<ArgumentCondition<?>>() {
         });

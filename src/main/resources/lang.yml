@@ -50,6 +50,7 @@ errors:
   arena-in-use: '<red>Arena {arena} is in use!'
   no-game-running: '<red>No game running in {arena}!'
   unknown-arena: '<red>Unknown arena {arena}!'
+  unknown-player: '<red>Unknown player or invalid uuid {value}'
 
 admin:
   stats-reset: '<green>Stats reset for {player}!'

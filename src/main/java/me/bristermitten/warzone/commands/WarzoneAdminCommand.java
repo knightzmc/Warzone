@@ -59,6 +59,7 @@ public class WarzoneAdminCommand extends BaseCommand {
 
     @Subcommand("xp set")
     @CommandPermission("warzone.admin.xp.set")
+    @CommandCompletion("@offlinePlayers")
     public void setXp(CommandSender sender, OfflinePlayer target, long newXP) {
         if (newXP < 0) {
             langService.sendMessage(sender,
