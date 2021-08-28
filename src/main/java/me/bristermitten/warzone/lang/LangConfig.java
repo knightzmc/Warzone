@@ -35,6 +35,7 @@ public record LangConfig(
 
     public record AdminLang(
             @SerializedName("stats-reset") LangElement statsReset
+            , @SerializedName("xp-set") LangElement xpSet
     ) {
     }
 

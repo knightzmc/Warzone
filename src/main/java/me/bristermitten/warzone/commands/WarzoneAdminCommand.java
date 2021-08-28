@@ -69,7 +69,8 @@ public class WarzoneAdminCommand extends BaseCommand {
             xpHandler.setXP(targetPlayer, newXP);
 
             langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
-                    Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString())));
+                    Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString()),
+                            "{value}", newXP));
         });
     }
 }
