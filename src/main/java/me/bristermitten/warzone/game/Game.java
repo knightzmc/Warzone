@@ -41,6 +41,7 @@ public class Game implements Stateful<Game, GameState> {
         this.uuid = UUID.randomUUID();
         this.arena = arena;
         this.preGameLobbyTimer = preGameLobbyTimer;
+        preGameLobbyTimer.bind(this);
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
         this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfig().timeLimit()));
