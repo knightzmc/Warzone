@@ -19,6 +19,8 @@ import java.util.Map;
 @Subcommand("admin")
 @CommandPermission("warzone.admin")
 public class WarzoneAdminCommand extends BaseCommand {
+
+    public static final String PLAYER_PLACEHOLDER = "{player}";
     private final LangService langService;
     private final PlayerManager playerManager;
     private final XPHandler xpHandler;
@@ -41,7 +43,7 @@ public class WarzoneAdminCommand extends BaseCommand {
             targetPlayer.setXp(0);
 
             langService.send(sender, langConfig -> langConfig.adminLang().statsReset(),
-                    Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString())));
+                    Map.of(PLAYER_PLACEHOLDER, Null.get(target.getName(), target.getUniqueId().toString())));
         });
     }
 
@@ -71,8 +73,18 @@ public class WarzoneAdminCommand extends BaseCommand {
             xpHandler.setXP(targetPlayer, newXP);
 
             langService.send(sender, langConfig -> langConfig.adminLang().xpSet(),
-                    Map.of("{player}", Null.get(target.getName(), target.getUniqueId().toString()),
+                    Map.of(PLAYER_PLACEHOLDER, Null.get(target.getName(), target.getUniqueId().toString()),
                             "{value}", newXP));
         });
+    }
+
+    @Subcommand("xp get")
+    @CommandPermission("warzone.admin.xp.get")
+    @CommandCompletion("@offlinePlayers")
+    public void getXp(CommandSender sender, OfflinePlayer target) {
+        playerManager.loadPlayer(target.getUniqueId(), targetPlayer ->
+                langService.send(sender, langConfig -> langConfig.adminLang().xpGet(),
+                        Map.of(PLAYER_PLACEHOLDER, Null.get(target.getName(), target.getUniqueId().toString()),
+                                "{value}", targetPlayer.getXp())));
     }
 }

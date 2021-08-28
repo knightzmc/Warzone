@@ -55,6 +55,7 @@ errors:
 admin:
   stats-reset: '<green>Stats reset for {player}!'
   xp-set: '<green>Set {player}''s xp to {value}!'
+  xp-get: '<green>{player} has {value} XP'
 
 tags:
   tag-gained: '<green> You gained the tag {tag} <green>from levelling up!'
