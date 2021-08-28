@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -60,7 +61,8 @@ public class WarzoneExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    @NotNull public List<String> getPlaceholders() {
+    @NotNull
+    public List<String> getPlaceholders() {
         return Stream.concat(
                 Stream.of("level", "kdr", "wlr", "global_ranking", "xp_required", "xp"),
                 extraPlaceholders.stream().flatMap(p -> p.getPlaceholders().stream()))
@@ -97,13 +99,11 @@ public class WarzoneExpansion extends PlaceholderExpansion {
             return simple;
         }
 
-        var firstMatching = extraPlaceholders
+        return extraPlaceholders
                 .stream()
                 .filter(p -> p.getPattern() == null || p.getPattern().matcher(params).matches())
-                .findFirst();
-        if (firstMatching.isEmpty()) {
-            return null;
-        }
-        return firstMatching.get().onPlaceholderRequest(player, params);
+                .map(p -> p.onPlaceholderRequest(player, params))
+                .filter(Objects::nonNull)
+                .findFirst().orElse(null);
     }
 }
