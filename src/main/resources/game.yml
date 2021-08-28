@@ -25,3 +25,16 @@ spectator-mode:
 # "TELEPORT": spawn in a random location in the map, close to their party
 # defaults to ELYTRA
 drop-in-method: ELYTRA
+
+
+game-start-timer:
+  # The minimum percentage of players that must be in the pre-game lobby to start the game timer
+  # Default value is 25%
+  threshold: 25
+  # The length of the timer in seconds
+  # Default value is 60 seconds / 1 minute
+  length: 60
+  boss-bar:
+    name: '<blue>Game starting in <yellow>{time}'
+    color: PINK
+    overlay: PROGRESS

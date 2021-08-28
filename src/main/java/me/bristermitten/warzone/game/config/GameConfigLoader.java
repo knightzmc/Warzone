@@ -39,10 +39,19 @@ public class GameConfigLoader implements Provider<GameConfig> {
         );
     }
 
+    public GameConfig.GameStartTimerConfig load(GameConfigDAO.GameStartTimerConfigDAO dao) {
+        return new GameConfig.GameStartTimerConfig(
+                dao.threshold(),
+                dao.length(),
+                dao.bossBar()
+        );
+    }
+
     @Override
     public GameConfig get() {
         var dao = daoProvider.get();
         var spectator = loadSpectatorConfig(dao.spectatorMode());
-        return new GameConfig(spectator, Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA));
+        var startTimer = load(dao.gameStartTimerConfigDAO());
+        return new GameConfig(spectator, Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA), startTimer);
     }
 }
