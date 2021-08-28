@@ -10,14 +10,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public record BossBarConfigDAO(
-        @NotNull String format,
+        @NotNull String name,
         @Nullable BossBar.Color color,
         @Nullable BossBar.Overlay style,
         @Nullable Set<BossBar.Flag> flags
 ) {
     public BossBarConfig loadBossBarConfig() {
         return new BossBarConfig(
-                format(),
+                name(),
                 1f,
                 Null.get(color(), BossBar.Color.WHITE),
                 Null.get(style(), BossBar.Overlay.PROGRESS),

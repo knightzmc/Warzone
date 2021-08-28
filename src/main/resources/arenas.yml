@@ -27,7 +27,7 @@ arenas:
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
       boss-bar:
-        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+        name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
         color: BLUE # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Color.html
         overlay: PROGRESS # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Overlay.html
         flags: [ ] # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Flag.html
@@ -69,7 +69,7 @@ arenas:
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
       boss-bar:
-        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+        name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:
       min:
         x: 0
@@ -106,7 +106,7 @@ arenas:
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
       boss-bar:
-        format: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
+        name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:
       min:
         x: 0
