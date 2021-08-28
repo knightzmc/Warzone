@@ -51,8 +51,8 @@ public class GameStatisticsListener implements EventListener {
         if (!(event.getCustomItem() instanceof Gun gun)) {
             return;
         }
-        var reloadingVal = gun.getReloadingingVal();
-        if (reloadingVal == null || !reloadingVal.isReloading(event.getPlayer())) {
+        var reloadingingHandler = gun.getReloadingingHandler();
+        if (reloadingingHandler == null || !reloadingingHandler.isReloading(event.getPlayer())) {
             return;
         }
         gameManager.getGameContaining(event.getPlayer().getUniqueId())
