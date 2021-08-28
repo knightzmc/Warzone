@@ -8,6 +8,7 @@ import me.bristermitten.warzone.data.pdc.PointDataType;
 import me.bristermitten.warzone.loot.LootGenerator;
 import me.bristermitten.warzone.loot.LootTable;
 import me.bristermitten.warzone.util.Schedule;
+import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -37,9 +38,9 @@ public class ChunkChestFiller {
         this.schedule = schedule;
     }
 
-    private Future<Void> cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
+    private Future<Unit> cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
         if (existingPoints == null) {
-            return Future.successful(null); // Server might have crashed, clean up from the last time
+            return Future.successful(Unit.INSTANCE); // Server might have crashed, clean up from the last time
         }
         return schedule.runSync(() -> {
             for (Point existingPoint : existingPoints) {

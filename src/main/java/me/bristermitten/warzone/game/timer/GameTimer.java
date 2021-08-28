@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.timer;
 
 public class GameTimer {
     private final long durationMillis;

@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.timer;
 
 import me.bristermitten.warzone.chat.ChatFormatter;
 import me.bristermitten.warzone.lang.LangConfig;

@@ -6,9 +6,10 @@ import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-import me.bristermitten.warzone.game.GameTimer;
-import me.bristermitten.warzone.game.GameTimerRenderer;
+
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
+import me.bristermitten.warzone.game.timer.GameTimer;
+import me.bristermitten.warzone.game.timer.GameTimerRenderer;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.game.AliveState;
