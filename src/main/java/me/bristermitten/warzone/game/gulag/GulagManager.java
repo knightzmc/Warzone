@@ -6,6 +6,8 @@ import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.player.state.game.InGulagState;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.Queue;
@@ -38,6 +40,26 @@ public class GulagManager {
         } else {
             return game.getPartiesInGame().size() >= GULAG_MIN_PARTIES;
         }
+    }
+
+    public boolean gulagIsAvailableFor(@NotNull WarzonePlayer warzonePlayer) {
+        if (warzonePlayer.getCurrentState() instanceof InGulagState) {
+            return false;
+        }
+        var gameOpt = gameManager.getGameContaining(warzonePlayer);
+        if (gameOpt.isEmpty()) {
+            return false;
+        }
+        var game = gameOpt.get();
+        if (!gulagIsAvailable(game.getGulag())) {
+            return false;
+        }
+        var infoOpt = game.getInfo(warzonePlayer.getPlayerId());
+        if (infoOpt.isEmpty()) {
+            return false;
+        }
+        var playerInfo = infoOpt.get();
+        return playerInfo.getDeathCount() <= game.getArena().gameConfig().maxGulagEntries();
     }
 
     public void addToGulag(Gulag gulag, WarzonePlayer player) {

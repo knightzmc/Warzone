@@ -12,10 +12,10 @@ public class Sync {
     private Sync() {
     }
 
-    public static Future<Void> run(@NotNull Runnable r, @NotNull Plugin p) {
+    public static Future<Unit> run(@NotNull Runnable r, @NotNull Plugin p) {
         return run(() -> {
             r.run();
-            return null;
+            return Unit.INSTANCE;
         }, p);
     }
 

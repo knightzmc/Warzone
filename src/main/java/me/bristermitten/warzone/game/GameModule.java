@@ -17,6 +17,7 @@ public class GameModule extends AbstractModule {
     protected void configure() {
         bind(GameManager.class).to(GameManagerImpl.class);
         ListenerBinding.bindListener(binder()).to(ChunkLoadFiller.class);
+        ListenerBinding.bindListener(binder()).to(GamePlayerRemoveListener.class);
 
         bind(BossBarManager.class).to(BossBarManagerImpl.class);
         bind(IdlingState.class).toInstance(IdlingState.INSTANCE);

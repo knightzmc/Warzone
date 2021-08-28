@@ -4,11 +4,8 @@ import io.vavr.collection.List;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.listener.EventListener;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
 

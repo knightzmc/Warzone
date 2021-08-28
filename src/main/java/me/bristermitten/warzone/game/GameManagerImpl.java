@@ -7,11 +7,9 @@ import io.vavr.concurrent.Future;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
-import me.bristermitten.warzone.game.gulag.GulagManager;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.statistic.GamePersistence;
 import me.bristermitten.warzone.game.statistic.GameStatistic;
-import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.lang.LangService;
@@ -22,16 +20,12 @@ import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.AliveState;
-import me.bristermitten.warzone.player.state.game.InGulagState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -49,7 +43,6 @@ public class GameManagerImpl implements GameManager {
     private final PlayerManager playerManager;
     private final PartyManager partyManager;
     private final ArenaManager arenaManager;
-    private final GulagManager gulagManager;
     private final GameWorldUpdateTask gameWorldUpdateTask;
     private final LangService langService;
     private final GamePersistence gamePersistence;
@@ -62,7 +55,6 @@ public class GameManagerImpl implements GameManager {
                            PlayerManager playerManager,
                            PartyManager partyManager,
                            ArenaManager arenaManager,
-                           GulagManager gulagManager,
                            GameWorldUpdateTask gameWorldUpdateTask,
                            LangService langService,
                            XPHandler xpHandler,
@@ -71,7 +63,6 @@ public class GameManagerImpl implements GameManager {
         this.playerManager = playerManager;
         this.partyManager = partyManager;
         this.arenaManager = arenaManager;
-        this.gulagManager = gulagManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
         this.langService = langService;
         this.gamePersistence = gamePersistence;
@@ -107,23 +98,22 @@ public class GameManagerImpl implements GameManager {
         }
         var party = partyManager.getParty(player.getUniqueId());
         if (includeParty || party.getSize() == PartySize.SINGLES) {
-            return Future.sequence(List.ofAll(party.getAllMembers()).map(playerManager::loadPlayer))
+            return Future.sequence(
+                    List.ofAll(party.getAllMembers())
+                            .map(playerManager::loadPlayer))
                     .map(players -> {
                         players.forEach(warzonePlayer ->
                                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
                         game.getParties().remove(party);
-                        cleanup(game);
                         return Unit.INSTANCE;
-                    });
-        } else {
-            return playerManager.loadPlayer(player.getUniqueId())
-                    .map(warzonePlayer -> {
-                        playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
-                        partyManager.leave(party, player);
-                        cleanup(game);
-                        return Unit.INSTANCE;
-                    });
+                    }).flatMap(unit -> checkForWinner(game));
         }
+        return playerManager.loadPlayer(player.getUniqueId())
+                .map(warzonePlayer -> {
+                    playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
+                    partyManager.leave(party, player);
+                    return Unit.INSTANCE;
+                }).flatMap(unit -> checkForWinner(game));
     }
 
     @Override
@@ -193,46 +183,8 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void handleDeath(Game game, UUID died, PlayerDeathEvent event) {
-        if (!gameContains(game, died)) {
-            throw new IllegalArgumentException("Player is not in this game! something has gone very wrong");
-        }
-        if (!(game.getState() instanceof InProgressState)) {
-            // This probably shouldn't happen, i guess we'll ignore it
-            return;
-        }
-        var playerInfo = game.getInfo(died)
-                .getOrElseThrow(() -> new IllegalStateException("Something has also gone very wrong as the player has no PlayerInformation"));
-
-        game.getDeaths().add(new PlayerDeath(
-                died,
-                Option.of(Bukkit.getPlayer(died)).flatMap(p -> Option.of(p.getKiller())).map(Player::getUniqueId).getOrNull(),
-                Instant.now(),
-                Option.of(event.getEntity().getLastDamageCause())
-                        .map(EntityDamageEvent::getCause)
-                        .map(cause -> switch (cause) {
-                            case FALL -> PlayerDeath.DeathCause.FALL_DAMAGE;
-                            case CUSTOM -> PlayerDeath.DeathCause.BORDER;
-                            default -> PlayerDeath.DeathCause.OTHER;
-                        }).getOrElse(PlayerDeath.DeathCause.UNKNOWN)
-        ));
-
-        playerManager.loadPlayer(died, player -> {
-            if (playerInfo.getDeathCount() > game.getArena().gameConfig().maxGulagEntries()
-                || player.getCurrentState() instanceof InGulagState
-                || !gulagManager.gulagIsAvailable(game.getGulag())) {
-                // they're out
-                playerManager.setState(player, PlayerStates::spectatingState);
-                checkForWinner(game);
-            } else {
-                gulagManager.addToGulag(game.getGulag(), player);
-            }
-        });
-    }
-
-
-    private void checkForWinner(Game game) {
-        getAllPlayers(game).flatMap(schedule.runSync(players -> {
+    public Future<Unit> checkForWinner(Game game) {
+        return getAllPlayers(game).flatMap(schedule.runSync(players -> {
             var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
 
@@ -280,6 +232,7 @@ public class GameManagerImpl implements GameManager {
                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
             });
             cleanup(game);
+
         }));
     }
 

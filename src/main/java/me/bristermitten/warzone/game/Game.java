@@ -44,9 +44,10 @@ public class Game implements Stateful<Game, GameState> {
                 .forEach(playerUUID -> playerInformationMap.put(playerUUID, new PlayerInformation(playerUUID)));
     }
 
-    Set<PlayerDeath> getDeaths() {
-        return deaths;
+    public void recordDeath(PlayerDeath playerDeath) {
+        deaths.add(playerDeath);
     }
+
 
     public GameBorder getGameBorder() {
         return gameBorder;
@@ -107,5 +108,9 @@ public class Game implements Stateful<Game, GameState> {
 
     public Gulag getGulag() {
         return gulag;
+    }
+
+    public @Unmodifiable Set<PlayerDeath> getDeaths() {
+        return Set.copyOf(deaths);
     }
 }

@@ -1,7 +1,10 @@
 package me.bristermitten.warzone.game.gulag;
 
+import io.vavr.collection.List;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
@@ -13,7 +16,7 @@ public class Gulag {
 
     private @Nullable GulagPlayers gulagPlayers = null;
 
-    private Deque<WarzonePlayer> playersInQueue = new ArrayDeque<>();
+    private final Deque<WarzonePlayer> playersInQueue = new ArrayDeque<>();
 
     public Gulag(Game game) {
         this.game = game;
@@ -25,6 +28,10 @@ public class Gulag {
 
     public @Nullable GulagPlayers getGulagPlayers() {
         return gulagPlayers;
+    }
+
+    public Option<GulagPlayers> getPlayers() {
+        return Option.of(gulagPlayers);
     }
 
     public void setGulagPlayers(@Nullable GulagPlayers gulagPlayers) {
@@ -47,5 +54,16 @@ public class Gulag {
             UUID a,
             UUID b
     ) {
+        public boolean contains(@NotNull UUID uuid) {
+            return uuid.equals(a) || uuid.equals(b);
+        }
+
+        public boolean contains(WarzonePlayer player) {
+            return contains(player.getPlayerId());
+        }
+
+        public List<UUID> getAsList() {
+            return List.of(a, b);
+        }
     }
 }

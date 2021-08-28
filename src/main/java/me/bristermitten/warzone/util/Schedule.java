@@ -15,11 +15,14 @@ public class Schedule {
         this.plugin = plugin;
     }
 
-    public Future<Void> runSync(Runnable r) {
+    public Future<Unit> runSync(Runnable r) {
         return Sync.run(r, plugin);
     }
 
-    public <T> Function<T, Future<Void>> runSync(Consumer<T> c) {
-        return t -> Sync.run(() -> c.accept(t), plugin);
+    public <T> Function<T, Future<Unit>> runSync(Consumer<T> c) {
+        return t -> Sync.run(() -> {
+            c.accept(t);
+            return Unit.INSTANCE;
+        }, plugin);
     }
 }

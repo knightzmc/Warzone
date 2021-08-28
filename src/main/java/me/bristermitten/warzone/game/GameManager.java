@@ -15,7 +15,6 @@ import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.state.StateManager;
 import me.bristermitten.warzone.util.Unit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -25,8 +24,6 @@ import java.util.UUID;
 
 public interface GameManager extends StateManager<Game, GameState, GameStates> {
     @Unmodifiable @NotNull Set<@NotNull Game> getGames();
-
-    void handleDeath(Game game, UUID died, PlayerDeathEvent event);
 
     boolean gameContains(Game game, UUID uuid);
 
@@ -73,4 +70,6 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
      */
     Future<Unit> leave(Game game, OfflinePlayer player, boolean includeParty);
+
+    Future<Unit> checkForWinner(Game game);
 }
