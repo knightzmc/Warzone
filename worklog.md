@@ -284,3 +284,8 @@ exactly 1 hour spent today
 - 11:40 - start work
 - 13:10 - pause
 - 14:00 - resume
+- 18:10 - pause
+- 20:10 - resume
+- 21:00 - pause
+- 21:10 - resume
+- 23:45 - pause
