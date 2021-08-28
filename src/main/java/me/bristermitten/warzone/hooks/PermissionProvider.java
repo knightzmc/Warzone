@@ -1,4 +1,4 @@
-package me.bristermitten.warzone.vault;
+package me.bristermitten.warzone.hooks;
 
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;

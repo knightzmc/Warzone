@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.tags;
 
+import me.bristermitten.warzone.hooks.TagFormatter;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.xp.LevelUpEvent;
@@ -20,12 +21,14 @@ public class TagsListener implements EventListener {
     private final SplittableRandom random = new SplittableRandom();
     private final Permission permission;
     private final LangService langService;
+    private final TagFormatter tagFormatter;
 
     @Inject
-    TagsListener(Provider<TagsConfig> tagsConfigProvider, Permission permission, LangService langService) {
+    TagsListener(Provider<TagsConfig> tagsConfigProvider, Permission permission, LangService langService, TagFormatter tagFormatter) {
         this.tagsConfigProvider = tagsConfigProvider;
         this.permission = permission;
         this.langService = langService;
+        this.tagFormatter = tagFormatter;
     }
 
     @EventHandler
@@ -54,6 +57,6 @@ public class TagsListener implements EventListener {
         String finalTag = tag;
         event.getLevelling().getPlayer().peek(player ->
                 langService.send(player, langConfig -> langConfig.tagsLang().tagGained(),
-                        Map.of("{tag}", finalTag)));
+                        Map.of("{tag}", tagFormatter.format(finalTag))));
     }
 }

@@ -34,7 +34,7 @@ import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
 import me.bristermitten.warzone.tags.TagsConfig;
 import me.bristermitten.warzone.tags.TagsModule;
-import me.bristermitten.warzone.vault.VaultModule;
+import me.bristermitten.warzone.hooks.HookModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -75,7 +75,7 @@ public class Warzone extends JavaPlugin {
                     , new GameModule()
                     , new ProtocolModule()
                     , new TagsModule()
-                    , new VaultModule()
+                    , new HookModule()
             );
 
             var injector = Guice.createInjector(modules);
