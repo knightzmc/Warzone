@@ -1,10 +1,7 @@
 package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.lang.LangService;
@@ -89,5 +86,12 @@ public class WarzoneCommand extends BaseCommand {
         processGameLeave(sender,
                 (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner)
                         .onSuccess(Consumers.run(() -> join(sender))), "Requeue");
+    }
+
+    @HelpCommand
+    @Default
+    public void help(){
+        //noinspection deprecation
+        showCommandHelp();
     }
 }

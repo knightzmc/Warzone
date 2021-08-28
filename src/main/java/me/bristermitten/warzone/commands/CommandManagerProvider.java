@@ -38,6 +38,7 @@ public class CommandManagerProvider implements Provider<PaperCommandManager> {
     @Override
     public @NotNull PaperCommandManager get() {
         PaperCommandManager paperCommandManager = new PaperCommandManager(plugin);
+        paperCommandManager.enableUnstableAPI("help");
         for (ArgumentProcessor<?> argumentProcessor : argumentProcessors) {
             registerProcessor(paperCommandManager, argumentProcessor);
         }
