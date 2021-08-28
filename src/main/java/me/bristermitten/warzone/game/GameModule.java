@@ -10,6 +10,7 @@ import me.bristermitten.warzone.game.init.ChunkLoadFiller;
 import me.bristermitten.warzone.game.spawning.SpawningModule;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.statistic.GamePersistenceModule;
+import me.bristermitten.warzone.game.statistic.GameStatisticsListener;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
 import me.bristermitten.warzone.listener.ListenerBinding;
 
@@ -19,6 +20,7 @@ public class GameModule extends AbstractModule {
         bind(GameManager.class).to(GameManagerImpl.class);
         ListenerBinding.bindListener(binder()).to(ChunkLoadFiller.class);
         ListenerBinding.bindListener(binder()).to(GamePlayerRemoveListener.class);
+        ListenerBinding.bindListener(binder()).to(GameStatisticsListener.class);
 
         bind(BossBarManager.class).to(BossBarManagerImpl.class);
         bind(IdlingState.class).toInstance(IdlingState.INSTANCE);
