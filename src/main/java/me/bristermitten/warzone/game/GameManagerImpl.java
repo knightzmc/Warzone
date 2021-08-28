@@ -222,6 +222,11 @@ public class GameManagerImpl implements GameManager {
                     .filter(p -> partyManager.getParty(p).equals(winningParty))
                     .forEach(winner -> xpHandler.addXP(winner, XPConfig::win));
 
+            var top3 = players.sorted(
+                    Comparator.comparingInt(player -> game.getInfo(player.getPlayerId()).map(PlayerInformation::getKillCount).getOrElse(0)))
+                    .take(3);
+            top3.forEach(p -> xpHandler.addXP(p, XPConfig::top3));
+
             winningParty.getAllMembers().forEach(winnerId -> {
                 var player = Bukkit.getPlayer(winnerId);
                 Objects.requireNonNull(player); // if they're offline they should've been removed from the party
