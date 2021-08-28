@@ -2,11 +2,11 @@ package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Description;
 import co.aikar.commands.annotation.Subcommand;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-import me.bristermitten.warzone.game.state.GameStates;
-import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
@@ -37,6 +37,8 @@ public class WarzoneCommand extends BaseCommand {
     }
 
     @Subcommand("join")
+    @CommandPermission("warzone.join")
+    @Description("Queue your party for a game")
     public void join(Player sender) {
         if (!gameManager.getGameContaining(sender.getUniqueId()).isEmpty()) {
             langService.send(sender, langConfig -> langConfig.gameLang().alreadyInGame());
@@ -46,16 +48,9 @@ public class WarzoneCommand extends BaseCommand {
         sender.sendMessage("You've been placed in a queue");
     }
 
-    @Subcommand("start")
-    public void start(Player sender) {
-        gameManager.getGames().forEach(game -> {
-            if (!(game.getState() instanceof InProgressState)) {
-                gameManager.setState(game, GameStates::inProgressState);
-            }
-        });
-    }
-
     @Subcommand("leave")
+    @CommandPermission("warzone.leave")
+    @Description("Leave your current game")
     public void leave(Player sender) {
         processGameLeave(sender,
                 (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner), "Leave Game");
@@ -88,6 +83,8 @@ public class WarzoneCommand extends BaseCommand {
     }
 
     @Subcommand("requeue")
+    @CommandPermission("warzone.requeue")
+    @Description("Leave your current game and queue for a new one")
     public void requeue(Player sender) {
         processGameLeave(sender,
                 (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner)

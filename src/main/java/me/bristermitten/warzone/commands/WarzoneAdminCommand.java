@@ -37,6 +37,7 @@ public class WarzoneAdminCommand extends BaseCommand {
     @Subcommand("reset")
     @CommandPermission("warzone.admin.reset")
     @CommandCompletion("@offlinePlayers")
+    @Description("Reset a player's Level and XP")
     public void reset(CommandSender sender, OfflinePlayer target) {
         playerManager.loadPlayer(target.getUniqueId(), targetPlayer -> {
             targetPlayer.setLevel(0);
@@ -50,6 +51,7 @@ public class WarzoneAdminCommand extends BaseCommand {
     @Subcommand("forcestart")
     @CommandPermission("warzone.admin.forcestart")
     @CommandCompletion("@arenas=inUse")
+    @Description("Force a game to start the lobby timer, ignoring player limits")
     public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena) {
         var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
                 .findFirst().orElseThrow();
@@ -65,6 +67,7 @@ public class WarzoneAdminCommand extends BaseCommand {
     @Subcommand("xp set")
     @CommandPermission("warzone.admin.xp.set")
     @CommandCompletion("@offlinePlayers")
+    @Description("Set a player's XP")
     public void setXp(CommandSender sender, OfflinePlayer target, long newXP) {
         if (newXP < 0) {
             langService.sendMessage(sender,
@@ -83,6 +86,7 @@ public class WarzoneAdminCommand extends BaseCommand {
     @Subcommand("xp get")
     @CommandPermission("warzone.admin.xp.get")
     @CommandCompletion("@offlinePlayers")
+    @Description("Get a player's XP")
     public void getXp(CommandSender sender, OfflinePlayer target) {
         playerManager.loadPlayer(target.getUniqueId(), targetPlayer ->
                 langService.send(sender, langConfig -> langConfig.adminLang().xpGet(),
