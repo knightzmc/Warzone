@@ -51,6 +51,7 @@ errors:
   no-game-running: '<red>No game running in {arena}!'
   unknown-arena: '<red>Unknown arena {arena}!'
   unknown-player: '<red>Unknown player or invalid uuid {value}'
+  cannot-start-game: '<red>Could not start game in {arena}'
 
 admin:
   stats-reset: '<green>Stats reset for {player}!'

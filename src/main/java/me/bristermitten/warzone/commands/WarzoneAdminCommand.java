@@ -55,7 +55,9 @@ public class WarzoneAdminCommand extends BaseCommand {
                 .findFirst().orElseThrow();
 
         if (!(gameToStart.getState() instanceof InLobbyState)) {
-            return;// TODO error
+            langService.sendMessage(sender, langConfig -> langConfig.errorLang().cannotStartGame(),
+                    Map.of("{arena}", arena.name()));
+            return;
         }
         gameToStart.getPreGameLobbyTimer().forceStart();
     }
