@@ -3,7 +3,6 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
-import co.aikar.commands.bukkit.contexts.OnlinePlayer;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.state.GameStates;
@@ -27,7 +26,6 @@ public class WarzoneCommand extends BaseCommand {
     private final GameManager gameManager;
     private final LeaveRequeueMenuFactory leaveRequeueMenuFactory;
     private final LangService langService;
-    private final ProtocolWrapper protocolWrapper;
 
     @Inject
     public WarzoneCommand(MatchmakingService matchmakingService, PartyManager partyManager, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService, ProtocolWrapper protocolWrapper) {
@@ -36,7 +34,6 @@ public class WarzoneCommand extends BaseCommand {
         this.gameManager = gameManager;
         this.leaveRequeueMenuFactory = leaveRequeueMenuFactory;
         this.langService = langService;
-        this.protocolWrapper = protocolWrapper;
     }
 
     @Subcommand("join")
@@ -95,10 +92,5 @@ public class WarzoneCommand extends BaseCommand {
         processGameLeave(sender,
                 (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner)
                         .onSuccess(Consumers.run(() -> join(sender))), "Requeue");
-    }
-
-    @Subcommand("test")
-    public void test(Player sender, OnlinePlayer target) {
-        protocolWrapper.makePlayerGlowing(target.getPlayer(), sender);
     }
 }
