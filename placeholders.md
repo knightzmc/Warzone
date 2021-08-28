@@ -11,4 +11,6 @@
 | %warzone_wlr%                      | Player's win/loss ratio                                                                                                 | 10:19                                      |
 | %warzone_level%                    | Player's level                                                                                                          | 382                                        |
 | %warzone_global_ranking%           | The player's ranking in the global leaderboard based on K/DR                                                            | 31st                                       |
+| %warzone_leaderboard_name_<index>% | The name of the player at position <index> in the leaderboard (starts at 1)                                                            | BristerMitten                                    |
+| %warzone_leaderboard_kdr_<index>%  | The KDR of the player at position <index> in the leaderboard (starts at 1)                                                            | 10:2                                       |
 

@@ -9,5 +9,6 @@ public class PAPIModule extends AbstractModule {
         var multibinder = Multibinder.newSetBinder(binder(), WarzonePlaceholder.class);
         multibinder.addBinding().to(PartyMembersPlaceholder.class);
         multibinder.addBinding().to(GameStatusPlaceholder.class);
+        multibinder.addBinding().to(LeaderboardPlaceholder.class);
     }
 }
