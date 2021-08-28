@@ -1,14 +1,14 @@
-package me.bristermitten.warzone.bossbar;
+package me.bristermitten.warzone.bossbar.game;
 
+import me.bristermitten.warzone.bossbar.AbstractCustomBossBar;
+import me.bristermitten.warzone.bossbar.BossBarConfig;
 import me.bristermitten.warzone.game.Game;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public final class GameBossBar implements CustomBossBar {
+public final class GameBossBar extends AbstractCustomBossBar {
     private final @NotNull Game game;
-    private BossBarConfig previous = null;
-    private boolean paused = false;
 
     public GameBossBar(@NotNull Game game) {
         this.game = game;
@@ -23,22 +23,11 @@ public final class GameBossBar implements CustomBossBar {
     }
 
     @Override
-    public BossBarConfig getBossBar() {
-        if (paused && previous != null) {
-            return previous;
-        }
-        previous = game().getArena().gameConfig().bossBarConfig()
+    protected BossBarConfig getNewConfig() {
+        return game().getArena().gameConfig().bossBarConfig()
                 .withProgress(getProgress());
-        return previous;
     }
 
-    public boolean isPaused() {
-        return paused;
-    }
-
-    public void setPaused(boolean paused) {
-        this.paused = paused;
-    }
 
     public @NotNull Game game() {
         return game;

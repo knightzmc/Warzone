@@ -22,7 +22,7 @@ arenas:
       max-gulag-entries: 2 # Each player can enter the gulag TWICE, rather than once before being fully eliminated
       time-limit: 600 # time limit in seconds
       player-limit: 28
-      min-border-size: 15 # The minimum border side length
+      min-border-size: 15 # The minimum border side lengthMillis
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it

@@ -49,6 +49,7 @@ public class GameManagerImpl implements GameManager {
     private final XPHandler xpHandler;
     private final Schedule schedule;
 
+    private final GameFactory gameFactory;
 
     @Inject
     public GameManagerImpl(GameStates states,
@@ -58,7 +59,7 @@ public class GameManagerImpl implements GameManager {
                            GameWorldUpdateTask gameWorldUpdateTask,
                            LangService langService,
                            XPHandler xpHandler,
-                           GamePersistence gamePersistence, Schedule schedule) {
+                           GamePersistence gamePersistence, Schedule schedule, GameFactory gameFactory) {
         this.states = states;
         this.playerManager = playerManager;
         this.partyManager = partyManager;
@@ -68,6 +69,7 @@ public class GameManagerImpl implements GameManager {
         this.gamePersistence = gamePersistence;
         this.xpHandler = xpHandler;
         this.schedule = schedule;
+        this.gameFactory = gameFactory;
     }
 
     public @NotNull Set<Game> getGames() {
@@ -77,7 +79,9 @@ public class GameManagerImpl implements GameManager {
     @Override
     public Game createNewGame(Arena arena, PartySize acceptedSize) {
         arenaManager.use(arena);
-        Game game = new Game(arena, new HashSet<>(), acceptedSize);
+        var game = gameFactory.createGame(arena, new HashSet<>(), acceptedSize);
+        game.getPreGameLobbyTimer().addCompletionHook(() ->
+                setState(game, GameStates::inProgressStateProvider));
         games.add(game);
 
         gameWorldUpdateTask.start();
@@ -179,7 +183,7 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public boolean gameContains(Game game, UUID uuid) {
-        return game.getPartiesInGame().stream().anyMatch(party -> party.getAllMembers().contains(uuid));
+        return game.getPartiesInGame().toJavaStream().anyMatch(party -> party.getAllMembers().contains(uuid));
     }
 
     @Override

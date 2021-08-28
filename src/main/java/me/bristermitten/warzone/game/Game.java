@@ -1,8 +1,9 @@
 package me.bristermitten.warzone.game;
 
+import com.google.inject.assistedinject.Assisted;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
-import me.bristermitten.warzone.bossbar.GameBossBar;
+import me.bristermitten.warzone.bossbar.game.GameBossBar;
 import me.bristermitten.warzone.game.gulag.Gulag;
 import me.bristermitten.warzone.game.state.GameState;
 import me.bristermitten.warzone.game.state.IdlingState;
@@ -10,12 +11,14 @@ import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.timer.GameTimer;
 import me.bristermitten.warzone.game.world.GameBorder;
+import me.bristermitten.warzone.lobby.PreGameLobbyTimer;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.state.Stateful;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
+import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -30,11 +33,14 @@ public class Game implements Stateful<Game, GameState> {
     private final Gulag gulag;
     private final GameBorder gameBorder;
     private final GameBossBar gameBossBar;
+    private final PreGameLobbyTimer preGameLobbyTimer;
     private GameState state = IdlingState.INSTANCE;
 
-    public Game(Arena arena, Set<Party> players, PartySize acceptedSize) {
+    @Inject
+    Game(@Assisted Arena arena, @Assisted Set<Party> players, @Assisted PartySize acceptedSize, PreGameLobbyTimer preGameLobbyTimer) {
         this.uuid = UUID.randomUUID();
         this.arena = arena;
+        this.preGameLobbyTimer = preGameLobbyTimer;
         this.players = new HashSet<>(players);
         this.acceptedSize = acceptedSize;
         this.timer = new GameTimer(TimeUnit.SECONDS.toMillis(arena.gameConfig().timeLimit()));
@@ -74,6 +80,10 @@ public class Game implements Stateful<Game, GameState> {
         return uuid;
     }
 
+    public PreGameLobbyTimer getPreGameLobbyTimer() {
+        return preGameLobbyTimer;
+    }
+
     Map<UUID, PlayerInformation> getPlayerInformationMap() {
         return playerInformationMap;
     }
@@ -82,8 +92,8 @@ public class Game implements Stateful<Game, GameState> {
         return Option.of(playerInformationMap.get(uuid));
     }
 
-    public @Unmodifiable Set<Party> getPartiesInGame() {
-        return Set.copyOf(players);
+    public io.vavr.collection.Set<Party> getPartiesInGame() {
+        return io.vavr.collection.HashSet.ofAll(players);
     }
 
     public GameState getState() {

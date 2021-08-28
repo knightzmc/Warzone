@@ -25,6 +25,9 @@ public class GameModule extends AbstractModule {
         install(new FactoryModuleBuilder()
                 .build(LeaveRequeueMenuFactory.class));
 
+        install(new FactoryModuleBuilder()
+                .build(GameFactory.class));
+
         install(new GameConfigModule());
         install(new GamePersistenceModule());
         install(new SpawningModule());

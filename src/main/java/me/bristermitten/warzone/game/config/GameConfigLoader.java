@@ -10,6 +10,7 @@ import me.bristermitten.warzone.util.Null;
 import org.bukkit.potion.PotionEffect;
 
 import javax.inject.Provider;
+import java.util.concurrent.TimeUnit;
 
 public class GameConfigLoader implements Provider<GameConfig> {
     private final Provider<GameConfigDAO> daoProvider;
@@ -41,8 +42,8 @@ public class GameConfigLoader implements Provider<GameConfig> {
 
     public GameConfig.GameStartTimerConfig load(GameConfigDAO.GameStartTimerConfigDAO dao) {
         return new GameConfig.GameStartTimerConfig(
-                dao.threshold(),
-                dao.length(),
+                dao.threshold() / 100, // convert to a percentage
+                Math.toIntExact(TimeUnit.SECONDS.toMillis(dao.length())),
                 dao.bossBar()
         );
     }

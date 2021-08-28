@@ -1,9 +1,11 @@
 package me.bristermitten.warzone.game.world;
 
+import me.bristermitten.warzone.bossbar.BossBarManager;
+import me.bristermitten.warzone.bossbar.game.GameBossBar;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-import me.bristermitten.warzone.bossbar.BossBarManager;
-import me.bristermitten.warzone.bossbar.GameBossBar;
+import me.bristermitten.warzone.player.state.InPreGameLobbyState;
+import me.bristermitten.warzone.player.state.game.InGameState;
 import me.bristermitten.warzone.task.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -46,8 +48,13 @@ public class GameWorldUpdateTask extends Task {
             bossBarManager.updateAll();
             for (Game game : gamesToUpdate) {
                 game.getGameBorder().damagePlayersInBorder();
-                gameManager.getPlayers(game).forEach(warzonePlayer ->
-                        bossBarManager.show(warzonePlayer.getPlayerId(), game.getGameBossBar()));
+                gameManager.getPlayers(game).forEach(warzonePlayer -> {
+                    if (warzonePlayer.getCurrentState() instanceof InPreGameLobbyState) {
+                        bossBarManager.show(warzonePlayer.getPlayerId(), game.getPreGameLobbyTimer().getBossBar());
+                    } else if (warzonePlayer.getCurrentState() instanceof InGameState) {
+                        bossBarManager.show(warzonePlayer.getPlayerId(), game.getGameBossBar());
+                    }
+                });
             }
 
             if (running) {

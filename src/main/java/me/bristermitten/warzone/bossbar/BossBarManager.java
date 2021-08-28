@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.bossbar;
 
+import me.bristermitten.warzone.bossbar.game.GameBossBar;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
@@ -11,14 +12,14 @@ public interface BossBarManager {
      * <p>
      * This will keep the boss bar visible until
      */
-    void show(UUID player, GameBossBar bossBar);
+    void show(UUID player, CustomBossBar bossBar);
 
     /**
      * Hides a given {@link GameBossBar} from a given {@link Player}
      */
-    void hide(UUID player, GameBossBar bossBar);
+    void hide(UUID player, CustomBossBar bossBar);
 
     void updateAll();
 
-    void update(GameBossBar bossBar);
+    void update(CustomBossBar bossBar);
 }

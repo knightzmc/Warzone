@@ -15,7 +15,7 @@ public record GameConfig(
 ) {
     public record GameStartTimerConfig(
             double threshold,
-            int length,
+            int lengthMillis,
             BossBarConfig bossBarConfig
     ){}
     public record SpectatorConfig(

@@ -6,10 +6,10 @@ import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.GameManager;
-
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.timer.GameTimer;
 import me.bristermitten.warzone.game.timer.GameTimerRenderer;
+import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.game.AliveState;
@@ -65,13 +65,13 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .map(gameTimerRenderer::render)
                     .getOrElse(NOT_IN_GAME);
             case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
-                    .map(game -> game.getPartiesInGame().stream()
-                            .flatMap(party -> party.getAllMembers().stream())
+                    .map(game -> game.getPartiesInGame()
+                            .flatMap(Party::getAllMembers)
                             .map(playerManager::lookupPlayer)
                             .filter(Option::isDefined)
                             .map(Option::get)
                             .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof AliveState || warzonePlayer.getCurrentState() instanceof InGulagState)
-                            .count())
+                            .length())
                     .map(Objects::toString)
                     .getOrElse(NOT_IN_GAME);
             case "party_members_gameformat" -> List.ofAll(partyManager.getParty(player)

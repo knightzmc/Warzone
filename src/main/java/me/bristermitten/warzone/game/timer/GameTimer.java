@@ -7,7 +7,6 @@ public class GameTimer {
 
     public GameTimer(long durationMillis) {
         this.durationMillis = durationMillis;
-
     }
 
     public long getStartTimeMillis() {

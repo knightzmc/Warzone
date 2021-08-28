@@ -15,8 +15,8 @@ import java.util.UUID;
 
 @Singleton
 public class BossBarManagerImpl implements BossBarManager {
-    private final Multimap<GameBossBar, UUID> bars = HashMultimap.create();
-    private final Table<GameBossBar, UUID, BossBar> bossBarCache = HashBasedTable.create();
+    private final Multimap<CustomBossBar, UUID> bars = HashMultimap.create();
+    private final Table<CustomBossBar, UUID, BossBar> bossBarCache = HashBasedTable.create();
     private final BossBarRenderer renderer;
 
 
@@ -26,7 +26,7 @@ public class BossBarManagerImpl implements BossBarManager {
     }
 
     @Override
-    public void show(UUID player, GameBossBar bossBar) {
+    public void show(UUID player, CustomBossBar bossBar) {
         if (bars.containsEntry(bossBar, player)) {
             return;
         }
@@ -35,7 +35,7 @@ public class BossBarManagerImpl implements BossBarManager {
     }
 
     @Override
-    public void hide(UUID uuid, GameBossBar bossBar) {
+    public void hide(UUID uuid, CustomBossBar bossBar) {
         bars.remove(bossBar, uuid);
         var existing = bossBarCache.get(bossBar, uuid);
         if (existing != null) {
@@ -53,7 +53,7 @@ public class BossBarManagerImpl implements BossBarManager {
     }
 
     @Override
-    public void update(GameBossBar bossBar) {
+    public void update(CustomBossBar bossBar) {
         var viewers = this.bars.get(bossBar);
         viewers.removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
 
