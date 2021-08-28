@@ -53,6 +53,14 @@ public class PreGameLobbyTimer extends Timer {
     }
 
     @Override
+    public long getTimeRemaining() {
+        if (!hasStarted()) {
+            return durationMillis;
+        }
+        return super.getTimeRemaining();
+    }
+
+    @Override
     public void start() {
         if (hasStarted()) {
             return; // already started
