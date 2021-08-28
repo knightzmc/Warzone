@@ -39,13 +39,15 @@ public class GulagDeathHandler implements GameDeathHandler {
     public void onDeath(PlayerDeathEvent event) {
         event.setCancelled(true);
         playerManager.loadPlayer(event.getEntity().getUniqueId(), warzonePlayer -> {
-            var game = gameManager.getGameContaining(event.getEntity().getUniqueId())
-                    .getOrElseThrow(() -> new IllegalStateException("Player is in gulag state but not in a game!"));
-
-            if (gulagManager.gulagIsAvailableFor(warzonePlayer)) {
-                gulagManager.addToGulag(game.getGulag(), warzonePlayer);
+            var gameOpt = gameManager.getGameContaining(event.getEntity().getUniqueId());
+            if (gulagManager.gulagIsAvailableFor(warzonePlayer) && gameOpt.isDefined()) {
+                gulagManager.addToGulag(gameOpt.get().getGulag(), warzonePlayer);
                 return;
             }
+            var game = gameOpt
+                    .getOrElseThrow(() -> new IllegalStateException("Player is in gulag state but not in a game!"));
+
+
             var gulagPlayers = game.getGulag().getGulagPlayers();
             if (gulagPlayers == null) {
                 throw new IllegalStateException("Player is in gulag stat but gulag players is null!");
