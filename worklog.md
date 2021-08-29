@@ -289,3 +289,8 @@ exactly 1 hour spent today
 - 21:00 - pause
 - 21:10 - resume
 - 23:45 - pause
+
+## 2021-08-29
+
+- 22:50 - start work
+- 23:45 - stop

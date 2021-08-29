@@ -68,6 +68,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
             enabled.set(false);
             readerWriter.writeTo(read, realizedPath);
             enabled.set(true);
+            // TODO remove this
             return read;
         });
     }
