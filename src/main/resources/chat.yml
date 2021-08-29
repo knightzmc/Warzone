@@ -3,9 +3,9 @@
 # Custom placeholders:
 # <player_name_hover_stats> - The player's name, with a hover event that will show their stats
 formats:
-  in-game: "%warzone_level% <player_name_hover_stats> - {message}"
-  pre-game-lobby: "%warzone_level% <player_name_hover_stats> - {message}"
-  lobby: "%warzone_level% <player_name_hover_stats> - {message}"
+  in-game: "%eternaltags_tag%<reset> %warzone_level% <player_name_hover_stats> - {message}"
+  pre-game-lobby: "%eternaltags_tag%<reset> %warzone_level% <player_name_hover_stats> - {message}"
+  lobby: "%eternaltags_tag%<reset> %warzone_level% <player_name_hover_stats> - {message}"
 
 stats-hover-message:
   - "<gold>Name: <gray>%player_name%"
