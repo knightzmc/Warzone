@@ -17,7 +17,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> {
@@ -39,14 +38,11 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
         }
 
         var realizedPath = plugin.getDataFolder().toPath().resolve(source.path());
-        AtomicBoolean enabled = new AtomicBoolean(true);
         service.add(new FileWatcher(
                 realizedPath,
                 ignored -> {
-                    if (enabled.get()) {
-                        invalidationHooks.forEach(it -> it.accept(get()));
-                        cached.invalidate();
-                    }
+                    invalidationHooks.forEach(it -> it.accept(get()));
+                    cached.invalidate();
                 }
         ));
         this.cached = new Cached<>(() -> {
