@@ -16,8 +16,8 @@ public class ConfigReaderWriter {
         this.saver = saver;
     }
 
-    public <T> T readFrom(Class<T> type, Path path, Path defaultPath) {
-        var loaded = loader.load(type, path, defaultPath);
+    public <T> T readFrom(Class<T> type, Path path) {
+        var loaded = loader.load(type, path);
         return loaded.getOrElseThrow(ConfigIOException::new);
     }
 

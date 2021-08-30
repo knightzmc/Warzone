@@ -11,8 +11,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +52,9 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
         this.cached = new Cached<>(() -> {
             Path pathInJar;
             try {
-                pathInJar = PathUtil.resourceToPath(plugin.getClass().getClassLoader().getResource(source.path()));
+                final URL resource = plugin.getClass().getClassLoader().getResource(source.path());
+                Objects.requireNonNull(resource, () -> "Could not find " + source.path() + " in jar!");
+                pathInJar = PathUtil.resourceToPath(resource);
             } catch (IOException | URISyntaxException e) {
                 throw new ConfigIOException("Could not load resource in jar for " + source.path(), e);
             }
@@ -64,12 +68,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
                 }
             }
 
-            var read = readerWriter.readFrom(source.type(), realizedPath, pathInJar);
-            enabled.set(false);
-            readerWriter.writeTo(read, realizedPath);
-            enabled.set(true);
-            // TODO remove this
-            return read;
+            return readerWriter.readFrom(source.type(), realizedPath);
         });
     }
 
