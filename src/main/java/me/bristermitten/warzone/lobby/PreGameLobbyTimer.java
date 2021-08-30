@@ -65,7 +65,11 @@ public class PreGameLobbyTimer extends Timer {
     }
 
     public void forceStart() {
-        this.durationMillis = loadDuration();
+        forceStart(loadDuration());
+    }
+
+    public void forceStart(long duration) {
+        this.durationMillis = duration;
         super.start();
         schedule.runLater(durationMillis, () -> onComplete.forEach(Runnable::run));
     }

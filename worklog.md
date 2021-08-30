@@ -298,3 +298,4 @@ exactly 1 hour spent today
 ## 2021-08-30
 
 - 14:55 - start
+- 15:20 - pause

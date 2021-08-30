@@ -11,9 +11,11 @@ import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @CommandAlias("warzone")
 @Subcommand("admin")
@@ -52,7 +54,7 @@ public class WarzoneAdminCommand extends BaseCommand {
     @CommandPermission("warzone.admin.forcestart")
     @CommandCompletion("@arenas=inUse")
     @Description("Force a game to start the lobby timer, ignoring player limits")
-    public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena) {
+    public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena, @Optional @Nullable Long timerSeconds) {
         var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
                 .findFirst().orElseThrow();
 
@@ -61,7 +63,11 @@ public class WarzoneAdminCommand extends BaseCommand {
                     Map.of("{arena}", arena.name()));
             return;
         }
-        gameToStart.getPreGameLobbyTimer().forceStart();
+        if (timerSeconds != null) {
+            gameToStart.getPreGameLobbyTimer().forceStart(TimeUnit.SECONDS.toMillis(timerSeconds));
+        } else {
+            gameToStart.getPreGameLobbyTimer().forceStart();
+        }
     }
 
     @Subcommand("xp set")
