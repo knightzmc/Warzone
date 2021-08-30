@@ -6,17 +6,18 @@ import me.bristermitten.warzone.config.mapper.ObjectMapper;
 
 import java.nio.file.Path;
 
-public record ConfigurationReader(ObjectLoader loader,
-                                  ObjectMapper mapper) {
+public final class ConfigurationReader {
+    private final ObjectLoader loader;
+    private final ObjectMapper mapper;
 
     @Inject
-    public ConfigurationReader {
+    public ConfigurationReader(ObjectLoader loader, ObjectMapper mapper) {
+        this.loader = loader;
+        this.mapper = mapper;
     }
 
     public <T> Try<T> load(Class<T> type, Path source) {
         return Try.of(() -> loader.load(source))
                 .flatMapTry(map -> mapper.map(map, type));
     }
-
-
 }
