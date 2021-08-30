@@ -1,11 +1,28 @@
+import org.ajoberstar.grgit.Grgit
+
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("maven-publish")
 }
 
+val rootVersion = "1.0"
+var buildNumber = ""
+
+ext {
+    val git: Grgit = Grgit.open {
+        dir = File("$rootDir/.git")
+    }
+    val commit = git.head().abbreviatedId
+    buildNumber = if (project.hasProperty("buildnumber")) {
+        project.properties["buildnumber"] as String
+    } else {
+        commit.toString()
+    }
+}
+
+version = "%s-%s".format(rootVersion, buildNumber)
 group = "me.bristermitten"
-version = "1.0"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_16
