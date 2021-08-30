@@ -61,7 +61,7 @@ public class GulagDeathHandler implements GameDeathHandler {
         gameManager.getGameContaining(killer.getUniqueId())
                 .peek(game ->
                         playerManager.loadPlayer(killer.getUniqueId()).flatMap(schedule.runSync(killerW -> {
-                            playerManager.setState(killerW, PlayerStates::aliveState);
+                            playerManager.setState(killerW, PlayerStates::inGameSpawningState);
                             playerSpawner.spawn(game, killerW);
                         })))
                 .onEmpty(() -> LOGGER.warn("Player {} killed {} in a gulag even though they aren't in a game", killer.getName(), event.getEntity().getName()));

@@ -20,7 +20,7 @@ import javax.inject.Inject;
 public class ElytraPlayerSpawner implements PlayerSpawner {
     public static final ItemStack ELYTRA_ITEM = new ItemStack(Material.ELYTRA);
     private static final int ELYTRA_Y = 100;
-    private static final NamespacedKey ELYTRA_KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "elytra_drop_in");
+    public static final NamespacedKey ELYTRA_KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "elytra_drop_in");
 
     static {
         ELYTRA_ITEM.editMeta(meta -> meta.getPersistentDataContainer().set(ELYTRA_KEY, PersistentDataType.BYTE, (byte) 1));

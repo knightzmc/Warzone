@@ -5,6 +5,7 @@ import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
+import me.bristermitten.warzone.player.state.PlayerStates;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -15,9 +16,11 @@ import java.util.UUID;
 
 public class TeleportationPlayerSpawner implements PlayerSpawner {
     private static final int PLAYER_SPAWN_RADIUS = 10; // players in a party spawn within 20 blocks of each other
+    private final PlayerManager playerManager;
 
     @Inject
     public TeleportationPlayerSpawner(PlayerManager playerManager) {
+        this.playerManager = playerManager;
     }
 
     @Override
@@ -48,6 +51,7 @@ public class TeleportationPlayerSpawner implements PlayerSpawner {
             var world = game.getArena().forceGetWorld(); // empty case should have been handled by now
             var y = world.getHighestBlockYAt(spawnPoint.x(), spawnPoint.y());
             player.teleport(spawnPoint.setY(y).toLocation(world));
+            playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::aliveState));
         });
     }
 

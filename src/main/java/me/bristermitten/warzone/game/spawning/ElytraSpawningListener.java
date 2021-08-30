@@ -3,6 +3,7 @@ package me.bristermitten.warzone.game.spawning;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
+import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGameSpawningState;
 import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import org.bukkit.Bukkit;
@@ -11,7 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.persistence.PersistentDataType;
 
 import javax.inject.Inject;
 
@@ -46,14 +49,22 @@ public class ElytraSpawningListener implements EventListener {
         if (!((Entity) event.getPlayer()).isOnGround()) {
             return;
         }
-        if (!ElytraPlayerSpawner.ELYTRA_ITEM.equals(event.getPlayer().getInventory().getChestplate())) {
+        final ItemStack chestplate = event.getPlayer().getInventory().getChestplate();
+        if (chestplate == null) {
             return;
+        }
+        if (!chestplate.hasItemMeta()) {
+            return;
+        }
+        if (!chestplate.getItemMeta().getPersistentDataContainer().has(ElytraPlayerSpawner.ELYTRA_KEY, PersistentDataType.BYTE)) {
+            return; // For some reason ItemStack#isSimilar doesn't want to work here
         }
         playerManager.loadPlayer(event.getPlayer().getUniqueId(), warzonePlayer -> {
             if (!(warzonePlayer.getCurrentState() instanceof InGameSpawningState)) {
                 return; //we dont care
             }
             event.getPlayer().getInventory().setChestplate(null);
+            playerManager.setState(warzonePlayer, PlayerStates::aliveState);
             partyManager.getParty(warzonePlayer)
                     .getAllMembers().forEach(partyMemberUUID -> {
                 Player player = Bukkit.getPlayer(partyMemberUUID);

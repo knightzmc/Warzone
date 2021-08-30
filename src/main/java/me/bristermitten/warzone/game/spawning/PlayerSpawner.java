@@ -4,6 +4,16 @@ import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.WarzonePlayer;
 
+/**
+ * Responsible for spawning a Player into a Game world
+ * <b>Assumptions</b>
+ * <ul>
+ * <li>When either <code>spawn()</code> method is called, it can be assumed that any applicable {@link WarzonePlayer}s will be in the
+ * {@link me.bristermitten.warzone.player.state.game.InGameSpawningState} </li>
+ * <li> Once the player has finished spawning, they should be set to the {@link me.bristermitten.warzone.player.state.game.AliveState}
+ * by the implementation </li>
+ * </ul>
+ */
 public interface PlayerSpawner {
     void spawn(Game game, Party party);
 
