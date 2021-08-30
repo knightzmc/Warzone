@@ -1,6 +1,7 @@
 plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("maven-publish")
 }
 
 group = "me.bristermitten"
@@ -81,4 +82,22 @@ tasks {
 tasks.register<Copy>("copyJarToServerPlugins") {
     from(tasks.getByPath("shadowJar"))
     into(layout.projectDirectory.dir("server/plugins"))
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/knightzmc/Warzone")
+            credentials {
+                username = project.findProperty("gpr.user") as? String ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as? String ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        register("jar", MavenPublication::class) {
+            from(components["java"])
+        }
+    }
 }
