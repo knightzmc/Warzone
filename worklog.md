@@ -294,3 +294,7 @@ exactly 1 hour spent today
 
 - 22:50 - start work
 - 23:45 - stop
+
+## 2021-08-30
+
+- 14:55 - start

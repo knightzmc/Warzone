@@ -194,7 +194,7 @@ public class GameManagerImpl implements GameManager {
 
             if (remainingParties.isEmpty()) {
                 //pack it up boys
-                cleanup(game);
+                cleanup(game, players);
                 return;
             }
             if (remainingParties.keySet().size() != 1) {
@@ -232,20 +232,19 @@ public class GameManagerImpl implements GameManager {
                 Objects.requireNonNull(player); // if they're offline they should've been removed from the party
                 langService.send(player, config -> config.gameLang().winner());
             });
-            players.forEach(warzonePlayer -> {
-                warzonePlayer.getPlayer().peek(player ->
-                        langService.send(player,
-                                config -> config.gameLang().winnerBroadcast(),
-                                Map.of("{winner}",
-                                        Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName())));
-                playerManager.setState(warzonePlayer, PlayerStates::inLobbyState);
-            });
-            cleanup(game);
+            players.forEach(warzonePlayer ->
+                    warzonePlayer.getPlayer().peek(player ->
+                            langService.send(player,
+                                    config -> config.gameLang().winnerBroadcast(),
+                                    Map.of("{winner}",
+                                            Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName()))));
+            cleanup(game, players);
 
         }));
     }
 
-    private void cleanup(Game game) {
+    private void cleanup(Game game, Seq<WarzonePlayer> players) {
+        players.forEach(warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
         setState(game, GameStates::idlingState);
         arenaManager.free(game.getArena());
         games.remove(game);
