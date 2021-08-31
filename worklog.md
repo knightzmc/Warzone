@@ -301,3 +301,7 @@ exactly 1 hour spent today
 - 15:20 - pause
 - 15:30 - resume
 - 16:20 - pause
+
+## 2021-08-31
+
+- 16:40 - start work on QualityArmory
