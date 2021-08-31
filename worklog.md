@@ -305,3 +305,4 @@ exactly 1 hour spent today
 ## 2021-08-31
 
 - 16:40 - start work on QualityArmory
+- 18:00 - QA working, pause
