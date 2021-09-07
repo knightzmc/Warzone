@@ -279,6 +279,8 @@ exactly 1 hour spent today
 
 1 hour spent today
 
+**Fourth Payment Sent**
+
 ## 2021-08-28
 
 - 11:40 - start work
@@ -290,10 +292,14 @@ exactly 1 hour spent today
 - 21:10 - resume
 - 23:45 - pause
 
+9 hours 5 minutes spent today
+
 ## 2021-08-29
 
 - 22:50 - start work
 - 23:45 - stop
+
+55 minutes spent today
 
 ## 2021-08-30
 
@@ -302,7 +308,11 @@ exactly 1 hour spent today
 - 15:30 - resume
 - 16:20 - pause
 
+1 hour 15 minutes spent today
+
 ## 2021-08-31
 
 - 16:40 - start work on QualityArmory
 - 18:00 - QA working, pause
+
+1 hour 20 minutes spent today
