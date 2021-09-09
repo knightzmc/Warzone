@@ -51,7 +51,7 @@ public class ChunkChestFiller {
                 var block = location.getBlock();
                 block.setType(Material.AIR);
             }
-            LOGGER.info("Cleaned up {} points in {}", existingPoints.size(), chunk);
+            LOGGER.debug("Cleaned up {} points in {}", existingPoints.size(), chunk);
         });
     }
 
@@ -100,7 +100,7 @@ public class ChunkChestFiller {
                                         }
                                         fill(table, chest);
                                     });
-                                    LOGGER.info("Filled {} with {} chests", chunk, points.size());
+                                    LOGGER.debug("Filled {} with {} chests", chunk, points.size());
                                     chunk.getPersistentDataContainer().set(KEY,
                                             new ListDataType<>(PointDataType.INSTANCE),
                                             List.copyOf(points));
