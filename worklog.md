@@ -315,4 +315,9 @@ exactly 1 hour spent today
 - 16:40 - start work on QualityArmory
 - 18:00 - QA working, pause
 
+
+## 2021-09-09
+
+- 19:40 - start bugfixing
+
 1 hour 20 minutes spent today
