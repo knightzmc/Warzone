@@ -19,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Unmodifiable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -27,9 +29,9 @@ import java.util.stream.Collectors;
 
 public class ChunkChestFiller {
     private static final NamespacedKey KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "chunk_chests");
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChunkChestFiller.class);
     private final LootGenerator generator;
     private final SplittableRandom random = new SplittableRandom();
-
     private final Schedule schedule;
 
     @Inject
@@ -39,7 +41,8 @@ public class ChunkChestFiller {
     }
 
     private Future<Unit> cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
-        if (existingPoints == null) {
+        if (existingPoints == null || existingPoints.isEmpty()) {
+            LOGGER.info("No chest points left to cleanup in {}", chunk);
             return Future.successful(Unit.INSTANCE); // Server might have crashed, clean up from the last time
         }
         return schedule.runSync(() -> {
@@ -48,6 +51,7 @@ public class ChunkChestFiller {
                 var block = location.getBlock();
                 block.setType(Material.AIR);
             }
+            LOGGER.info("Cleaned up {} points in {}", existingPoints.size(), chunk);
         });
     }
 
@@ -79,12 +83,12 @@ public class ChunkChestFiller {
                 .map(irrelevantScopePollution -> chunk.getChunkSnapshot(true, false, false))
                 .flatMap(snapshot ->
                         Future.of(() -> BlockFinder.getBlocks(snapshot)
-                                .filter(point -> point.x() != 0 && point.x() != 15 && point.z() != 0 && point.z() != 15)
-                                .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()).isAir()) // we can only place chests where there's air
-                                .filter(point -> snapshot.getBlockType(point.x(), point.y() + 1, point.z()).isAir()) // has to have a free spot above it
-                                .filter(point -> snapshot.getBlockType(point.x(), point.y() - 1, point.z()).isSolid())  //must have a solid block below it
-                                .filter(block -> ThreadLocalRandom.current().nextDouble(0, 100) < chestChance)
-                                .collect(Collectors.toSet()))
+                                        .filter(point -> point.x() != 0 && point.x() != 15 && point.z() != 0 && point.z() != 15)
+                                        .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()).isAir()) // we can only place chests where there's air
+                                        .filter(point -> snapshot.getBlockType(point.x(), point.y() + 1, point.z()).isAir()) // has to have a free spot above it
+                                        .filter(point -> snapshot.getBlockType(point.x(), point.y() - 1, point.z()).isSolid())  //must have a solid block below it
+                                        .filter(block -> ThreadLocalRandom.current().nextDouble(0, 100) < chestChance)
+                                        .collect(Collectors.toSet()))
                                 .map(this::filterAdjacent)
                                 .flatMap(points -> schedule.runSync(() -> {
                                     points.forEach(point -> {
@@ -96,7 +100,7 @@ public class ChunkChestFiller {
                                         }
                                         fill(table, chest);
                                     });
-
+                                    LOGGER.info("Filled {} with {} chests", chunk, points.size());
                                     chunk.getPersistentDataContainer().set(KEY,
                                             new ListDataType<>(PointDataType.INSTANCE),
                                             List.copyOf(points));
