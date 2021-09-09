@@ -14,7 +14,6 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
 @Singleton
 public class ArenaChestFiller extends Task {
@@ -65,7 +64,7 @@ public class ArenaChestFiller extends Task {
                 }
                 var world = next.arena().forceGetWorld();
                 var chunk = next.chunk();
-                CompletableFuture.completedFuture(world.getChunkAt(chunk.getX(), chunk.getZ())).whenComplete((loadedChunk, t) -> {
+                world.getChunkAtAsync(chunk.getX(), chunk.getZ()).whenComplete((loadedChunk, t) -> {
                     if (t != null) {
                         throw new IllegalStateException("Could not load chunk", t);
                     }

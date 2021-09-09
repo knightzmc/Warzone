@@ -40,23 +40,33 @@ public class ChunkChestFiller {
         this.schedule = schedule;
     }
 
-    private Future<Unit> cleanupOldPoints(Chunk chunk, Collection<Point> existingPoints) {
-        if (existingPoints == null || existingPoints.isEmpty()) {
-            LOGGER.info("No chest points left to cleanup in {}", chunk);
-            return Future.successful(Unit.INSTANCE); // Server might have crashed, clean up from the last time
-        }
-        return schedule.runSync(() -> {
-            for (Point existingPoint : existingPoints) {
+    private Future<Unit> cleanupOldPoints(Chunk chunk, final Collection<Point> existingPoints) {
+        var snapshot = chunk.getChunkSnapshot();
+        return Future.of(() -> {
+            var chests = BlockFinder.getBlocks(snapshot)
+
+                    .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()) == Material.CHEST)
+                    .collect(Collectors.toCollection(HashSet::new));
+            if (existingPoints != null) {
+                chests.addAll(existingPoints);
+            }
+            return chests;
+        }).flatMap(schedule.runSync(points -> {
+            for (Point existingPoint : points) {
                 var location = existingPoint.toLocation(chunk);
                 var block = location.getBlock();
                 block.setType(Material.AIR);
             }
             LOGGER.debug("Cleaned up {} points in {}", existingPoints.size(), chunk);
-        });
+        }));
     }
 
     private List<Point> readPointsFromPDC(Chunk chunk) {
         return chunk.getPersistentDataContainer().get(KEY, new ListDataType<>(PointDataType.INSTANCE));
+    }
+
+    public Future<Unit> clean(Chunk chunk) {
+        return cleanupOldPoints(chunk, readPointsFromPDC(chunk));
     }
 
     /**
@@ -78,8 +88,7 @@ public class ChunkChestFiller {
     }
 
     public void fill(Chunk chunk, LootTable table, float chestChance) {
-        var oldChestPoints = readPointsFromPDC(chunk);
-        cleanupOldPoints(chunk, oldChestPoints)
+        clean(chunk)
                 .map(irrelevantScopePollution -> chunk.getChunkSnapshot(true, false, false))
                 .flatMap(snapshot ->
                         Future.of(() -> BlockFinder.getBlocks(snapshot)
