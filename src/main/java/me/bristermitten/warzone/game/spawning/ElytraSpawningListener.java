@@ -6,6 +6,8 @@ import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGameSpawningState;
 import me.bristermitten.warzone.protocol.ProtocolWrapper;
+import me.bristermitten.warzone.util.Schedule;
+import me.bristermitten.warzone.util.Time;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -25,12 +27,14 @@ public class ElytraSpawningListener implements EventListener {
     private final PlayerManager playerManager;
     private final PartyManager partyManager;
     private final ProtocolWrapper protocolWrapper;
+    private final Schedule schedule;
 
     @Inject
-    ElytraSpawningListener(PlayerManager playerManager, PartyManager partyManager, ProtocolWrapper protocolWrapper) {
+    ElytraSpawningListener(PlayerManager playerManager, PartyManager partyManager, ProtocolWrapper protocolWrapper, Schedule schedule) {
         this.playerManager = playerManager;
         this.partyManager = partyManager;
         this.protocolWrapper = protocolWrapper;
+        this.schedule = schedule;
     }
 
     @EventHandler
@@ -59,7 +63,9 @@ public class ElytraSpawningListener implements EventListener {
         if (!chestplate.getItemMeta().getPersistentDataContainer().has(ElytraPlayerSpawner.ELYTRA_KEY, PersistentDataType.BYTE)) {
             return; // For some reason ItemStack#isSimilar doesn't want to work here
         }
-        event.getPlayer().setInvulnerable(false);
+
+        schedule.runLater(Time.ticksToMillis(1), () -> event.getPlayer().setInvulnerable(false));
+
         playerManager.loadPlayer(event.getPlayer().getUniqueId(), warzonePlayer -> {
             if (!(warzonePlayer.getCurrentState() instanceof InGameSpawningState)) {
                 return; //we dont care
@@ -68,11 +74,11 @@ public class ElytraSpawningListener implements EventListener {
             playerManager.setState(warzonePlayer, PlayerStates::aliveState);
             partyManager.getParty(warzonePlayer)
                     .getAllMembers().forEach(partyMemberUUID -> {
-                Player player = Bukkit.getPlayer(partyMemberUUID);
-                if (player != null) {
-                    protocolWrapper.undoPlayerGlowing(player, event.getPlayer());
-                }
-            });
+                        Player player = Bukkit.getPlayer(partyMemberUUID);
+                        if (player != null) {
+                            protocolWrapper.undoPlayerGlowing(player, event.getPlayer());
+                        }
+                    });
         });
     }
 }
