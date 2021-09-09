@@ -246,6 +246,7 @@ public class GameManagerImpl implements GameManager {
     private void cleanup(Game game, Seq<WarzonePlayer> players) {
         players.forEach(warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
         setState(game, GameStates::idlingState);
+        game.getGameBorder().remove();
         arenaManager.free(game.getArena());
         games.remove(game);
     }

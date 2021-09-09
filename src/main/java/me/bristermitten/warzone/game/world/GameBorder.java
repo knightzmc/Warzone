@@ -46,4 +46,8 @@ public class GameBorder {
     public void pause() {
         border.setSize(border.getSize());
     }
+
+    public void remove() {
+        border.reset();
+    }
 }
