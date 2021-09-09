@@ -59,6 +59,7 @@ public class ElytraSpawningListener implements EventListener {
         if (!chestplate.getItemMeta().getPersistentDataContainer().has(ElytraPlayerSpawner.ELYTRA_KEY, PersistentDataType.BYTE)) {
             return; // For some reason ItemStack#isSimilar doesn't want to work here
         }
+        event.getPlayer().setInvulnerable(false);
         playerManager.loadPlayer(event.getPlayer().getUniqueId(), warzonePlayer -> {
             if (!(warzonePlayer.getCurrentState() instanceof InGameSpawningState)) {
                 return; //we dont care

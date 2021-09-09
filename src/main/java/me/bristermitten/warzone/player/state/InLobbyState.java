@@ -34,6 +34,7 @@ public class InLobbyState implements PlayerState {
             scoreboardManager.show(p, ScoreboardConfig::lobby);
             p.teleport(arenaConfigProvider.get().lobbySpawnpoint().toLocation());
             p.setGameMode(GameMode.SURVIVAL);
+            p.setInvulnerable(false);
         });
     }
 

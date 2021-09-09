@@ -69,5 +69,6 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
 
         bukkitPlayer.getInventory().setChestplate(ELYTRA_ITEM);
         bukkitPlayer.teleport(center.toLocation(world));
+        bukkitPlayer.setInvulnerable(true);
     }
 }
