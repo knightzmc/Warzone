@@ -58,11 +58,12 @@ public class WarzoneAdminCommand extends BaseCommand {
         var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
                 .findFirst().orElseThrow();
 
-        if (!(gameToStart.getState() instanceof InLobbyState)) {
+        if (!(gameToStart.getState() instanceof InLobbyState) || gameToStart.getPreGameLobbyTimer().hasStarted()) {
             langService.sendMessage(sender, langConfig -> langConfig.errorLang().cannotStartGame(),
                     Map.of("{arena}", arena.name()));
             return;
         }
+
         if (timerSeconds != null) {
             gameToStart.getPreGameLobbyTimer().forceStart(TimeUnit.SECONDS.toMillis(timerSeconds));
         } else {
