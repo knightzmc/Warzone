@@ -18,6 +18,8 @@ import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +42,7 @@ public class ChunkChestFiller {
         this.schedule = schedule;
     }
 
-    private Future<Unit> cleanupOldPoints(Chunk chunk, final Collection<Point> existingPoints) {
+    private Future<Unit> cleanupOldPoints(@NotNull final Chunk chunk, @Nullable final Collection<Point> existingPoints) {
         var snapshot = chunk.getChunkSnapshot();
         return Future.of(() -> {
             var chests = BlockFinder.getBlocks(snapshot)
@@ -57,7 +59,7 @@ public class ChunkChestFiller {
                 var block = location.getBlock();
                 block.setType(Material.AIR);
             }
-            LOGGER.debug("Cleaned up {} points in {}", existingPoints.size(), chunk);
+            LOGGER.debug("Cleaned up {} points in {}", points.size(), chunk);
         }));
     }
 
