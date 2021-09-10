@@ -7,6 +7,8 @@ import me.bristermitten.warzone.util.PathUtil;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleConfigurationProvider.class);
     private final Configuration<T> source;
     private final Set<Consumer<T>> invalidationHooks = ConcurrentHashMap.newKeySet();
     private Cached<T> cached;
@@ -41,6 +44,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
         service.add(new FileWatcher(
                 realizedPath,
                 ignored -> {
+                    LOGGER.info("File {} was edited, invalidating cached version so that it will be reloaded", realizedPath.getFileName());
                     invalidationHooks.forEach(it -> it.accept(get()));
                     cached.invalidate();
                 }
@@ -56,6 +60,7 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
             }
 
             if (!Files.exists(realizedPath)) {
+                LOGGER.info("Real file did not exist ({}), so copying from jar", realizedPath.getFileName());
                 try {
                     Files.createDirectories(realizedPath.getParent());
                     Files.copy(pathInJar, realizedPath);

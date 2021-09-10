@@ -2,15 +2,19 @@ package me.bristermitten.warzone.file;
 
 import com.google.inject.Singleton;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 @Singleton
 public class FileWatcherService implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileWatcherService.class);
     private final ConcurrentMap<Path, Set<FileWatcher>> watchers = new ConcurrentHashMap<>();
 
     private Thread thread;
@@ -28,7 +32,7 @@ public class FileWatcherService implements Runnable {
     }
 
     public void add(@NotNull FileWatcher watcher) {
-        System.out.println("add called");
+        LOGGER.info("Registering new FileWatcher watching {}", watcher.watching());
         var mutableList = new HashSet<>(watchers.getOrDefault(watcher.watching(), Set.of()));
         mutableList.add(watcher);
         watchers.put(watcher.watching(), mutableList);
