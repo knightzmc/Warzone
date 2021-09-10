@@ -49,7 +49,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
     compileOnly("me.zombie_striker:QualityArmory:1.1.176")
-    compileOnly("org.jetbrains:annotations:21.0.1")
+    compileOnly("org.jetbrains:annotations:22.0.0")
     compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("xyz.oribuin:eternaltags:1.0.10")
@@ -58,21 +58,21 @@ dependencies {
 
     implementation("com.google.inject:guice:5.0.1")
     implementation("com.google.inject.extensions:guice-assistedinject:5.0.1")
-    implementation("com.google.code.gson:gson:2.8.7")
-    implementation("io.vavr:vavr:0.9.0")
+    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("io.vavr:vavr:0.10.4")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("com.github.Redempt:Crunch:master")
 
-    implementation("net.kyori:adventure-api:4.8.1")
+    implementation("net.kyori:adventure-api:4.9.0")
     implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
 
     implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testImplementation("org.yaml:snakeyaml:1.28")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.yaml:snakeyaml:1.29")
     testImplementation("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
 }
 
 
