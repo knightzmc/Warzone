@@ -34,7 +34,8 @@ public class SimpleConfigurationProvider<T> implements ConfigurationProvider<T> 
 
 
     @Inject
-    public void init(@NotNull Plugin plugin, @NotNull ConfigReaderWriter readerWriter,
+    public void init(@NotNull Plugin plugin,
+                     @NotNull ConfigReaderWriter readerWriter,
                      @NotNull FileWatcherService service) {
         if (this.cached != null) {
             throw new IllegalStateException("Already initialized!");
