@@ -17,6 +17,7 @@ import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.game.GameModule;
 import me.bristermitten.warzone.game.config.GameConfigDAO;
+import me.bristermitten.warzone.hooks.HookModule;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardModule;
 import me.bristermitten.warzone.leaderboard.menu.LeaderboardMenu;
@@ -27,14 +28,15 @@ import me.bristermitten.warzone.matchmaking.MatchmakingModule;
 import me.bristermitten.warzone.papi.PAPIModule;
 import me.bristermitten.warzone.papi.WarzoneExpansion;
 import me.bristermitten.warzone.player.PlayerModule;
+import me.bristermitten.warzone.player.storage.PlayerDatabaseHook;
 import me.bristermitten.warzone.player.storage.PlayerPersistence;
+import me.bristermitten.warzone.player.storage.PlayerStorage;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.protocol.ProtocolModule;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
 import me.bristermitten.warzone.tags.TagsConfig;
 import me.bristermitten.warzone.tags.TagsModule;
-import me.bristermitten.warzone.hooks.HookModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -83,14 +85,16 @@ public class Warzone extends JavaPlugin {
             injector.getInstance(FileWatcherService.class).watch();
 
             persistences = List.of(
-                    injector.getInstance(PlayerPersistence.class)
+                    injector.getInstance(PlayerPersistence.class),
+                    injector.getInstance(PlayerDatabaseHook.class),
+                    injector.getInstance(PlayerStorage.class)
             );
 
             injector.getInstance(Key.get(new TypeLiteral<Set<EventListener>>() {
             })).forEach(eventListener -> Bukkit.getPluginManager().registerEvents(eventListener, this));
 
             Future.sequence(persistences
-                    .map(Persistence::initialise))
+                            .map(Persistence::initialise))
                     .onFailure(t -> {
                         throw new StorageException("Could not load data", t);
                     })
@@ -108,7 +112,7 @@ public class Warzone extends JavaPlugin {
     @Override
     public void onDisable() {
         Future.sequence(persistences
-                .map(Persistence::cleanup))
+                        .map(Persistence::cleanup))
                 .get(); // This needs to block!
     }
 }
