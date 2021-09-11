@@ -328,4 +328,7 @@ exactly 1 hour spent today
 
 ## 2021-09-11
 
-14:40 - start bugfixing #2
+- 14:40 - start bugfixing #2
+- 14:50 - pause
+- 15:00 - resume on debug messages
+- 17:20 - debugging done, pause
