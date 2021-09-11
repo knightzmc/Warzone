@@ -28,7 +28,6 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
     private int losses;
     private long xp;
     private @NotNull PlayerState currentState = NullState.INSTANCE;
-
     public WarzonePlayer(UUID playerId, int kills, int deaths, int level, int wins, int losses, long xp) {
         this.playerId = playerId;
         this.kills = kills;
@@ -41,6 +40,20 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
 
     public WarzonePlayer(UUID playerId) {
         this.playerId = playerId;
+    }
+
+    @Override
+    public String toString() {
+        return "WarzonePlayer{" +
+               "playerId=" + playerId +
+               ", kills=" + kills +
+               ", deaths=" + deaths +
+               ", level=" + level +
+               ", wins=" + wins +
+               ", losses=" + losses +
+               ", xp=" + xp +
+               ", currentState=" + currentState +
+               '}';
     }
 
     public int getWins() {
