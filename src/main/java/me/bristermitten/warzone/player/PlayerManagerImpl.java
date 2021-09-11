@@ -37,11 +37,7 @@ public class PlayerManagerImpl implements PlayerManager {
             }
             player.setCurrentState(newState);
         };
-        if (Bukkit.isPrimaryThread()) {
-            run.run();
-        } else {
-            schedule.runSync(run).get();
-        }
+        schedule.runSync(run).get();
     }
 
     public void loadPlayerAsync(@NotNull UUID id, @NotNull Consumer<WarzonePlayer> onSuccess) {
