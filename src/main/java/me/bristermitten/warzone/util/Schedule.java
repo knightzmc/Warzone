@@ -22,6 +22,10 @@ public class Schedule {
         return Sync.run(r, plugin);
     }
 
+    public Future<Unit> runAsync(Runnable r) {
+        return Async.run(r, plugin);
+    }
+
     public <T> Function<T, Future<Unit>> runSync(Consumer<T> c) {
         return t -> Sync.run(() -> {
             c.accept(t);

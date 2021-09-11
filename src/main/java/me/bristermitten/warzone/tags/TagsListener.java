@@ -4,6 +4,7 @@ import me.bristermitten.warzone.hooks.TagFormatter;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.xp.LevelUpEvent;
+import me.bristermitten.warzone.util.Schedule;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.event.EventHandler;
 import org.slf4j.Logger;
@@ -22,13 +23,15 @@ public class TagsListener implements EventListener {
     private final Permission permission;
     private final LangService langService;
     private final TagFormatter tagFormatter;
+    private final Schedule schedule;
 
     @Inject
-    TagsListener(Provider<TagsConfig> tagsConfigProvider, Permission permission, LangService langService, TagFormatter tagFormatter) {
+    TagsListener(Provider<TagsConfig> tagsConfigProvider, Permission permission, LangService langService, TagFormatter tagFormatter, Schedule schedule) {
         this.tagsConfigProvider = tagsConfigProvider;
         this.permission = permission;
         this.langService = langService;
         this.tagFormatter = tagFormatter;
+        this.schedule = schedule;
     }
 
     @EventHandler
@@ -40,23 +43,25 @@ public class TagsListener implements EventListener {
         if (random.nextDouble(0, 100) > tagsConfig.chance()) {
             return;
         }
-        var checked = new HashSet<String>();
-        String tag;
-        do {
-            tag = tagsConfig.tags().get(random.nextInt(tagsConfig.tags().size()));
-            checked.add(tag);
-            if (checked.size() == tagsConfig.tags().size()) {
-                event.getLevelling().getPlayer().peek(player ->
-                        langService.send(player, langConfig -> langConfig.tagsLang().noMoreTags()));
-                LOGGER.warn("Player {} already has every tag", event.getLevelling().getPlayerId());
-                return;
-            }
-        } while (permission.playerHas(null, event.getLevelling().getOfflinePlayer(), tag));
+        schedule.runAsync(() -> {
+            var checked = new HashSet<String>();
+            String tag;
+            do {
+                tag = tagsConfig.tags().get(random.nextInt(tagsConfig.tags().size()));
+                checked.add(tag);
+                if (checked.size() == tagsConfig.tags().size()) {
+                    event.getLevelling().getPlayer().peek(player ->
+                            langService.send(player, langConfig -> langConfig.tagsLang().noMoreTags()));
+                    LOGGER.warn("Player {} already has every tag", event.getLevelling().getPlayerId());
+                    return;
+                }
+            } while (permission.playerHas(null, event.getLevelling().getOfflinePlayer(), tag));
 
-        permission.playerAdd(null, event.getLevelling().getOfflinePlayer(), tag);
-        String finalTag = tag;
-        event.getLevelling().getPlayer().peek(player ->
-                langService.send(player, langConfig -> langConfig.tagsLang().tagGained(),
-                        Map.of("{tag}", tagFormatter.format(finalTag))));
+            permission.playerAdd(null, event.getLevelling().getOfflinePlayer(), tag);
+            String finalTag = tag;
+            event.getLevelling().getPlayer().peek(player ->
+                    langService.send(player, langConfig -> langConfig.tagsLang().tagGained(),
+                            Map.of("{tag}", tagFormatter.format(finalTag))));
+        });
     }
 }
