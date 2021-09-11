@@ -54,6 +54,9 @@ dependencies {
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     compileOnly("xyz.oribuin:eternaltags:1.0.10")
 
+    compileOnly("org.apache.logging.log4j:log4j-core:2.14.1") // paper slf4j implementation
+
+
     compileOnly("me.clip:placeholderapi:2.10.10")
 
     implementation("com.google.inject:guice:5.0.1")

@@ -37,6 +37,17 @@ import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardModule;
 import me.bristermitten.warzone.tags.TagsConfig;
 import me.bristermitten.warzone.tags.TagsModule;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.ConsoleAppender;
+import org.apache.logging.log4j.core.config.AppenderRef;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.DefaultConfiguration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
+import org.apache.logging.log4j.core.filter.LevelMatchFilter;
+import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,6 +60,10 @@ public class Warzone extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
+            saveDefaultConfig();
+            if (getConfig().getBoolean("debug")) {
+                setupDebugLogging();
+            }
             var configModule = new ConfigModule(Set.of(
                     ScoreboardConfig.CONFIG
                     , DatabaseConfig.CONFIG
@@ -107,6 +122,42 @@ public class Warzone extends JavaPlugin {
             e.printStackTrace();
         }
 
+    }
+
+    private void setupDebugLogging() {
+        Configuration configuration = ((LoggerContext) LogManager.getContext(false)).getConfiguration();
+
+        configuration.removeLogger("me.bristermitten.warzone"); // Remove the existing logger, if it exists
+
+
+        ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
+                .setName("WarzoneConsole")
+                .setLayout(PatternLayout.newBuilder().withPattern("%highlightError{[%level]: [%logger] %paperMinecraftFormatting{%msg}%n%xEx{full}}").build())
+                .build();
+        consoleAppender.start(); //Create a new appender that roughly matches the paper one
+
+        configuration.addAppender(consoleAppender);
+        LoggerConfig warzoneConsole = LoggerConfig.createLogger(
+                true,
+                Level.DEBUG,
+                "me.bristermitten.warzone",
+                null,
+                new AppenderRef[]{
+                        AppenderRef.createAppenderRef("WarzoneConsole", Level.DEBUG, null)
+                },
+                null,
+                new DefaultConfiguration(),
+                LevelMatchFilter.newBuilder()
+                        .setLevel(Level.DEBUG)
+                        .build()
+        );
+        warzoneConsole.addAppender(consoleAppender, Level.DEBUG, null);
+        configuration.addLogger(
+                "me.bristermitten.warzone",
+                warzoneConsole
+        );
+
+        ((Logger) getLog4JLogger()).setLevel(Level.DEBUG);
     }
 
     @Override
