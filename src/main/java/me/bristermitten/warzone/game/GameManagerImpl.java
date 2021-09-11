@@ -27,6 +27,8 @@ import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,8 +39,8 @@ import java.util.stream.Collectors;
 
 @Singleton
 public class GameManagerImpl implements GameManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameManagerImpl.class);
     private final Set<Game> games = new HashSet<>();
-
     private final GameStates states;
     private final PlayerManager playerManager;
     private final PartyManager partyManager;
@@ -48,7 +50,6 @@ public class GameManagerImpl implements GameManager {
     private final GamePersistence gamePersistence;
     private final XPHandler xpHandler;
     private final Schedule schedule;
-
     private final GameFactory gameFactory;
 
     @Inject
@@ -84,6 +85,10 @@ public class GameManagerImpl implements GameManager {
                 setState(game, GameStates::inProgressState));
         games.add(game);
 
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Created new game in arena {} with size {}", arena.name(), acceptedSize);
+        }
+
         gameWorldUpdateTask.start();
         /* TODO i'm not really sure if this belong here. iterating an empty set is so cheap
          *   that it could just be started when the plugin loads up. but this seems like a kinda logical place to put it, for now */
@@ -103,8 +108,8 @@ public class GameManagerImpl implements GameManager {
         var party = partyManager.getParty(player.getUniqueId());
         if (includeParty || party.getSize() == PartySize.SINGLES) {
             return Future.sequence(
-                    List.ofAll(party.getAllMembers())
-                            .map(playerManager::loadPlayer))
+                            List.ofAll(party.getAllMembers())
+                                    .map(playerManager::loadPlayer))
                     .map(players -> {
                         players.forEach(warzonePlayer ->
                                 playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
@@ -193,11 +198,13 @@ public class GameManagerImpl implements GameManager {
             var remainingParties = stillAlive.groupBy(partyManager::getParty);
 
             if (remainingParties.isEmpty()) {
+                LOGGER.debug("Cleaning up game {} in arena {} because remainingParties is empty", game.getUuid(), game.getArena().name());
                 //pack it up boys
                 cleanup(game, players);
                 return;
             }
-            if (remainingParties.keySet().size() != 1) {
+            if (remainingParties.size() != 1) {
+                LOGGER.debug("Not doing anything, because remainingParties.size() != 1 ({})", remainingParties);
                 // The game isn't over yet!
                 return;
             }
@@ -209,7 +216,7 @@ public class GameManagerImpl implements GameManager {
                     game.getUuid(),
                     game.getArena().name(),
                     Instant.ofEpochMilli(game.getTimer().getStartTimeMillis()),
-                    Instant.ofEpochMilli(System.currentTimeMillis()),
+                    Instant.now(),
                     game.getParties().stream().flatMap(party -> party.getAllMembers().stream()).collect(Collectors.toSet()),
                     Set.copyOf(winningParty.getAllMembers()),
                     game.getDeaths(),
@@ -217,15 +224,20 @@ public class GameManagerImpl implements GameManager {
                             .mapValues(PlayerInformation::createStatistics).toJavaMap()
             );
             gamePersistence.save(stats);
+            LOGGER.debug("Saved stats {}", stats);
 
             stillAlive
                     .filter(p -> partyManager.getParty(p).equals(winningParty))
                     .forEach(winner -> xpHandler.addXP(winner, XPConfig::win));
+            LOGGER.debug("Giving winner xp to players {}", stillAlive);
 
-            var top3 = players.sorted(
-                    Comparator.comparingInt(player -> game.getInfo(player.getPlayerId()).map(PlayerInformation::getKillCount).getOrElse(0)))
+            var top3 = players.sorted(Comparator.comparingInt(player ->
+                            game.getInfo(player.getPlayerId())
+                                    .map(PlayerInformation::getKillCount)
+                                    .getOrElse(0)))
                     .take(3);
             top3.forEach(p -> xpHandler.addXP(p, XPConfig::top3));
+            LOGGER.debug("Giving top 3 xp to players {}", top3);
 
             winningParty.getAllMembers().forEach(winnerId -> {
                 var player = Bukkit.getPlayer(winnerId);
@@ -243,7 +255,9 @@ public class GameManagerImpl implements GameManager {
         }));
     }
 
+    // The players parameter here allows to avoid an extra getAllPlayers call
     private void cleanup(Game game, Seq<WarzonePlayer> players) {
+        LOGGER.debug("Cleaning up game {} (remaining players = {})", game, players);
         players.forEach(warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::inLobbyState));
         setState(game, GameStates::idlingState);
         game.getGameBorder().remove();
@@ -255,6 +269,8 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public void setState(Game game, Function<GameStates, GameState> stateFunction) {
-        game.setCurrentState(stateFunction.apply(states));
+        final var state = stateFunction.apply(states);
+        game.setCurrentState(state);
+        LOGGER.debug("Set state of game {} to {}", game, state);
     }
 }

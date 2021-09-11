@@ -125,4 +125,22 @@ public class Game implements Stateful<Game, GameState> {
     public @Unmodifiable Set<PlayerDeath> getDeaths() {
         return Set.copyOf(deaths);
     }
+
+    @Override
+    public String toString() {
+        return "Game{" +
+               "uuid=" + uuid +
+               ", arena=" + arena +
+               ", players=" + players +
+               ", acceptedSize=" + acceptedSize +
+               ", timer=" + timer +
+               ", playerInformationMap=" + playerInformationMap +
+               ", deaths=" + deaths +
+               ", gulag=" + gulag +
+               ", gameBorder=" + gameBorder +
+               ", gameBossBar=" + gameBossBar +
+               ", preGameLobbyTimer=" + preGameLobbyTimer +
+               ", state=" + state +
+               '}';
+    }
 }
