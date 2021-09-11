@@ -323,5 +323,9 @@ exactly 1 hour spent today
 - 20:15 - pause
 - 20:22 - resume
 - 20:50 - pause
-- 21:30 - resume 
+- 21:30 - resume
 - 22:50 - finish for today
+
+## 2021-09-11
+
+14:40 - start bugfixing #2
