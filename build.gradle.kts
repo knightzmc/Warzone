@@ -67,15 +67,15 @@ dependencies {
     implementation("com.github.Redempt:Crunch:master")
 
     implementation("net.kyori:adventure-api:4.9.0")
-    implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
+    implementation("net.kyori:adventure-platform-bukkit:4.0.0")
     implementation("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
 
     implementation("co.aikar:acf-paper:0.5.0-SNAPSHOT")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.0")
     testImplementation("org.yaml:snakeyaml:1.29")
     testImplementation("io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.0")
 }
 
 
