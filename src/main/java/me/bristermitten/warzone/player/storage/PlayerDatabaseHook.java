@@ -1,12 +1,17 @@
 package me.bristermitten.warzone.player.storage;
 
+import io.vavr.collection.Seq;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Database;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.WarzonePlayerBuilder;
+import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,23 +29,28 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
                     if (!resultSet.next()) {
                         return new WarzonePlayerBuilder().setPlayerId(id).createWarzonePlayer();
                     }
-                    int kills = resultSet.getInt(2);
-                    int deaths = resultSet.getInt(3);
-                    int level = resultSet.getInt(4);
-                    long xp = resultSet.getLong(5);
-                    int wins = resultSet.getInt(6);
-                    int losses = resultSet.getInt(7);
-                    return new WarzonePlayerBuilder()
-                            .setPlayerId(id)
-                            .setKills(kills)
-                            .setDeaths(deaths)
-                            .setLevel(level)
-                            .setWins(wins)
-                            .setLosses(losses)
-                            .setXp(xp)
-                            .createWarzonePlayer();
+                    return loadPlayerFromResultSet(resultSet);
                 }
         );
+    }
+
+    private WarzonePlayer loadPlayerFromResultSet(ResultSet resultSet) throws SQLException {
+        UUID id = UUID.fromString(resultSet.getString(1));
+        int kills = resultSet.getInt(2);
+        int deaths = resultSet.getInt(3);
+        int level = resultSet.getInt(4);
+        long xp = resultSet.getLong(5);
+        int wins = resultSet.getInt(6);
+        int losses = resultSet.getInt(7);
+        return new WarzonePlayerBuilder()
+                .setPlayerId(id)
+                .setKills(kills)
+                .setDeaths(deaths)
+                .setLevel(level)
+                .setWins(wins)
+                .setLosses(losses)
+                .setXp(xp)
+                .createWarzonePlayer();
     }
 
     @Override
@@ -70,6 +80,18 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
             }
             statement.executeBatch();
         });
+    }
+
+    @Override
+    public Future<Seq<WarzonePlayer>> getAll() {
+        return database.query("SELECT * FROM players", NoOp.consumer(),
+                resultSet -> {
+                    var players = new LinkedList<WarzonePlayer>();
+                    while (resultSet.next()) {
+                        players.add(loadPlayerFromResultSet(resultSet));
+                    }
+                    return io.vavr.collection.List.ofAll(players);
+                });
     }
 
     @Override

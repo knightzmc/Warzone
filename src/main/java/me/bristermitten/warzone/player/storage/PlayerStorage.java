@@ -7,7 +7,6 @@ import me.bristermitten.warzone.database.Persistence;
 import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
 import me.bristermitten.warzone.player.WarzonePlayer;
-import me.bristermitten.warzone.util.NoOp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +51,14 @@ public class PlayerStorage implements Persistence {
 
     @Override
     public @NotNull Future<Void> initialise() {
-        return Future.run(NoOp.runnable());
+        return persistence.getAll()
+                .map(warzonePlayers -> {
+                    warzonePlayers.forEach(p -> {
+                        playerCache.put(p.getPlayerId(), p);
+                        leaderboard.add(p);
+                    });
+                    return null;
+                });
     }
 
     /**
