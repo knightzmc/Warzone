@@ -31,6 +31,7 @@ public class InLobbyState implements PlayerState {
     @Override
     public void onEnter(@NotNull WarzonePlayer player) {
         player.getPlayer().peek(p -> {
+            p.getInventory().clear();
             scoreboardManager.show(p, ScoreboardConfig::lobby);
             p.teleport(arenaConfigProvider.get().lobbySpawnpoint().toLocation());
             p.setGameMode(GameMode.SURVIVAL);
