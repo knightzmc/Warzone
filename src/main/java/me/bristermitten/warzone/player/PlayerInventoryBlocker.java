@@ -2,6 +2,8 @@ package me.bristermitten.warzone.player;
 
 import me.bristermitten.warzone.Warzone;
 import me.bristermitten.warzone.listener.EventListener;
+import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;
+import me.bristermitten.warzone.player.state.game.InGameState;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -24,6 +26,13 @@ public class PlayerInventoryBlocker implements EventListener {
         var inventory = player.getInventory();
         for (int i = FIRST_NON_HOTBAR_SLOT; i < inventory.getSize(); i++) {
             inventory.setItem(i, BARRIER_ITEM.clone());
+        }
+    }
+
+    @EventHandler
+    public void onStateChange(PlayerStateChangeEvent e) {
+        if (e.getNewState() instanceof InGameState) {
+            e.getSubject().getPlayer().peek(this::blockInventory);
         }
     }
 
