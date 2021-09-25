@@ -19,5 +19,6 @@ public class PlayerModule extends AbstractModule {
         ListenerBinding.bindListener(binder()).to(PlayerKillDeathListener.class);
         ListenerBinding.bindListener(binder()).to(SpectatingStateHotbarItemListener.class);
         ListenerBinding.bindListener(binder()).to(PlayerDamageListener.class);
+        ListenerBinding.bindListener(binder()).to(PlayerInventoryBlocker.class);
     }
 }
