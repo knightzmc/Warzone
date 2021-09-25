@@ -48,13 +48,13 @@ import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.filter.LevelMatchFilter;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
 
 public class Warzone extends JavaPlugin {
 
+    public static final String PACKAGE_NAME = "me.bristermitten.warzone";
     private List<Persistence> persistences = List.of();
 
     @Override
@@ -106,7 +106,7 @@ public class Warzone extends JavaPlugin {
             );
 
             injector.getInstance(Key.get(new TypeLiteral<Set<EventListener>>() {
-            })).forEach(eventListener -> Bukkit.getPluginManager().registerEvents(eventListener, this));
+            })).forEach(eventListener -> eventListener.register(this));
 
             Future.sequence(persistences
                             .map(Persistence::initialise))
@@ -127,7 +127,7 @@ public class Warzone extends JavaPlugin {
     private void setupDebugLogging() {
         Configuration configuration = ((LoggerContext) LogManager.getContext(false)).getConfiguration();
 
-        configuration.removeLogger("me.bristermitten.warzone"); // Remove the existing logger, if it exists
+        configuration.removeLogger(PACKAGE_NAME); // Remove the existing logger, if it exists
 
 
         ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
@@ -140,7 +140,7 @@ public class Warzone extends JavaPlugin {
         LoggerConfig warzoneConsole = LoggerConfig.createLogger(
                 true,
                 Level.DEBUG,
-                "me.bristermitten.warzone",
+                PACKAGE_NAME,
                 null,
                 new AppenderRef[]{
                         AppenderRef.createAppenderRef("WarzoneConsole", Level.DEBUG, null)
@@ -153,7 +153,7 @@ public class Warzone extends JavaPlugin {
         );
         warzoneConsole.addAppender(consoleAppender, Level.DEBUG, null);
         configuration.addLogger(
-                "me.bristermitten.warzone",
+                PACKAGE_NAME,
                 warzoneConsole
         );
 
