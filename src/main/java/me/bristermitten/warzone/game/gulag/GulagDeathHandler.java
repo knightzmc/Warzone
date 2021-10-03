@@ -7,6 +7,7 @@ import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 import me.bristermitten.warzone.player.state.game.InGameState;
+import me.bristermitten.warzone.player.state.game.InGulagArenaState;
 import me.bristermitten.warzone.util.Schedule;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import javax.inject.Inject;
  * Processes a death when a player is in the gulag
  */
 public class GulagDeathHandler implements GameDeathHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(GulagDeathHandler.class);
     private final PlayerManager playerManager;
     private final GameManager gameManager;
@@ -59,8 +61,9 @@ public class GulagDeathHandler implements GameDeathHandler {
         }
         // Respawn the killer
         gameManager.getGameContaining(killer.getUniqueId())
-                .peek(game ->
-                        playerManager.loadPlayer(killer.getUniqueId()).flatMap(schedule.runSync(killerW -> {
+                .peek(game -> playerManager.loadPlayer(killer.getUniqueId())
+                        .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof InGulagArenaState)
+                        .flatMap(schedule.runSync(killerW -> {
                             playerManager.setState(killerW, PlayerStates::inGameSpawningState);
                             playerSpawner.spawn(game, killerW);
                         })))
