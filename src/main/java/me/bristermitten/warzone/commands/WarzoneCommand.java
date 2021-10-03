@@ -42,7 +42,7 @@ public class WarzoneCommand extends BaseCommand {
             return;
         }
         matchmakingService.queue(partyManager.getParty(sender));
-        sender.sendMessage("You've been placed in a queue");
+        sender.sendMessage("You've been placed in a queue"); // TODO make this properly localized
     }
 
     @Subcommand("leave")

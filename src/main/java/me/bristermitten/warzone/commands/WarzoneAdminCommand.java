@@ -55,8 +55,10 @@ public class WarzoneAdminCommand extends BaseCommand {
     @CommandCompletion("@arenas=inUse")
     @Description("Force a game to start the lobby timer, ignoring player limits")
     public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena, @Optional @Nullable Long timerSeconds) {
-        var gameToStart = gameManager.getGames().stream().filter(game -> game.getArena().equals(arena))
-                .findFirst().orElseThrow();
+        var gameToStart = gameManager.getGames().stream()
+                .filter(game -> game.getArena().equals(arena))
+                .findFirst()
+                .orElseThrow(); // This will never throw because of the @Conditions("inUse")
 
         if (!(gameToStart.getState() instanceof InLobbyState) || gameToStart.getPreGameLobbyTimer().hasStarted()) {
             langService.sendMessage(sender, langConfig -> langConfig.errorLang().cannotStartGame(),
