@@ -36,4 +36,12 @@ public abstract class Timer {
         return endTimeMillis - System.currentTimeMillis();
     }
 
+    @Override
+    public String toString() {
+        return "Timer{" +
+               "durationMillis=" + durationMillis +
+               ", startTimeMillis=" + startTimeMillis +
+               ", endTimeMillis=" + endTimeMillis +
+               '}';
+    }
 }
