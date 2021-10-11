@@ -43,14 +43,17 @@ public class SpectatingState extends InGameState {
                 () -> new IllegalStateException("Player must be online!")
         );
 
-        player.getLocation().getBlock().setType(Material.CHEST);
-        var chest = (Chest) player.getLocation().getBlock().getState();
-        chest.getBlockInventory().setContents(
-                Arrays.stream(player.getInventory().getContents())
-                        .filter(Objects::nonNull)
-                        .filter(Predicate.not(PlayerInventoryBlocker::isBarrierItem))
-                        .toArray(ItemStack[]::new)
-        );
+        var deathChestContents = Arrays.stream(player.getInventory().getContents())
+                .filter(Objects::nonNull)
+                .filter(Predicate.not(PlayerInventoryBlocker::isBarrierItem))
+                .toArray(ItemStack[]::new);
+
+        if (deathChestContents.length != 0) {
+            player.getLocation().getBlock().setType(Material.CHEST);
+            var chest = (Chest) player.getLocation().getBlock().getState();
+            chest.getBlockInventory().setContents(deathChestContents);
+        }
+
         player.getInventory().clear();
 
         var spectatorConfig = gameConfigProvider.get().spectatorConfig();
