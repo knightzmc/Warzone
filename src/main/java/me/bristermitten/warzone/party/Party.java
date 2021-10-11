@@ -75,6 +75,15 @@ public class Party {
         };
     }
 
+    @Override
+    public String toString() {
+        return "Party{" +
+               "otherPlayers=" + otherPlayers +
+               ", outgoingInvites=" + outgoingInvites +
+               ", owner=" + owner +
+               '}';
+    }
+
     public boolean isFull() {
         return otherPlayers.size() >= MAX_SIZE;
     }
