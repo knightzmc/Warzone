@@ -88,4 +88,18 @@ public class PlayerInformation {
     public void setKillCount(int killCount) {
         this.killCount = killCount;
     }
+
+    @Override
+    public String toString() {
+        return "PlayerInformation{" +
+               "player=" + player +
+               ", deathCount=" + deathCount +
+               ", killCount=" + killCount +
+               ", shotsFired=" + shotsFired +
+               ", shotsHit=" + shotsHit +
+               ", medkitsUsed=" + medkitsUsed +
+               ", timesReloaded=" + timesReloaded +
+               ", weaponsPickedUp=" + weaponsPickedUp +
+               '}';
+    }
 }
