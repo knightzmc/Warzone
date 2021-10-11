@@ -46,6 +46,13 @@ public class Gulag {
         return playersInQueue;
     }
 
+    @Override
+    public String toString() {
+        return "Gulag{" +
+               "gulagPlayers=" + gulagPlayers +
+               ", playersInQueue=" + playersInQueue +
+               '}';
+    }
 
     /**
      * Simple tuple type storing the 2 players currently duelling in the gulag
