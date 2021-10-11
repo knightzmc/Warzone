@@ -46,10 +46,4 @@ public final class GameBossBar extends AbstractCustomBossBar {
         return Objects.hash(game);
     }
 
-    @Override
-    public String toString() {
-        return "GameBossBar[" +
-               "game=" + game + ']';
-    }
-
 }
