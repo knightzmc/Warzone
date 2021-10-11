@@ -12,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,10 @@ public class PlayerInventoryBlocker implements EventListener {
         item.editMeta(meta ->
                 meta.getPersistentDataContainer().set(BARRIER_KEY, PersistentDataType.STRING, UUID.randomUUID().toString()));
         return item;
+    }
+
+    public static boolean isBarrierItem(@NotNull final ItemStack item) {
+        return item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(BARRIER_KEY, PersistentDataType.STRING);
     }
 
     public void blockInventory(Player player) {
@@ -53,7 +58,7 @@ public class PlayerInventoryBlocker implements EventListener {
         if (item == null) {
             return;
         }
-        if (item.hasItemMeta() && item.getItemMeta().getPersistentDataContainer().has(BARRIER_KEY, PersistentDataType.STRING)) {
+        if (isBarrierItem(item)) {
             event.setCancelled(true);
         }
     }
