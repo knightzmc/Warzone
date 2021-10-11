@@ -50,4 +50,14 @@ public class GameBorder {
     public void remove() {
         border.reset();
     }
+
+    @Override
+    public String toString() {
+        return "GameBorder{" +
+               "border=" + border +
+               ", world=" + world +
+               ", around=" + around +
+               ", playerDamageTimes=" + playerDamageTimes +
+               '}';
+    }
 }
