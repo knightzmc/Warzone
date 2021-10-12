@@ -16,7 +16,7 @@ public class Party {
 
     Party(UUID owner, @NotNull Set<UUID> otherPlayers) {
         this.owner = owner;
-        if (otherPlayers.size() > MAX_SIZE) {
+        if (otherPlayers.size() + 1 >= MAX_SIZE) {
             throw new IllegalArgumentException("players is too big");
         }
         this.otherPlayers = otherPlayers;
