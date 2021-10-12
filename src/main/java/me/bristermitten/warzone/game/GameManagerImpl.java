@@ -208,6 +208,7 @@ public class GameManagerImpl implements GameManager {
                 // The game isn't over yet!
                 return;
             }
+            LOGGER.debug("Ending game, only 1 party remaining. remainingParties = {}, stillAlive = {}", remainingParties, stillAlive);
             game.getGameBorder().pause();
             game.getGameBossBar().setPaused(true);
 
