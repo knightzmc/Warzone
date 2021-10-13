@@ -126,9 +126,14 @@ public class ChunkChestFiller {
 
     public void fill(LootTable table, Chest chest) {
         Inventory inventory = chest.getInventory();
-        Collection<ItemStack> items = generator.generateLoot(table);
-        for (ItemStack item : items) {
-            var slot = random.nextInt(0, inventory.getSize());
+        List<ItemStack> items = generator.generateLoot(table);
+        int[] slots = random.ints(0, inventory.getSize())
+                .distinct()
+                .limit(items.size())
+                .toArray();
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack item = items.get(i);
+            int slot = slots[i];
             inventory.setItem(slot, item);
         }
     }
