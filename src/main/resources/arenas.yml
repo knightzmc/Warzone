@@ -25,7 +25,8 @@ arenas:
       min-border-size: 15 # The minimum border side lengthMillis
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
-      chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      chest-rate: 0.5 # Essentially, every valid block has a 0.5% chance of having a chest placed on top of it
+      max-chest-y: 40 # The maximum y value that chests can spawn on
       boss-bar:
         name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
         color: BLUE # see https://javadoc.io/doc/net.kyori/adventure-api/latest/net/kyori/adventure/bossbar/BossBar.Color.html
@@ -68,6 +69,7 @@ arenas:
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      max-chest-y: 40 # The maximum y value that chests can spawn on
       boss-bar:
         name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:
@@ -105,6 +107,7 @@ arenas:
       border-damage: 1 # half a heart = 1 hp
       border-damage-time: 40 # every 2 seconds = 40 ticks
       chest-rate: 0.5 # Essentially, every valid block has a 0.5 chance of having a chest placed on top of it
+      max-chest-y: 40 # The maximum y value that chests can spawn on
       boss-bar:
         name: '&4Warzone: &9Time Remaining: &e%warzone_time_remaining%'
     playable-area:

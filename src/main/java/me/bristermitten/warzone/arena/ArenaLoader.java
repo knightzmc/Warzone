@@ -1,21 +1,15 @@
 package me.bristermitten.warzone.arena;
 
 import io.vavr.collection.HashMap;
-import me.bristermitten.warzone.bossbar.BossBarConfig;
 import me.bristermitten.warzone.loot.LootTableManager;
 import me.bristermitten.warzone.util.Null;
-import net.kyori.adventure.bossbar.BossBar;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ArenaLoader {
-    private static final int DEFAULT_PRIORITY = 0;
     public static final double DEFAULT_MINIMUM_BORDER_SIZE = 15;
-
+    private static final int DEFAULT_PRIORITY = 0;
     private final LootTableManager manager;
 
     @Inject
@@ -55,7 +49,8 @@ public class ArenaLoader {
                 configuration.borderDamageTime(),
                 configuration.chestRate(),
                 Null.get(configuration.maxGulagEntries(), 1),
-                configuration.bossBarConfigDAO().loadBossBarConfig()
+                configuration.bossBarConfigDAO().loadBossBarConfig(),
+                Null.get(configuration.maxChestY(), Integer.MAX_VALUE)
         );
     }
 

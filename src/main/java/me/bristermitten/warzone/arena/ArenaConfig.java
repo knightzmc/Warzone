@@ -1,8 +1,8 @@
 package me.bristermitten.warzone.arena;
 
 import com.google.gson.annotations.SerializedName;
-import me.bristermitten.warzone.data.AngledPoint;
 import me.bristermitten.warzone.bossbar.BossBarConfig;
+import me.bristermitten.warzone.data.AngledPoint;
 
 public interface ArenaConfig {
     record GulagConfig(
@@ -20,7 +20,8 @@ public interface ArenaConfig {
             int borderDamageTime,
             float chestRate,
             int maxGulagEntries,
-            BossBarConfig bossBarConfig
+            BossBarConfig bossBarConfig,
+            int maxChestY
     ) {
 
     }

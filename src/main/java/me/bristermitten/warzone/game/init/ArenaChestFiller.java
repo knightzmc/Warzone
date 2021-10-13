@@ -58,17 +58,21 @@ public class ArenaChestFiller extends Task {
     protected void schedule() {
         runningTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             for (int i = 0; i < 10; i++) {
-                var next = chunksToProcess.poll();
-                if (next == null) {
+                var nextChunk = chunksToProcess.poll();
+                if (nextChunk == null) {
                     break;
                 }
-                var world = next.arena().forceGetWorld();
-                var chunk = next.chunk();
+                final var arena = nextChunk.arena();
+                var world = arena.forceGetWorld();
+                var chunk = nextChunk.chunk();
                 world.getChunkAtAsync(chunk.getX(), chunk.getZ()).whenComplete((loadedChunk, t) -> {
                     if (t != null) {
                         throw new IllegalStateException("Could not load chunk", t);
                     }
-                    filler.fill(world.getChunkAt(chunk.getX(), chunk.getZ()), next.arena().lootTable(), next.arena().gameConfig().chestRate());
+                    filler.fill(world.getChunkAt(chunk.getX(), chunk.getZ()),
+                            arena.lootTable(),
+                            arena.gameConfig().chestRate(),
+                            arena.gameConfig().maxChestY());
                     loaded.add(ChunkPosition.of(chunk));
                 });
             }

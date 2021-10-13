@@ -80,21 +80,15 @@ public class ChunkChestFiller {
      */
     private Set<Point> filterAdjacent(@Unmodifiable final Set<Point> points) {
         var copy = new HashSet<>(points);
-        copy.removeIf(point -> {
-            for (BlockFace face : Arrays.asList(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN)) {
-                Point relative = point.add(face.getModX(), face.getModY(), face.getModZ());
-                if (points.contains(relative)) {
-                    return true;
-                }
-            }
-            return false;
-        });
+        copy.removeIf(point -> Stream.of(BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN)
+                .map(face -> point.add(face.getModX(), face.getModY(), face.getModZ()))
+                .anyMatch(points::contains));
         return copy;
     }
 
-    private Stream<Point> getChestBlocks(ChunkSnapshot snapshot, float chestChance) {
+    private Stream<Point> getChestBlocks(ChunkSnapshot snapshot, float chestChance, int maxY) {
         return BlockFinder.getBlocks(snapshot)
-                .filter(point -> point.x() != 0 && point.x() != 15 && point.z() != 0 && point.z() != 15)
+                .filter(point -> point.y() <= maxY) // below the max y
                 .filter(point -> snapshot.getBlockType(point.x(), point.y(), point.z()).isAir()) // we can only place chests where there's air
                 .filter(point -> snapshot.getBlockType(point.x(), point.y() + 1, point.z()).isAir()) // has to have a free spot above it
                 .filter(point -> snapshot.getBlockType(point.x(), point.y() - 1, point.z()).isSolid())  //must have a solid block below it
@@ -102,10 +96,10 @@ public class ChunkChestFiller {
                 .filter(block -> ThreadLocalRandom.current().nextDouble(0, 100) < chestChance);
     }
 
-    public void fill(Chunk chunk, LootTable table, float chestChance) {
+    public void fill(Chunk chunk, LootTable table, float chestChance, int maxY) {
         clean(chunk)
                 .map(irrelevantScopePollution -> chunk.getChunkSnapshot(true, false, false))
-                .flatMap(snapshot -> Future.of(() -> getChestBlocks(snapshot, chestChance).collect(Collectors.toSet()))
+                .flatMap(snapshot -> Future.of(() -> getChestBlocks(snapshot, chestChance, maxY).collect(Collectors.toSet()))
                         .map(this::filterAdjacent)
                         .flatMap(points -> schedule.runSync(() -> {
                             points.forEach(point -> {
