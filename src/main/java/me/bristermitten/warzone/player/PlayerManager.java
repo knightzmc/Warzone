@@ -16,6 +16,9 @@ public interface PlayerManager extends StateManager<WarzonePlayer, PlayerState, 
     @NotNull Future<@NotNull WarzonePlayer> loadPlayer(@NotNull UUID id);
 
 
+    /**
+     * Equivalent to {@link PlayerManager#loadPlayerAsync(UUID, Consumer)}, except the callback will be executed on the main thread
+     */
     void loadPlayer(@NotNull UUID id, @NotNull Consumer<@NotNull WarzonePlayer> onSuccess);
 
     void loadPlayerAsync(@NotNull UUID id, @NotNull Consumer<@NotNull WarzonePlayer> onSuccess);

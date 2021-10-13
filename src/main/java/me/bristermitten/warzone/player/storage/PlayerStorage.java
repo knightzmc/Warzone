@@ -9,6 +9,8 @@ import me.bristermitten.warzone.leaderboard.PlayerLeaderboard;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +18,7 @@ import java.util.UUID;
 
 @Singleton
 public class PlayerStorage implements Persistence {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerStorage.class);
     private final Cache<UUID, WarzonePlayer> playerCache = CacheBuilder.newBuilder().build();
 
     private final PlayerPersistence persistence;
@@ -28,15 +31,20 @@ public class PlayerStorage implements Persistence {
     }
 
     public Future<Void> flush() {
+        LOGGER.debug("Flushing cache, contents = {}", playerCache);
         return persistence.flush(playerCache.asMap().values());
     }
 
     public Future<WarzonePlayer> load(@NotNull UUID id) {
+        LOGGER.debug("Loading player {}", id);
         WarzonePlayer cached = playerCache.getIfPresent(id);
         if (cached != null) {
+            LOGGER.debug("Player {} was in cache ({})", id, cached);
             return Future.successful(cached);
         }
+        LOGGER.debug("Looking up {} in database", id);
         return lookup(id)
+                .onSuccess(player -> LOGGER.debug("Retrieved player {} from database = {} ", id, player))
                 .onSuccess(leaderboard::add); // I don't really like this being here but it means that the leaderboard will stay up to date without any external intervention
     }
 
@@ -72,6 +80,7 @@ public class PlayerStorage implements Persistence {
 
     @Override
     public Future<Void> cleanup() {
+        LOGGER.debug("Cleaning up cache ({})", playerCache);
         playerCache.cleanUp();
         return flush();
     }
