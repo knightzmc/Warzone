@@ -14,7 +14,9 @@ ext {
         dir = File("$rootDir/.git")
     }
     val commit = git.head().abbreviatedId
-    buildNumber = if (project.hasProperty("buildnumber")) {
+    buildNumber = if (project.hasProperty("no-commits")) {
+        rootVersion
+    } else if (project.hasProperty("buildnumber")) {
         project.properties["buildnumber"] as String
     } else {
         commit.toString()
