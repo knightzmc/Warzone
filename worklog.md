@@ -333,6 +333,12 @@ exactly 1 hour spent today
 - 15:00 - resume on debug messages
 - 17:20 - debugging done, pause
 
-## 2021-10-25
+## 2021-09-25
+
 - 13:35 - start bugfixing #3
 - 14:15 - pause
+
+## 2021-10-20
+
+- 20:30 - Start work
+- 00:30 - pause
