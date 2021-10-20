@@ -29,7 +29,7 @@ public class GameWinnerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameWinnerHandler.class);
     private final GameRepository gameRepository;
     private final PartyManager partyManager;
-    private final GameCleanupServiceImpl gameCleanupService;
+    private final GameCleanupService gameCleanupService;
     private final GamePersistence gamePersistence;
     private final XPHandler xpHandler;
     private final LangService langService;
@@ -37,7 +37,7 @@ public class GameWinnerHandler {
     @Inject
     public GameWinnerHandler(GameRepository gameRepository,
                              PartyManager partyManager,
-                             GameCleanupServiceImpl gameCleanupService,
+                             GameCleanupService gameCleanupService,
                              GamePersistence gamePersistence,
                              XPHandler xpHandler,
                              LangService langService) {
