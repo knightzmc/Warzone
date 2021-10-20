@@ -1,6 +1,6 @@
 package me.bristermitten.warzone.game;
 
-import me.bristermitten.warzone.game.cleanup.GameWinnerHandler;
+import me.bristermitten.warzone.game.cleanup.GameEndingService;
 import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;
@@ -11,12 +11,12 @@ import javax.inject.Inject;
 
 public class GamePlayerRemoveListener implements EventListener {
     private final GameRepository gameRepository;
-    private final GameWinnerHandler gameWinnerHandler;
+    private final GameEndingService gameEndingService;
 
     @Inject
-    GamePlayerRemoveListener(GameRepository gameRepository, GameWinnerHandler gameManager) {
+    GamePlayerRemoveListener(GameRepository gameRepository, GameEndingService gameEndingService) {
         this.gameRepository = gameRepository;
-        this.gameWinnerHandler = gameManager;
+        this.gameEndingService = gameEndingService;
     }
 
     @EventHandler
@@ -25,6 +25,6 @@ public class GamePlayerRemoveListener implements EventListener {
             return;
         }
         gameRepository.getGameContaining(event.getSubject())
-                .peek(gameWinnerHandler::checkForWinner);
+                .peek(gameEndingService::endIfShould);
     }
 }

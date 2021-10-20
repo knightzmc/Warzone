@@ -2,7 +2,7 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
-import me.bristermitten.warzone.game.cleanup.GameWinnerHandler;
+import me.bristermitten.warzone.game.cleanup.GameEndingService;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.Party;
@@ -15,15 +15,15 @@ import java.util.UUID;
 
 public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
     private final PlayerManager playerManager;
-    private final GameWinnerHandler gameWinnerHandler;
+    private final GameEndingService gameEndingService;
     private final GameStateManager gameStateManager;
 
     @Inject
     public GameJoinLeaveServiceImpl(PlayerManager playerManager,
-                                    GameWinnerHandler gameWinnerHandler,
+                                    GameEndingService gameEndingService,
                                     GameStateManager gameStateManager) {
         this.playerManager = playerManager;
-        this.gameWinnerHandler = gameWinnerHandler;
+        this.gameEndingService = gameEndingService;
         this.gameStateManager = gameStateManager;
     }
 
@@ -42,7 +42,7 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
 
                     game.getParties().remove(party); // remove the party from the game if necessary
                     return game;
-                }).flatMap(gameWinnerHandler::checkForWinner);
+                }).flatMap(gameEndingService::endIfShould);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
                     playerManager.setState(player, PlayerStates::inLobbyState); // change player state
                     return game;
                 })
-                .flatMap(gameWinnerHandler::checkForWinner);
+                .flatMap(gameEndingService::endIfShould);
     }
 
     @Override

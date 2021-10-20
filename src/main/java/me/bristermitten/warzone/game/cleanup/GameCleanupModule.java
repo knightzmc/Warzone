@@ -7,5 +7,6 @@ public class GameCleanupModule extends AbstractModule {
     protected void configure() {
         bind(GameCleanupService.class).to(GameCleanupServiceImpl.class);
         bind(GameWinnerHandler.class).to(GameWinnerHandlerImpl.class);
+        bind(GameEndingService.class).to(GameEndingServiceImpl.class);
     }
 }

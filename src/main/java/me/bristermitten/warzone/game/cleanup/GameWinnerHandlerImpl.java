@@ -1,18 +1,21 @@
 package me.bristermitten.warzone.game.cleanup;
 
+import io.vavr.Tuple2;
+import io.vavr.collection.Seq;
 import io.vavr.concurrent.Future;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.repository.GameRepository;
-import me.bristermitten.warzone.game.statistic.GamePersistence;
-import me.bristermitten.warzone.game.statistic.GameStatistic;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
+import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
+import me.bristermitten.warzone.util.Functions;
 import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -20,82 +23,74 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 class GameWinnerHandlerImpl implements GameWinnerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameWinnerHandlerImpl.class);
     private final GameRepository gameRepository;
-    private final PartyManager partyManager;
-    private final GameCleanupService gameCleanupService;
-    private final GamePersistence gamePersistence;
+
     private final XPHandler xpHandler;
+    private final PartyManager partyManager;
     private final LangService langService;
+    private final PlayerManager playerManager;
 
     @Inject
     public GameWinnerHandlerImpl(GameRepository gameRepository,
                                  PartyManager partyManager,
-                                 GameCleanupService gameCleanupService,
-                                 GamePersistence gamePersistence,
                                  XPHandler xpHandler,
-                                 LangService langService) {
+                                 LangService langService,
+                                 PlayerManager playerManager) {
         this.gameRepository = gameRepository;
-
         this.partyManager = partyManager;
-        this.gameCleanupService = gameCleanupService;
-        this.gamePersistence = gamePersistence;
         this.xpHandler = xpHandler;
         this.langService = langService;
+        this.playerManager = playerManager;
     }
 
-    public @NotNull Future<Unit> checkForWinner(@NotNull Game game) {
+
+    @Override
+    public @NotNull Option<Party> getWinner(@NotNull Game game) {
         var players = gameRepository.getPlayers(game);
 
         var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
         var remainingParties = stillAlive.groupBy(partyManager::getParty);
-
-        if (remainingParties.isEmpty()) {
-            LOGGER.debug("Cleaning up game {} in arena {} because remainingParties is empty", game.getUuid(), game.getArena().name()); //NOSONAR
-            //pack it up boys
-            return gameCleanupService.scheduleCleanup(game);
-        }
         if (remainingParties.size() != 1) {
-            LOGGER.debug("Not doing anything, because remainingParties.size() != 1 ({})", remainingParties);
-            // The game isn't over yet!
-            return Future.successful(Unit.INSTANCE);
+            return Option.none();
         }
-        LOGGER.debug("Ending game, only 1 party remaining. remainingParties = {}, stillAlive = {}", remainingParties, stillAlive);
+        return remainingParties.headOption().map(Tuple2::_1);
+    }
 
-        game.getGameBorder().pause();
-        game.getGameBossBar().setPaused(true);
-
-        var winningParty = remainingParties.keySet().head();
-        saveGameStats(game, winningParty);
-
-        giveWinnerXP(game, players, stillAlive, winningParty);
-
-        winningParty.getAllMembers().forEach(winnerId -> {
+    @Override
+    public @NotNull Future<Unit> giveWinnerRewards(@NotNull Game game, @NotNull Party winners) {
+        winners.getAllMembers().forEach(winnerId -> {
             var player = Bukkit.getPlayer(winnerId);
-            Objects.requireNonNull(player); // if they're offline they should've been removed from the party
+            Objects.requireNonNull(player); // if they're offline they should've been removed from the party by now
             langService.send(player, config -> config.gameLang().winner());
         });
 
-        players.forEach(warzonePlayer -> warzonePlayer.getPlayer().peek(player ->
-                langService.send(player,
+        game.getPlayersInGame()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> langService.send(player,
                         config -> config.gameLang().winnerBroadcast(),
-                        Map.of("{winner}", Objects.requireNonNull(Bukkit.getPlayer(winningParty.getOwner())).getName()))));
-        return gameCleanupService.scheduleCleanup(game);
+                        Map.of("{winner}", Objects.requireNonNull(Bukkit.getPlayer(winners.getOwner())).getName())));
+
+        var allPlayers = Future.sequence(game.getPlayersInGame()
+                .map(playerManager::loadPlayer));
+
+        return allPlayers
+                .onSuccess(players -> giveWinnerXP(game, players, winners))
+                .map(Functions.constant(Unit.INSTANCE));
     }
 
-    private void giveWinnerXP(Game game, io.vavr.collection.Set<WarzonePlayer> players, io.vavr.collection.Set<WarzonePlayer> stillAlive, Party winningParty) {
-        stillAlive
-                .filter(p -> partyManager.getParty(p).equals(winningParty))
-                .forEach(winner -> xpHandler.addXP(winner, XPConfig::win));
 
-        LOGGER.debug("Giving winner xp to players {}", stillAlive);
+    private void giveWinnerXP(Game game, Seq<WarzonePlayer> players, Party winningParty) {
+        var winners = players.filter(p -> partyManager.getParty(p).equals(winningParty));
+
+        winners.forEach(winner -> xpHandler.addXP(winner, XPConfig::win));
+        LOGGER.debug("Giving winner xp to players {}", winners);
 
         var top3 = players.toList()
                 .sorted(Comparator.comparingInt(player ->
@@ -107,18 +102,4 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
         LOGGER.debug("Giving top 3 xp to players {}", top3);
     }
 
-    private void saveGameStats(Game game, Party winningParty) {
-        var stats = new GameStatistic(
-                game.getUuid(),
-                game.getArena().name(),
-                Instant.ofEpochMilli(game.getTimer().getStartTimeMillis()),
-                Instant.now(),
-                game.getPartiesInGame().flatMap(Party::getAllMembers).toJavaSet(),
-                Set.copyOf(winningParty.getAllMembers()),
-                game.getDeaths(),
-                game.getPlayerInformation().mapValues(PlayerInformation::createStatistics).toJavaMap()
-        );
-        gamePersistence.save(stats);
-        LOGGER.debug("Saved stats {}", stats);
-    }
 }

@@ -3,7 +3,7 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.arena.Arena;
-import me.bristermitten.warzone.game.cleanup.GameCleanupService;
+import me.bristermitten.warzone.game.cleanup.GameEndingService;
 import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.game.state.InProgressState;
@@ -29,15 +29,15 @@ public class WarzoneAdminCommand extends BaseCommand {
     private final PlayerManager playerManager;
     private final XPHandler xpHandler;
     private final GameRepository gameRepository;
-    private final GameCleanupService gameCleanupService;
+    private final GameEndingService gameEndingService;
 
     @Inject
-    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository, GameCleanupService gameCleanupService) {
+    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository, GameEndingService gameEndingService) {
         this.langService = langService;
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
         this.gameRepository = gameRepository;
-        this.gameCleanupService = gameCleanupService;
+        this.gameEndingService = gameEndingService;
     }
 
     @Subcommand("reset")
@@ -90,7 +90,7 @@ public class WarzoneAdminCommand extends BaseCommand {
                     Map.of("{arena}", arena.name()));
             return;
         }
-        gameCleanupService.cleanup(gameToEnd);
+        gameEndingService.end(gameToEnd);
     }
 
     @Subcommand("xp set")
