@@ -3,8 +3,10 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.arena.Arena;
+import me.bristermitten.warzone.game.cleanup.GameCleanupService;
 import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.state.InLobbyState;
+import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.xp.XPHandler;
@@ -27,13 +29,15 @@ public class WarzoneAdminCommand extends BaseCommand {
     private final PlayerManager playerManager;
     private final XPHandler xpHandler;
     private final GameRepository gameRepository;
+    private final GameCleanupService gameCleanupService;
 
     @Inject
-    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository) {
+    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository, GameCleanupService gameCleanupService) {
         this.langService = langService;
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
         this.gameRepository = gameRepository;
+        this.gameCleanupService = gameCleanupService;
     }
 
     @Subcommand("reset")
@@ -70,6 +74,23 @@ public class WarzoneAdminCommand extends BaseCommand {
         } else {
             gameToStart.getPreGameLobbyTimer().forceStart();
         }
+    }
+
+    @Subcommand("forceend")
+    @CommandPermission("warzone.admin.forceend")
+    @CommandCompletion("@arenas=inUse")
+    @Description("Force a game to end")
+    public void forceEnd(CommandSender sender, @Conditions("inUse") Arena arena) {
+        var gameToEnd = gameRepository.getGames()
+                .filter(game -> game.getArena().equals(arena))
+                .head(); // This will never throw because of the @Conditions("inUse")
+
+        if (!(gameToEnd.getState() instanceof InProgressState)) {
+            langService.sendMessage(sender, langConfig -> langConfig.errorLang().cannotStartGame(),
+                    Map.of("{arena}", arena.name()));
+            return;
+        }
+        gameCleanupService.cleanup(gameToEnd);
     }
 
     @Subcommand("xp set")

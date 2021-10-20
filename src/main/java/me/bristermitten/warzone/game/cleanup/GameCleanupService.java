@@ -6,6 +6,7 @@ import me.bristermitten.warzone.util.Unit;
 import org.jetbrains.annotations.NotNull;
 
 public interface GameCleanupService {
-    @NotNull  Future<Unit> scheduleCleanup(@NotNull final Game game);
+    @NotNull Future<Unit> scheduleCleanup(@NotNull final Game game);
+
     void cleanup(@NotNull final Game game);
 }

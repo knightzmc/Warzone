@@ -52,6 +52,7 @@ errors:
   unknown-arena: '<red>Unknown arena {arena}!'
   unknown-player: '<red>Unknown player or invalid uuid {value}'
   cannot-start-game: '<red>Could not start game in {arena}'
+  cannot-end-game: '<red>Could not end game in {arena}'
 
 admin:
   stats-reset: '<green>Stats reset for {player}!'

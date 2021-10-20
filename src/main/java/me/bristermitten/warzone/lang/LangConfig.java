@@ -23,6 +23,7 @@ public record LangConfig(
             , @SerializedName("no-game-running") String noGameRunning
             , @SerializedName("unknown-player") String unknownPlayer
             , @SerializedName("cannot-start-game") String cannotStartGame
+            , @SerializedName("cannot-end-game") String cannotEndGame
     ) {
     }
 
