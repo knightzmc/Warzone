@@ -60,7 +60,9 @@ public class GameManagerImpl implements GameManager {
                            GameWorldUpdateTask gameWorldUpdateTask,
                            LangService langService,
                            XPHandler xpHandler,
-                           GamePersistence gamePersistence, Schedule schedule, GameFactory gameFactory) {
+                           GamePersistence gamePersistence,
+                           Schedule schedule,
+                           GameFactory gameFactory) {
         this.states = states;
         this.playerManager = playerManager;
         this.partyManager = partyManager;
@@ -80,14 +82,13 @@ public class GameManagerImpl implements GameManager {
     @Override
     public Game createNewGame(Arena arena, PartySize acceptedSize) {
         arenaManager.use(arena);
-        var game = gameFactory.createGame(arena, new HashSet<>(), acceptedSize);
+        var game = gameFactory.createGame(arena, Collections.emptySet(), acceptedSize);
+
         game.getPreGameLobbyTimer().addCompletionHook(() ->
                 setState(game, GameStates::inProgressState));
         games.add(game);
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Created new game in arena {} with size {}", arena.name(), acceptedSize);
-        }
+        LOGGER.debug("Created new game in arena {} with size {}", arena.name(), acceptedSize); //NOSONAR the record call is unbelievably cheap
 
         gameWorldUpdateTask.start();
         /* TODO i'm not really sure if this belong here. iterating an empty set is so cheap
@@ -152,16 +153,18 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public @NotNull Option<Game> getGameContaining(UUID uuid) {
-        return List.ofAll(getGames())
+        return Option.ofOptional(getGames()
+                .stream()
                 .filter(game -> gameContains(game, uuid))
-                .headOption();
+                .findFirst());
     }
 
     @Override
     public @NotNull Option<Game> getGameContaining(Party party) {
-        return List.ofAll(getGames())
+        return Option.ofOptional(getGames()
+                .stream()
                 .filter(game -> game.getParties().contains(party))
-                .headOption();
+                .findFirst());
     }
 
     /**
@@ -171,7 +174,7 @@ public class GameManagerImpl implements GameManager {
      */
     @Override
     public List<WarzonePlayer> getPlayers(Game game) {
-        return io.vavr.collection.List.ofAll(game.getParties())
+        return List.ofAll(game.getParties())
                 .flatMap(Party::getAllMembers)
                 .map(playerManager::lookupPlayer)
                 .filter(Option::isDefined)
@@ -180,7 +183,7 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public Future<Seq<WarzonePlayer>> getAllPlayers(Game game) {
-        return io.vavr.collection.List.ofAll(game.getParties())
+        return List.ofAll(game.getParties())
                 .flatMap(Party::getAllMembers)
                 .map(playerManager::loadPlayer)
                 .transform(Future::sequence);

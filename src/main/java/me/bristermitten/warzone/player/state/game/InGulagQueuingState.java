@@ -25,7 +25,7 @@ public class InGulagQueuingState extends InGulagState {
         var game = gameManager.getGameContaining(player.getPlayerId())
                 .getOrElseThrow(() -> new IllegalStateException("Player is not in a game"));
 
-        var spawnArea = game.getArena().gulagConfig().spawnArea().toLocation(game.getArena().forceGetWorld());
+        var spawnArea = game.getArena().gulagConfig().spawnArea().toLocation(game.getArena().getWorldOrThrow());
         player.getPlayer().peek(p -> p.teleport(spawnArea));
     }
 }

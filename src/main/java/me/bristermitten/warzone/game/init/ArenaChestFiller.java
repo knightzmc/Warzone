@@ -29,7 +29,7 @@ public class ArenaChestFiller extends Task {
     }
 
     public void add(@NotNull final Arena arena) {
-        var world = arena.forceGetWorld();
+        var world = arena.getWorldOrThrow();
         BlockFinder.getLoadedChunks(world, arena.playableArea())
                 .filter(chunk -> !loaded.contains(ChunkPosition.of(chunk)))
                 .map(chunk -> new Entry(chunk, arena))
@@ -39,7 +39,7 @@ public class ArenaChestFiller extends Task {
     }
 
     public void unload(@NotNull final Arena arena) {
-        var world = arena.forceGetWorld();
+        var world = arena.getWorldOrThrow();
         BlockFinder.getLoadedChunks(world, arena.playableArea())
                 .map(ChunkPosition::of)
                 .forEach(loaded::remove);
@@ -63,7 +63,7 @@ public class ArenaChestFiller extends Task {
                     break;
                 }
                 final var arena = nextChunk.arena();
-                var world = arena.forceGetWorld();
+                var world = arena.getWorldOrThrow();
                 var chunk = nextChunk.chunk();
                 world.getChunkAtAsync(chunk.getX(), chunk.getZ()).whenComplete((loadedChunk, t) -> {
                     if (t != null) {

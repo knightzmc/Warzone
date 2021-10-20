@@ -64,7 +64,7 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
     public void spawn(Game game, WarzonePlayer player) {
         var playableArea = game.getArena().playableArea();
         var center = playableArea.center().setY(ELYTRA_Y);
-        var world = game.getArena().forceGetWorld(); // empty case should have been handled by now
+        var world = game.getArena().getWorldOrThrow(); // empty case should have been handled by now
         var bukkitPlayer = player.getPlayer().get();
 
         bukkitPlayer.getInventory().setChestplate(ELYTRA_ITEM);

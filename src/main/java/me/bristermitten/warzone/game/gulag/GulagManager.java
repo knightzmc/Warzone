@@ -97,7 +97,7 @@ public class GulagManager {
         var player2 = maybe2.get();
 
 
-        var world = gulag.getGame().getArena().forceGetWorld();
+        var world = gulag.getGame().getArena().getWorldOrThrow();
 
         gulag.setGulagPlayers(new Gulag.GulagPlayers(
                 player1.getPlayerId(),

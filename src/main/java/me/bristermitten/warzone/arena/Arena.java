@@ -21,7 +21,13 @@ public record Arena(String name,
         return Option.of(Bukkit.getWorld(world));
     }
 
-    public World forceGetWorld() {
+    /**
+     * Gets the world of the arena, throwing an exception if it is not present
+     *
+     * @return The world of the arena
+     * @throws IllegalStateException if the world is not present according to {@link Bukkit#getWorld(String)}
+     */
+    public World getWorldOrThrow() {
         return getWorld().getOrElseThrow(() -> new IllegalStateException("World for arena " + name + " does not exist!"));
     }
 }

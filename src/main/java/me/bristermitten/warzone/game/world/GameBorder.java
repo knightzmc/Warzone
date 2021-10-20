@@ -20,7 +20,7 @@ public class GameBorder {
     private final Map<UUID, Long> playerDamageTimes = new HashMap<>();
 
     public GameBorder(Arena around) {
-        this.world = around.forceGetWorld();
+        this.world = around.getWorldOrThrow();
         this.border = world.getWorldBorder();
         this.around = around;
     }

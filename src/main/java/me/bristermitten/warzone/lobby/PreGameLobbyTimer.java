@@ -83,7 +83,6 @@ public class PreGameLobbyTimer extends Timer {
             return;
         }
         forceStart();
-
     }
 
     public PreGameLobbyBossBar getBossBar() {
