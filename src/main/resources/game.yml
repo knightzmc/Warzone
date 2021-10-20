@@ -26,6 +26,8 @@ spectator-mode:
 # defaults to ELYTRA
 drop-in-method: ELYTRA
 
+# How many seconds players stay in a game after a winner is declared until the game actually ends and players are sent back to spawn
+game-end-timer: 10
 
 game-start-timer:
   # The minimum percentage of players that must be in the pre-game lobby to start the game timer

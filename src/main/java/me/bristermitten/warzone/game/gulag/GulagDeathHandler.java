@@ -1,8 +1,8 @@
 package me.bristermitten.warzone.game.gulag;
 
 
-import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.death.GameDeathHandler;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
@@ -22,18 +22,18 @@ public class GulagDeathHandler implements GameDeathHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GulagDeathHandler.class);
     private final PlayerManager playerManager;
-    private final GameManager gameManager;
     private final PlayerSpawner playerSpawner;
     private final GulagManager gulagManager;
     private final Schedule schedule;
+    private final GameRepository gameRepository;
 
     @Inject
-    public GulagDeathHandler(PlayerManager playerManager, GameManager gameManager, PlayerSpawner playerSpawner, GulagManager gulagManager, Schedule schedule) {
+    public GulagDeathHandler(PlayerManager playerManager, PlayerSpawner playerSpawner, GulagManager gulagManager, Schedule schedule, GameRepository gameRepository) {
         this.playerManager = playerManager;
-        this.gameManager = gameManager;
         this.playerSpawner = playerSpawner;
         this.gulagManager = gulagManager;
         this.schedule = schedule;
+        this.gameRepository = gameRepository;
     }
 
     /*
@@ -45,7 +45,7 @@ public class GulagDeathHandler implements GameDeathHandler {
     public void onDeath(PlayerDeathEvent event) {
         event.setCancelled(true);
         playerManager.loadPlayer(event.getEntity().getUniqueId(), warzonePlayer -> {
-            var gameOpt = gameManager.getGameContaining(event.getEntity().getUniqueId());
+            var gameOpt = gameRepository.getGameContaining(event.getEntity().getUniqueId());
             if (gulagManager.gulagIsAvailableFor(warzonePlayer) && gameOpt.isDefined()) {
                 gulagManager.addToGulag(gameOpt.get().getGulag(), warzonePlayer);
                 return;
@@ -60,12 +60,12 @@ public class GulagDeathHandler implements GameDeathHandler {
             return;
         }
         // Respawn the killer
-        gameManager.getGameContaining(killer.getUniqueId())
+        gameRepository.getGameContaining(killer.getUniqueId())
                 .peek(game -> playerManager.loadPlayer(killer.getUniqueId())
                         .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof InGulagArenaState)
-                        .flatMap(schedule.runSync(killerW -> {
-                            playerManager.setState(killerW, PlayerStates::inGameSpawningState);
-                            playerSpawner.spawn(game, killerW);
+                        .flatMap(schedule.runSync(killerPlayer -> {
+                            playerManager.setState(killerPlayer, PlayerStates::inGameSpawningState);
+                            playerSpawner.spawn(game, killerPlayer);
                         })))
                 .onEmpty(() -> LOGGER.warn("Player {} killed {} in a gulag even though they aren't in a game", killer.getName(), event.getEntity().getName()));
     }

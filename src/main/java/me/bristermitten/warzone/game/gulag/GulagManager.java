@@ -1,7 +1,7 @@
 package me.bristermitten.warzone.game.gulag;
 
 import io.vavr.control.Option;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.WarzonePlayer;
@@ -17,13 +17,13 @@ public class GulagManager {
     private static final long GULAG_MIN_TIME = TimeUnit.MINUTES.toMillis(7);
     private static final int GULAG_MIN_PLAYERS = 12;
     private static final int GULAG_MIN_PARTIES = 4;
-    private final GameManager gameManager;
+    private final GameRepository gameRepository;
     private final PlayerManager playerManager;
 
 
     @Inject
-    public GulagManager(GameManager gameManager, PlayerManager playerManager) {
-        this.gameManager = gameManager;
+    public GulagManager(GameRepository gameRepository, PlayerManager playerManager) {
+        this.gameRepository = gameRepository;
         this.playerManager = playerManager;
     }
 
@@ -36,7 +36,7 @@ public class GulagManager {
             return false;
         }
         if (game.getAcceptedSize() == PartySize.SINGLES) {
-            return gameManager.getPlayers(game).size() >= GULAG_MIN_PLAYERS;
+            return gameRepository.getPlayers(game).size() >= GULAG_MIN_PLAYERS;
         } else {
             return game.getPartiesInGame().size() >= GULAG_MIN_PARTIES;
         }
@@ -46,7 +46,7 @@ public class GulagManager {
         if (warzonePlayer.getCurrentState() instanceof InGulagState) {
             return false;
         }
-        var gameOpt = gameManager.getGameContaining(warzonePlayer);
+        var gameOpt = gameRepository.getGameContaining(warzonePlayer);
         if (gameOpt.isEmpty()) {
             return false;
         }

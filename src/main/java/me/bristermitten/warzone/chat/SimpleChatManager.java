@@ -35,7 +35,7 @@ public class SimpleChatManager implements ChatManager {
                 .map(Option::get)
                 .forEach(player -> player.sendMessage(
                         // TODO: https://discord.com/channels/319355592605040642/420342659115122688/868934565320884234 in case of breakage
-                        formatter.format(channel.format().replace("{message}", message), sender)
+                        formatter.format(channel.format().get().replace("{message}", message), sender)
                 )));
     }
 }

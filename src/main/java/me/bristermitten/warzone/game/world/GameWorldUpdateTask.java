@@ -3,7 +3,7 @@ package me.bristermitten.warzone.game.world;
 import me.bristermitten.warzone.bossbar.BossBarManager;
 import me.bristermitten.warzone.bossbar.game.GameBossBar;
 import me.bristermitten.warzone.game.Game;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.player.state.InPreGameLobbyState;
 import me.bristermitten.warzone.player.state.game.InGameState;
 import me.bristermitten.warzone.task.Task;
@@ -23,13 +23,13 @@ public class GameWorldUpdateTask extends Task {
     private final Plugin plugin;
     private final Set<Game> gamesToUpdate = new HashSet<>();
     private final BossBarManager bossBarManager;
-    private final GameManager gameManager;
+    private final GameRepository gameRepository;
 
     @Inject
-    public GameWorldUpdateTask(Plugin plugin, BossBarManager bossBarManager, GameManager gameManager) {
+    public GameWorldUpdateTask(Plugin plugin, BossBarManager bossBarManager, GameRepository gameRepository) {
         this.plugin = plugin;
         this.bossBarManager = bossBarManager;
-        this.gameManager = gameManager;
+        this.gameRepository = gameRepository;
     }
 
     public void submit(Game game) {
@@ -38,7 +38,7 @@ public class GameWorldUpdateTask extends Task {
 
     public void remove(Game game) {
         gamesToUpdate.remove(game);
-        gameManager.getPlayers(game).forEach(warzonePlayer ->
+        gameRepository.getPlayers(game).forEach(warzonePlayer ->
                 bossBarManager.hide(warzonePlayer.getPlayerId(), game.getGameBossBar()));
     }
 
@@ -46,16 +46,16 @@ public class GameWorldUpdateTask extends Task {
     protected void schedule() {
         runningTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
             bossBarManager.updateAll();
-            for (Game game : gamesToUpdate) {
+            gamesToUpdate.forEach(game -> {
                 game.getGameBorder().damagePlayersInBorder();
-                gameManager.getPlayers(game).forEach(warzonePlayer -> {
+                gameRepository.getPlayers(game).forEach(warzonePlayer -> {
                     if (warzonePlayer.getCurrentState() instanceof InPreGameLobbyState) {
                         bossBarManager.show(warzonePlayer.getPlayerId(), game.getPreGameLobbyTimer().getBossBar());
                     } else if (warzonePlayer.getCurrentState() instanceof InGameState) {
                         bossBarManager.show(warzonePlayer.getPlayerId(), game.getGameBossBar());
                     }
                 });
-            }
+            });
 
             if (running) {
                 schedule();

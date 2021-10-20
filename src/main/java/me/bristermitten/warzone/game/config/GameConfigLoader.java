@@ -13,6 +13,7 @@ import javax.inject.Provider;
 import java.util.concurrent.TimeUnit;
 
 public class GameConfigLoader implements Provider<GameConfig> {
+    private static final int DEFAULT_GAME_END_TIMER = 10;
     private final Provider<GameConfigDAO> daoProvider;
     private final ItemRenderer itemRenderer;
 
@@ -53,6 +54,9 @@ public class GameConfigLoader implements Provider<GameConfig> {
         var dao = daoProvider.get();
         var spectator = loadSpectatorConfig(dao.spectatorMode());
         var startTimer = load(dao.gameStartTimerConfigDAO());
-        return new GameConfig(spectator, Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA), startTimer);
+        return new GameConfig(spectator,
+                Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA)
+                , startTimer,
+                Null.get(dao.gameEndTimer(), DEFAULT_GAME_END_TIMER));
     }
 }

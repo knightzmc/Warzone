@@ -11,7 +11,8 @@ import java.util.Map;
 public record GameConfig(
         SpectatorConfig spectatorConfig,
         PlayerSpawningMethod spawningMethod,
-        GameStartTimerConfig gameStartTimerConfig
+        GameStartTimerConfig gameStartTimerConfig,
+        int gameEndTimer
 ) {
     public record GameStartTimerConfig(
             double threshold,

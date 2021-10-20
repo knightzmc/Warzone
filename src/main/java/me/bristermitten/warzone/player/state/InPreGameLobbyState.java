@@ -3,7 +3,7 @@ package me.bristermitten.warzone.player.state;
 import me.bristermitten.warzone.arena.ArenasConfigDAO;
 import me.bristermitten.warzone.bossbar.BossBarManager;
 import me.bristermitten.warzone.chat.channel.ChatChannel;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.scoreboard.ScoreboardConfig;
 import me.bristermitten.warzone.scoreboard.ScoreboardManager;
@@ -21,16 +21,20 @@ public class InPreGameLobbyState implements PlayerState {
     private final ChatChannel channel;
 
     private final Provider<ArenasConfigDAO> arenaConfigProvider;
-    private final GameManager gameManager;
     private final BossBarManager bossBarManager;
+    private final GameRepository gameRepository;
 
     @Inject
-    public InPreGameLobbyState(ScoreboardManager scoreboardManager, @Named("preGameLobby") ChatChannel channel, Provider<ArenasConfigDAO> arenaConfigProvider, GameManager gameManager, BossBarManager bossBarManager) {
+    public InPreGameLobbyState(ScoreboardManager scoreboardManager,
+                               @Named("preGameLobby") ChatChannel channel,
+                               Provider<ArenasConfigDAO> arenaConfigProvider,
+                               BossBarManager bossBarManager,
+                               GameRepository gameRepository) {
         this.scoreboardManager = scoreboardManager;
         this.channel = channel;
         this.arenaConfigProvider = arenaConfigProvider;
-        this.gameManager = gameManager;
         this.bossBarManager = bossBarManager;
+        this.gameRepository = gameRepository;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class InPreGameLobbyState implements PlayerState {
             scoreboardManager.show(player, ScoreboardConfig::preGameLobby);
             player.teleport(arenaConfigProvider.get().preGameLobbySpawnpoint().toLocation());
             player.setGameMode(GameMode.ADVENTURE);
-            var game = gameManager.getGameContaining(warzonePlayer)
+            var game = gameRepository.getGameContaining(warzonePlayer)
                     .getOrElseThrow(() -> new IllegalArgumentException("Player is not in a game"));
             game.getPreGameLobbyTimer().start();
             bossBarManager.show(player.getUniqueId(), game.getPreGameLobbyTimer().getBossBar());
@@ -48,7 +52,7 @@ public class InPreGameLobbyState implements PlayerState {
 
     @Override
     public void onLeave(WarzonePlayer player) {
-        gameManager.getGameContaining(player).peek(game ->
+        gameRepository.getGameContaining(player).peek(game ->
                 bossBarManager.hide(player.getPlayerId(), game.getPreGameLobbyTimer().getBossBar()));
 
     }

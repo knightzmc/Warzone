@@ -5,7 +5,7 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.game.timer.GameTimer;
 import me.bristermitten.warzone.party.Party;
@@ -36,15 +36,18 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
     );
     private final PlayerManager playerManager;
     private final TimerRenderer timerRenderer;
-    private final GameManager gameManager;
     private final PartyManager partyManager;
+    private final GameRepository gameRepository;
 
     @Inject
-    public GameStatusPlaceholder(PlayerManager playerManager, TimerRenderer timerRenderer, GameManager gameManager, PartyManager partyManager) {
+    public GameStatusPlaceholder(PlayerManager playerManager,
+                                 TimerRenderer timerRenderer,
+                                 PartyManager partyManager,
+                                 GameRepository gameRepository) {
         this.playerManager = playerManager;
         this.timerRenderer = timerRenderer;
-        this.gameManager = gameManager;
         this.partyManager = partyManager;
+        this.gameRepository = gameRepository;
     }
 
     @Override
@@ -55,21 +58,21 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
         }
 
         return switch (params) {
-            case "kill_count" -> gameManager.getGameContaining(player.getUniqueId())
+            case "kill_count" -> gameRepository.getGameContaining(player.getUniqueId())
                     .flatMap(game -> game.getInfo(player.getUniqueId()))
                     .map(PlayerInformation::getKillCount)
                     .map(Objects::toString)
                     .getOrElse(NOT_IN_GAME);
-            case "lobby_time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
+            case "lobby_time_remaining" -> gameRepository.getGameContaining(player.getUniqueId())
                     .map(Game::getPreGameLobbyTimer)
                     .map(timer -> timerRenderer.render(timer, "Waiting for Players"))
                     .getOrElse(NOT_IN_GAME);
-            case "time_remaining" -> gameManager.getGameContaining(player.getUniqueId())
+            case "time_remaining" -> gameRepository.getGameContaining(player.getUniqueId())
                     .map(Game::getTimer)
                     .filter(GameTimer::hasStarted)
                     .map(timerRenderer::render)
                     .getOrElse(NOT_IN_GAME);
-            case "players_remaining" -> gameManager.getGameContaining(player.getUniqueId())
+            case "players_remaining" -> gameRepository.getGameContaining(player.getUniqueId())
                     .map(game -> game.getPartiesInGame()
                             .flatMap(Party::getAllMembers)
                             .map(playerManager::lookupPlayer)
@@ -80,7 +83,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
                     .map(Objects::toString)
                     .getOrElse(NOT_IN_GAME);
             case "party_members_gameformat" -> List.ofAll(partyManager.getParty(player)
-                    .getAllMembers())
+                            .getAllMembers())
                     .map(playerManager::lookupPlayer)
                     .filter(Option::isDefined)
                     .map(Option::get)

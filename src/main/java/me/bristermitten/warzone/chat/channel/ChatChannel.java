@@ -5,23 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public final class ChatChannel {
-    private final String name;
-    private final Supplier<String> format;
-
-    public ChatChannel(String name, Supplier<String> format) {
-        this.name = name;
-        this.format = format;
-    }
-
-
-    public String name() {
-        return name;
-    }
-
-    public String format() {
-        return format.get();
-    }
+public record ChatChannel(String name, Supplier<String> format) {
 
     @Override
     public boolean equals(Object o) {
@@ -41,4 +25,5 @@ public final class ChatChannel {
                "name='" + name + '\'' +
                '}';
     }
+
 }

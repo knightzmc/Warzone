@@ -1,17 +1,9 @@
 package me.bristermitten.warzone.game.statistic;
 
+import org.jetbrains.annotations.Unmodifiable;
+
 import java.time.Instant;
 import java.util.*;
-
-/*
-Stuff to store:
-time spent in gulag
-shots fired
-weapons picked up
-medkits used
-times reloaded
-total accuracy
- */
 
 /**
  * Holds statistics for a certain {@link me.bristermitten.warzone.game.Game}
@@ -21,10 +13,10 @@ public record GameStatistic(
         String arenaName,
         Instant timeStarted,
         Instant timeFinished,
-        Set<UUID> participants,
-        Set<UUID> winners,
-        Set<PlayerDeath> deaths,
-        Map<UUID, PlayerStatistic> playerStatistics
+        @Unmodifiable Set<UUID> participants,
+        @Unmodifiable Set<UUID> winners,
+        @Unmodifiable Set<PlayerDeath> deaths,
+        @Unmodifiable Map<UUID, PlayerStatistic> playerStatistics
 ) {
     public static class Builder {
         private UUID gameId;
@@ -56,17 +48,12 @@ public record GameStatistic(
             return this;
         }
 
-        public Builder setParticipants(Set<UUID> participants) {
-            this.participants = participants;
-            return this;
-        }
-
         public Set<UUID> getParticipants() {
             return participants;
         }
 
-        public Builder setWinners(Set<UUID> winners) {
-            this.winners = winners;
+        public Builder setParticipants(Set<UUID> participants) {
+            this.participants = participants;
             return this;
         }
 
@@ -74,8 +61,8 @@ public record GameStatistic(
             return winners;
         }
 
-        public Builder setDeaths(Set<PlayerDeath> deaths) {
-            this.deaths = deaths;
+        public Builder setWinners(Set<UUID> winners) {
+            this.winners = winners;
             return this;
         }
 
@@ -83,13 +70,18 @@ public record GameStatistic(
             return deaths;
         }
 
-        public Builder setPlayerStatistics(Map<UUID, PlayerStatistic> playerStatistics) {
-            this.playerStatistics = playerStatistics;
+        public Builder setDeaths(Set<PlayerDeath> deaths) {
+            this.deaths = deaths;
             return this;
         }
 
         public Map<UUID, PlayerStatistic> getPlayerStatistics() {
             return playerStatistics;
+        }
+
+        public Builder setPlayerStatistics(Map<UUID, PlayerStatistic> playerStatistics) {
+            this.playerStatistics = playerStatistics;
+            return this;
         }
 
         public GameStatistic build() {

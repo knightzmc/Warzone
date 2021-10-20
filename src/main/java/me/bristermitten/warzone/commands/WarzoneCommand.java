@@ -2,16 +2,19 @@ package me.bristermitten.warzone.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.game.Game;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.GameJoinLeaveService;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
-import me.bristermitten.warzone.protocol.ProtocolWrapper;
 import me.bristermitten.warzone.util.Consumers;
+import me.bristermitten.warzone.util.Unit;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import java.util.function.BiConsumer;
@@ -20,24 +23,31 @@ import java.util.function.BiConsumer;
 public class WarzoneCommand extends BaseCommand {
     private final MatchmakingService matchmakingService;
     private final PartyManager partyManager;
-    private final GameManager gameManager;
     private final LeaveRequeueMenuFactory leaveRequeueMenuFactory;
     private final LangService langService;
+    private final GameRepository gameRepository;
+    private final GameJoinLeaveService gameJoinLeaveService;
 
     @Inject
-    public WarzoneCommand(MatchmakingService matchmakingService, PartyManager partyManager, GameManager gameManager, LeaveRequeueMenuFactory leaveRequeueMenuFactory, LangService langService, ProtocolWrapper protocolWrapper) {
+    public WarzoneCommand(MatchmakingService matchmakingService,
+                          PartyManager partyManager,
+                          LeaveRequeueMenuFactory leaveRequeueMenuFactory,
+                          LangService langService,
+                          GameRepository gameRepository,
+                          GameJoinLeaveService gameJoinLeaveService) {
         this.matchmakingService = matchmakingService;
         this.partyManager = partyManager;
-        this.gameManager = gameManager;
         this.leaveRequeueMenuFactory = leaveRequeueMenuFactory;
         this.langService = langService;
+        this.gameRepository = gameRepository;
+        this.gameJoinLeaveService = gameJoinLeaveService;
     }
 
     @Subcommand("join")
     @CommandPermission("warzone.join")
     @Description("Queue your party for a game")
     public void join(Player sender) {
-        if (!gameManager.getGameContaining(sender.getUniqueId()).isEmpty()) {
+        if (!gameRepository.getGameContaining(sender.getUniqueId()).isEmpty()) {
             langService.send(sender, langConfig -> langConfig.gameLang().alreadyInGame());
             return;
         }
@@ -50,15 +60,25 @@ public class WarzoneCommand extends BaseCommand {
     @Description("Leave your current game")
     public void leave(Player sender) {
         processGameLeave(sender,
-                (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner), "Leave Game");
+                (game, isPartyOwner) -> leave(sender, game, isPartyOwner),
+                "Leave Game");
+    }
+
+    private Future<Unit> leave(Player sender, Game game, Boolean isPartyOwner) {
+        if (isPartyOwner) { //NOSONAR shush
+            var party = partyManager.getParty(sender);
+            return gameJoinLeaveService.leave(game, party);
+        } else {
+            return gameJoinLeaveService.leave(game, sender.getUniqueId());
+        }
     }
 
     /**
      * Just for complying with DRY in leave() and requeue()
      * If the sender is the party owner, opens the confirmation menu, otherwise just runs the onComplete task
      */
-    private void processGameLeave(Player sender, BiConsumer<Game, Boolean> onComplete, String actionName) {
-        var gameOption = gameManager.getGameContaining(sender.getUniqueId());
+    private void processGameLeave(Player sender, BiConsumer<Game, @NotNull Boolean> onComplete, String actionName) {
+        var gameOption = gameRepository.getGameContaining(sender.getUniqueId());
         if (gameOption.isEmpty()) {
             langService.send(sender, langConfig -> langConfig.gameLang().notInGame());
             return;
@@ -74,8 +94,8 @@ public class WarzoneCommand extends BaseCommand {
             return;
         }
         leaveRequeueMenuFactory.create(
-                () -> onComplete.accept(game, true),
-                actionName)
+                        () -> onComplete.accept(game, true),
+                        actionName)
                 .open(sender);
     }
 
@@ -84,13 +104,14 @@ public class WarzoneCommand extends BaseCommand {
     @Description("Leave your current game and queue for a new one")
     public void requeue(Player sender) {
         processGameLeave(sender,
-                (game, isPartyOwner) -> gameManager.leave(game, sender, isPartyOwner)
-                        .onSuccess(Consumers.run(() -> join(sender))), "Requeue");
+                (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onSuccess(Consumers.run(() -> join(sender))),
+                "Requeue");
     }
+
 
     @HelpCommand
     @Default
-    public void help(){
+    public void help() {
         //noinspection deprecation
         showCommandHelp();
     }

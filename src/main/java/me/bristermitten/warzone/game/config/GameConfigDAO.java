@@ -1,7 +1,6 @@
 package me.bristermitten.warzone.game.config;
 
 import com.google.gson.annotations.SerializedName;
-import me.bristermitten.warzone.bossbar.BossBarConfig;
 import me.bristermitten.warzone.bossbar.BossBarConfigDAO;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.game.spawning.PlayerSpawningMethod;
@@ -14,7 +13,8 @@ import java.util.Map;
 
 public record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode,
                             @SerializedName("drop-in-method") @Nullable PlayerSpawningMethod playerSpawningMethod,
-                            @SerializedName("game-start-timer") GameStartTimerConfigDAO gameStartTimerConfigDAO) {
+                            @SerializedName("game-start-timer") GameStartTimerConfigDAO gameStartTimerConfigDAO,
+                            @SerializedName("game-end-timer") @Nullable Integer gameEndTimer) {
     public static final Configuration<GameConfigDAO> CONFIG = new Configuration<>(GameConfigDAO.class, "game.yml");
 
     record GameStartTimerConfigDAO(

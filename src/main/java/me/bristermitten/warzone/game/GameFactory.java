@@ -6,6 +6,6 @@ import me.bristermitten.warzone.party.PartySize;
 
 import java.util.Set;
 
-public interface GameFactory {
+interface GameFactory {
     Game createGame(Arena arena, Set<Party> players, PartySize acceptedSize);
 }

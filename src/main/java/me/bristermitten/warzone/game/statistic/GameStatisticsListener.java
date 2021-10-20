@@ -1,6 +1,6 @@
 package me.bristermitten.warzone.game.statistic;
 
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.listener.EventListener;
 import me.zombie_striker.qg.api.QACustomItemInteractEvent;
 import me.zombie_striker.qg.api.QAWeaponDamageEntityEvent;
@@ -15,10 +15,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import javax.inject.Inject;
 
 public class GameStatisticsListener implements EventListener {
-    private final GameManager gameManager;
+    private final GameRepository gameManager;
 
     @Inject
-    GameStatisticsListener(GameManager gameManager) {
+    GameStatisticsListener(GameRepository gameManager) {
         this.gameManager = gameManager;
     }
 
@@ -51,8 +51,8 @@ public class GameStatisticsListener implements EventListener {
         if (!(event.getCustomItem() instanceof Gun gun)) {
             return;
         }
-        var reloadingingHandler = gun.getReloadingingHandler();
-        if (reloadingingHandler == null || !reloadingingHandler.isReloading(event.getPlayer())) {
+        var reloadingHandler = gun.getReloadingingHandler();
+        if (reloadingHandler == null || !reloadingHandler.isReloading(event.getPlayer())) {
             return;
         }
         gameManager.getGameContaining(event.getPlayer().getUniqueId())

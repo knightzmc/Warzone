@@ -3,7 +3,7 @@ package me.bristermitten.warzone.game.death;
 import io.vavr.Function3;
 import io.vavr.control.Option;
 import me.bristermitten.warzone.game.Game;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.statistic.PlayerDeath;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.util.Unit;
@@ -21,12 +21,12 @@ import java.util.UUID;
  */
 public class StatisticsDeathHandler implements GameDeathHandler {
     private final PlayerManager playerManager;
-    private final GameManager gameManager;
+    private final GameRepository gameRepository;
 
     @Inject
-    public StatisticsDeathHandler(PlayerManager playerManager, GameManager gameManager) {
+    public StatisticsDeathHandler(PlayerManager playerManager, GameRepository gameRepository) {
         this.playerManager = playerManager;
-        this.gameManager = gameManager;
+        this.gameRepository = gameRepository;
     }
 
     private Unit recordDeath(UUID died, Player player, Game game) {
@@ -51,7 +51,7 @@ public class StatisticsDeathHandler implements GameDeathHandler {
         playerManager.loadPlayer(died,
                 whoDied -> {
                     whoDied.setDeaths(whoDied.getDeaths() + 1);
-                    var containingGame = gameManager.getGameContaining(whoDied.getPlayerId());
+                    var containingGame = gameRepository.getGameContaining(whoDied.getPlayerId());
                     containingGame
                             .peek(game -> Function3.of(this::recordDeath).apply(died, event.getEntity()))
                             .flatMap(game -> game.getInfo(whoDied.getPlayerId()))
@@ -65,7 +65,7 @@ public class StatisticsDeathHandler implements GameDeathHandler {
 
         playerManager.loadPlayer(killerPlayer.getUniqueId(), killer -> {
             killer.setKills(killer.getKills() + 1);
-            gameManager.getGameContaining(killerPlayer.getUniqueId())
+            gameRepository.getGameContaining(killerPlayer.getUniqueId())
                     .flatMap(game -> game.getInfo(killerPlayer.getUniqueId()))
                     .peek(information -> information.setKillCount(information.getKillCount() + 1));
         });

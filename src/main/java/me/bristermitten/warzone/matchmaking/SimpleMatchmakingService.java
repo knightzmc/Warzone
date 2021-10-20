@@ -1,10 +1,13 @@
 package me.bristermitten.warzone.matchmaking;
 
 import com.google.inject.Singleton;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.Game;
+import me.bristermitten.warzone.game.GameJoinLeaveService;
 import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.state.GameStateChangeEvent;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.state.InLobbyState;
@@ -15,19 +18,26 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.function.Predicate;
 
 @Singleton
 public class SimpleMatchmakingService implements MatchmakingService, Listener {
+    private final GameRepository gameRepository;
     private final GameManager gameManager;
+    private final GameJoinLeaveService gameJoinLeaveService;
     private final Queue<Party> playersInQueue = new ArrayDeque<>();
     private final ArenaManager arenaManager;
 
     @Inject
-    public SimpleMatchmakingService(GameManager gameManager, ArenaManager arenaManager, Plugin plugin) {
-        this.gameManager = gameManager;
+    public SimpleMatchmakingService(GameRepository gameRepository, ArenaManager arenaManager, Plugin plugin, GameManager gameManager, GameJoinLeaveService gameJoinLeaveService) {
+        this.gameRepository = gameRepository;
         this.arenaManager = arenaManager;
+        this.gameManager = gameManager;
+        this.gameJoinLeaveService = gameJoinLeaveService;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
@@ -40,14 +50,14 @@ public class SimpleMatchmakingService implements MatchmakingService, Listener {
     private void processQueue() {
         var toRemove = new LinkedList<Party>();
         for (Party party : playersInQueue) {
-            Optional<Game> matching = gameManager.getGames().stream()
+            Option<Game> matching = gameRepository.getGames()
                     .filter(game -> arenaManager.partyCanUseArena(party, game.getArena()))
                     .filter(game -> game.getState() instanceof InLobbyState || game.getState() instanceof IdlingState)
                     .filter(Predicate.not(Game::isFull))
-                    .max(Comparator.comparing(game -> game.getArena().priority()));
+                    .maxBy(Comparator.comparing(game -> game.getArena().priority()));
 
-            if (matching.isPresent()) {
-                gameManager.addToGame(matching.get(), party);
+            if (matching.isDefined()) {
+                gameJoinLeaveService.join(matching.get(), party);
                 toRemove.add(party);
             }
         }

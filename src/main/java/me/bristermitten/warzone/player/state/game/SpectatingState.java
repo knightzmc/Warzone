@@ -2,8 +2,8 @@ package me.bristermitten.warzone.player.state.game;
 
 import me.bristermitten.warzone.bossbar.BossBarManager;
 import me.bristermitten.warzone.chat.channel.ChatChannel;
-import me.bristermitten.warzone.game.GameManager;
 import me.bristermitten.warzone.game.config.GameConfig;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.PlayerInventoryBlocker;
 import me.bristermitten.warzone.player.WarzonePlayer;
@@ -28,10 +28,10 @@ public class SpectatingState extends InGameState {
     SpectatingState(ScoreboardManager scoreboardManager,
                     @Named("inGame") ChatChannel channel,
                     LangService langService,
-                    GameManager gameManager,
+                    GameRepository gameRepository,
                     BossBarManager bossBarManager,
                     Provider<GameConfig> gameConfigProvider) {
-        super(scoreboardManager, channel, gameManager, bossBarManager);
+        super(scoreboardManager, channel, bossBarManager, gameRepository);
         this.langService = langService;
         this.gameConfigProvider = gameConfigProvider;
     }

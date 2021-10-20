@@ -1,50 +1,17 @@
 package me.bristermitten.warzone.game;
 
-import io.vavr.collection.List;
-import io.vavr.collection.Seq;
 import io.vavr.concurrent.Future;
-import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
-import me.bristermitten.warzone.game.state.GameState;
-import me.bristermitten.warzone.game.state.GameStates;
-import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartySize;
-import me.bristermitten.warzone.player.PlayerManager;
-import me.bristermitten.warzone.player.WarzonePlayer;
-import me.bristermitten.warzone.state.StateManager;
 import me.bristermitten.warzone.util.Unit;
-import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Set;
-import java.util.UUID;
-
-public interface GameManager extends StateManager<Game, GameState, GameStates> {
-    @Unmodifiable @NotNull Set<@NotNull Game> getGames();
-
-    boolean gameContains(Game game, UUID uuid);
-
-    Future<Seq<WarzonePlayer>> getAllPlayers(Game game);
-
-    /**
-     * Get all players in a given Game
-     * This method relies on a {@link WarzonePlayer} instance existing in the {@link PlayerManager} stored in this class,
-     * as it will only call {@link PlayerManager#lookupPlayer(UUID)} to get a result immediately
-     */
-    List<WarzonePlayer> getPlayers(Game game);
-
-    @NotNull Option<Game> getGameContaining(UUID uuid);
-
-    default @NotNull Option<Game> getGameContaining(WarzonePlayer player) {
-        return getGameContaining(player.getPlayerId());
-    }
-
-    @NotNull Option<Game> getGameContaining(Party party);
-
-    void addToGame(Game game, Party party);
+/**
+ * Handles the loading and unloading of Game objects
+ */
+public interface GameManager {
 
 
     /**
@@ -58,18 +25,23 @@ public interface GameManager extends StateManager<Game, GameState, GameStates> {
      * @throws IllegalArgumentException if arena is already in use
      */
     @Contract("_, _ -> new")
-    Game createNewGame(Arena arena, PartySize acceptedSize);
+    @NotNull Game createNewGame(@NotNull final Arena arena, @NotNull final PartySize acceptedSize);
 
     /**
-     * Makes a player leave a game.
+     * Unloads and completely cleans up a Game. This includes:
+     * <ul>
+     *     <li>Removing world chests</li>
+     *     <li>Clearing up world borders</li>
+     *     <li>Removing any players still in the game</li>
+     *     <li>Freeing up the Arena for more use</li>
+     * </ul>
+     * <p>
+     * However, note that this is not guaranteed to complete immediately.
+     * By default, this runs a 10 second timer before players are ejected to make the process look more smooth
+     * The returned Future will be completed once all cleanup operations have actually finished
      *
-     * @param game         The game to leave
-     * @param player       The player to leave
-     * @param includeParty Whether or not the player's party members should also leave the game
-     * @return A Future that will complete once the player has left the game
-     * @throws IllegalArgumentException if game does not contain playerUUID (based on {@link GameManager#gameContains(Game, UUID)}
+     * @param game The game to unload
      */
-    Future<Unit> leave(Game game, OfflinePlayer player, boolean includeParty);
+    Future<Unit> unload(@NotNull final Game game);
 
-    Future<Unit> checkForWinner(Game game);
 }

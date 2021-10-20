@@ -33,7 +33,10 @@ public class Party {
         return outgoingInvites;
     }
 
-    public boolean isEmpty() {
+    /**
+     * @return whether the party only has 1 player
+     */
+    public boolean isSingle() {
         return otherPlayers.isEmpty();
     }
 

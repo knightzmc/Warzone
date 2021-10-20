@@ -1,7 +1,7 @@
 package me.bristermitten.warzone.party;
 
 import io.vavr.control.Option;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.WarzonePlayer;
@@ -22,13 +22,13 @@ public class PartyManager {
     public static final String UNKNOWN_NAME = "Unknown Name";
     private final Map<UUID, Party> partiesByMember = new HashMap<>();
     private final LangService langService;
+    private final GameRepository gameRepository;
 
-    private final GameManager gameManager;
 
     @Inject
-    public PartyManager(LangService langService, GameManager gameManager) {
+    public PartyManager(LangService langService, GameRepository gameRepository) {
         this.langService = langService;
-        this.gameManager = gameManager;
+        this.gameRepository = gameRepository;
     }
 
     @NotNull
@@ -101,10 +101,14 @@ public class PartyManager {
             langService.send(receivingPlayer, config -> config.partyLang().invalidInvite());
             return;
         }
-        var gameContainingInviter = gameManager.getGameContaining(invite.invitingTo());
-        if (gameContainingInviter.isDefined() && gameContainingInviter.get().getState() instanceof InProgressState) {
+
+        // They can't accept the invite if the party is currently in a game
+        var gameContainingInviter = gameRepository.getGameContaining(invite.invitingTo());
+        var inProgressGame = gameContainingInviter.filter(game -> game.getState() instanceof InProgressState);
+        if (inProgressGame.isDefined()) {
+            var inviterName = Null.get(Bukkit.getOfflinePlayer(invite.invitingTo().getOwner()).getName(), UNKNOWN_NAME);
             langService.send(receivingPlayer, config -> config.partyLang().partyIsInGame(),
-                    Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(invite.invitingTo().getOwner()).getName(), UNKNOWN_NAME)));
+                    Map.of(PLAYER_PLACEHOLDER, inviterName));
             return;
         }
 
@@ -140,14 +144,13 @@ public class PartyManager {
 
     public void leave(@NotNull Party party, @NotNull OfflinePlayer leaver) {
 
-        if (party.isEmpty()) { // This is a bit of a lie, everyone is in a party, but if a party is just you, can it really be considered a party?
-            Option.of(leaver.getPlayer()).peek(
-                    player -> langService.send(player, langConfig -> langConfig.partyLang().noParty())
-            );
+        if (party.isSingle()) {
+            Option.of(leaver.getPlayer()).peek(player ->
+                    langService.send(player, langConfig -> langConfig.partyLang().noParty()));
             return;
         }
-        Option.of(leaver.getPlayer())
-                .peek(player -> langService.send(player, config -> config.partyLang().partyYouLeft()));
+        Option.of(leaver.getPlayer()).peek(player ->
+                langService.send(player, config -> config.partyLang().partyYouLeft()));
 
 
         party.getOtherPlayers().remove(leaver.getUniqueId());
@@ -156,9 +159,9 @@ public class PartyManager {
         party.getOtherPlayers().stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
-                .forEach(player ->
-                        langService.send(player, config -> config.partyLang().partyUserLeft(),
-                                Map.of("{leaver}", Null.get(leaver.getName(), UNKNOWN_NAME))));
+                .forEach(player -> langService.send(player,
+                        config -> config.partyLang().partyUserLeft(),
+                        Map.of("{leaver}", Null.get(leaver.getName(), UNKNOWN_NAME))));
 
         if (leaver.getUniqueId().equals(party.getOwner())) {
             // destroy one and another will take its place

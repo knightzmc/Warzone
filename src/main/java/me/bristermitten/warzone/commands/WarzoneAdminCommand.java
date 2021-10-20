@@ -3,7 +3,7 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.arena.Arena;
-import me.bristermitten.warzone.game.GameManager;
+import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -26,14 +26,14 @@ public class WarzoneAdminCommand extends BaseCommand {
     private final LangService langService;
     private final PlayerManager playerManager;
     private final XPHandler xpHandler;
-    private final GameManager gameManager;
+    private final GameRepository gameRepository;
 
     @Inject
-    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameManager gameManager) {
+    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository) {
         this.langService = langService;
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
-        this.gameManager = gameManager;
+        this.gameRepository = gameRepository;
     }
 
     @Subcommand("reset")
@@ -55,10 +55,9 @@ public class WarzoneAdminCommand extends BaseCommand {
     @CommandCompletion("@arenas=inUse")
     @Description("Force a game to start the lobby timer, ignoring player limits")
     public void forceStart(CommandSender sender, @Conditions("inUse") Arena arena, @Optional @Nullable Long timerSeconds) {
-        var gameToStart = gameManager.getGames().stream()
+        var gameToStart = gameRepository.getGames()
                 .filter(game -> game.getArena().equals(arena))
-                .findFirst()
-                .orElseThrow(); // This will never throw because of the @Conditions("inUse")
+                .head(); // This will never throw because of the @Conditions("inUse")
 
         if (!(gameToStart.getState() instanceof InLobbyState) || gameToStart.getPreGameLobbyTimer().hasStarted()) {
             langService.sendMessage(sender, langConfig -> langConfig.errorLang().cannotStartGame(),

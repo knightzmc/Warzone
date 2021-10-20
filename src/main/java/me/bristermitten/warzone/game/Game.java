@@ -22,6 +22,8 @@ import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static io.vavr.collection.HashSet.ofAll;
+
 public class Game implements Stateful<Game, GameState> {
     private final UUID uuid;
     private final Arena arena;
@@ -97,7 +99,11 @@ public class Game implements Stateful<Game, GameState> {
     }
 
     public io.vavr.collection.Set<Party> getPartiesInGame() {
-        return io.vavr.collection.HashSet.ofAll(players);
+        return ofAll(players);
+    }
+
+    public io.vavr.collection.Set<UUID> getPlayersInGame() {
+        return ofAll(getParties()).flatMap(Party::getAllMembers);
     }
 
     public GameState getState() {
@@ -127,6 +133,12 @@ public class Game implements Stateful<Game, GameState> {
 
     public @Unmodifiable Set<PlayerDeath> getDeaths() {
         return Set.copyOf(deaths);
+    }
+
+    public boolean contains(UUID uuid) {
+        return getPartiesInGame()
+                .filter(party -> party.getAllMembers().contains(uuid))
+                .nonEmpty();
     }
 
     @Override
