@@ -90,8 +90,12 @@ public class Game implements Stateful<Game, GameState> {
         return preGameLobbyTimer;
     }
 
-    Map<UUID, PlayerInformation> getPlayerInformationMap() {
+    Map<UUID, PlayerInformation> getMutablePlayerInformation() {
         return playerInformationMap;
+    }
+
+    public io.vavr.collection.Map<UUID, PlayerInformation> getPlayerInformation() {
+        return io.vavr.collection.HashMap.ofAll(playerInformationMap);
     }
 
     public Option<PlayerInformation> getInfo(UUID uuid) {

@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
+import me.bristermitten.warzone.game.cleanup.GameWinnerHandler;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.Party;
@@ -76,7 +77,7 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
         if (game.getState() instanceof InLobbyState) {
             game.getParties().add(party);
             party.getAllMembers().forEach(uuid -> {
-                game.getPlayerInformationMap().put(uuid, new PlayerInformation(uuid));
+                game.getMutablePlayerInformation().put(uuid, new PlayerInformation(uuid));
                 playerManager.loadPlayer(uuid, player ->
                         playerManager.setState(player, PlayerStates::inPreGameLobbyState));
             });

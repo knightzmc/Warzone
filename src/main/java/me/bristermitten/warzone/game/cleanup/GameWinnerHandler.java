@@ -1,7 +1,7 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.cleanup;
 
-import io.vavr.collection.HashMap;
 import io.vavr.concurrent.Future;
+import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.game.statistic.GamePersistence;
 import me.bristermitten.warzone.game.statistic.GameStatistic;
@@ -24,19 +24,23 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GameWinnerHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(GameWinnerHandler.class);
     private final GameRepository gameRepository;
     private final PartyManager partyManager;
-    private final GameCleanupService gameCleanupService;
+    private final GameCleanupServiceImpl gameCleanupService;
     private final GamePersistence gamePersistence;
     private final XPHandler xpHandler;
     private final LangService langService;
 
     @Inject
-    public GameWinnerHandler(GameRepository gameRepository, PartyManager partyManager, GameCleanupService gameCleanupService, GamePersistence gamePersistence, XPHandler xpHandler, LangService langService) {
+    public GameWinnerHandler(GameRepository gameRepository,
+                             PartyManager partyManager,
+                             GameCleanupServiceImpl gameCleanupService,
+                             GamePersistence gamePersistence,
+                             XPHandler xpHandler,
+                             LangService langService) {
         this.gameRepository = gameRepository;
 
         this.partyManager = partyManager;
@@ -108,10 +112,10 @@ public class GameWinnerHandler {
                 game.getArena().name(),
                 Instant.ofEpochMilli(game.getTimer().getStartTimeMillis()),
                 Instant.now(),
-                game.getParties().stream().flatMap(party -> party.getAllMembers().stream()).collect(Collectors.toSet()),
+                game.getPartiesInGame().flatMap(Party::getAllMembers).toJavaSet(),
                 Set.copyOf(winningParty.getAllMembers()),
                 game.getDeaths(),
-                HashMap.ofAll(game.getPlayerInformationMap()).mapValues(PlayerInformation::createStatistics).toJavaMap()
+                game.getPlayerInformation().mapValues(PlayerInformation::createStatistics).toJavaMap()
         );
         gamePersistence.save(stats);
         LOGGER.debug("Saved stats {}", stats);

@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.game;
 
+import me.bristermitten.warzone.game.cleanup.GameWinnerHandler;
 import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.state.PlayerStateChangeEvent;

@@ -1,9 +1,10 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.cleanup;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.arena.ArenaManager;
+import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.config.GameConfig;
 import me.bristermitten.warzone.game.repository.MutableGameRepository;
 import me.bristermitten.warzone.game.state.GameStates;
@@ -17,8 +18,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class GameCleanupService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameCleanupService.class);
+class GameCleanupServiceImpl implements GameCleanupService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameCleanupServiceImpl.class);
 
     private final Provider<GameConfig> gameConfigProvider;
     private final Schedule schedule;
@@ -28,12 +29,12 @@ public class GameCleanupService {
     private final MutableGameRepository gameRepository;
 
     @Inject
-    public GameCleanupService(Provider<GameConfig> gameConfigProvider,
-                              Schedule schedule,
-                              PlayerManager playerManager,
-                              me.bristermitten.warzone.game.state.GameStateManager gameStateManager,
-                              ArenaManager arenaManager,
-                              MutableGameRepository gameRepository) {
+    public GameCleanupServiceImpl(Provider<GameConfig> gameConfigProvider,
+                                  Schedule schedule,
+                                  PlayerManager playerManager,
+                                  me.bristermitten.warzone.game.state.GameStateManager gameStateManager,
+                                  ArenaManager arenaManager,
+                                  MutableGameRepository gameRepository) {
         this.gameConfigProvider = gameConfigProvider;
         this.schedule = schedule;
         this.playerManager = playerManager;
@@ -42,7 +43,7 @@ public class GameCleanupService {
         this.gameRepository = gameRepository;
     }
 
-    public Future<Unit> scheduleCleanup(Game game) {
+    public @NotNull Future<Unit> scheduleCleanup(@NotNull final Game game) {
         long time = TimeUnit.SECONDS.toMillis(gameConfigProvider.get().gameEndTimer());
         return schedule.runLater(time, () -> cleanup(game));
     }
