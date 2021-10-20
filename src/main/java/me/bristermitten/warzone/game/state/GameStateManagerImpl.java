@@ -1,20 +1,18 @@
-package me.bristermitten.warzone.game;
+package me.bristermitten.warzone.game.state;
 
-import me.bristermitten.warzone.game.state.GameState;
-import me.bristermitten.warzone.game.state.GameStates;
-import me.bristermitten.warzone.state.StateManager;
+import me.bristermitten.warzone.game.Game;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.function.Function;
 
-public class GameStateManager implements StateManager<Game, GameState, GameStates> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameStateManager.class);
+class GameStateManagerImpl implements me.bristermitten.warzone.game.state.GameStateManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameStateManagerImpl.class);
     private final GameStates states;
 
     @Inject
-    public GameStateManager(GameStates states) {
+    public GameStateManagerImpl(GameStates states) {
         this.states = states;
     }
 

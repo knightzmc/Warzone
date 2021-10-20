@@ -9,6 +9,7 @@ import me.bristermitten.warzone.game.death.DeathModule;
 import me.bristermitten.warzone.game.init.ChunkLoadFiller;
 import me.bristermitten.warzone.game.repository.GameRepositoryModule;
 import me.bristermitten.warzone.game.spawning.SpawningModule;
+import me.bristermitten.warzone.game.state.GameStateModule;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.statistic.GamePersistenceModule;
 import me.bristermitten.warzone.game.statistic.GameStatisticsListener;
@@ -19,6 +20,7 @@ public class GameModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(GameManager.class).to(GameManagerImpl.class);
+        bind(GameJoinLeaveService.class).to(GameJoinLeaveServiceImpl.class);
 
         ListenerBinding.bindListener(binder()).to(ChunkLoadFiller.class);
         ListenerBinding.bindListener(binder()).to(GamePlayerRemoveListener.class);
@@ -38,5 +40,6 @@ public class GameModule extends AbstractModule {
         install(new SpawningModule());
         install(new DeathModule());
         install(new GameRepositoryModule());
+        install(new GameStateModule());
     }
 }

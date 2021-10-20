@@ -4,6 +4,7 @@ import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.game.repository.MutableGameRepository;
+import me.bristermitten.warzone.game.state.GameStateManager;
 import me.bristermitten.warzone.game.state.GameStates;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
 import me.bristermitten.warzone.party.PartySize;
@@ -34,7 +35,8 @@ public class GameManagerImpl implements GameManager {
             GameWorldUpdateTask gameWorldUpdateTask,
             GameFactory gameFactory,
             MutableGameRepository gameStorage,
-            GameStateManager gameStateManager, GameCleanupService gameCleanupService) {
+            GameStateManager gameStateManager,
+            GameCleanupService gameCleanupService) {
 
         this.arenaManager = arenaManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;

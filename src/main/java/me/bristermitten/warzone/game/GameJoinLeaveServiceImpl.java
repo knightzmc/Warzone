@@ -2,10 +2,7 @@ package me.bristermitten.warzone.game;
 
 import io.vavr.collection.List;
 import io.vavr.concurrent.Future;
-import me.bristermitten.warzone.game.state.GameStates;
-import me.bristermitten.warzone.game.state.IdlingState;
-import me.bristermitten.warzone.game.state.InLobbyState;
-import me.bristermitten.warzone.game.state.InProgressState;
+import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -21,7 +18,9 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
     private final GameStateManager gameStateManager;
 
     @Inject
-    public GameJoinLeaveServiceImpl(PlayerManager playerManager, GameWinnerHandler gameWinnerHandler, GameStateManager gameStateManager) {
+    public GameJoinLeaveServiceImpl(PlayerManager playerManager,
+                                    GameWinnerHandler gameWinnerHandler,
+                                    GameStateManager gameStateManager) {
         this.playerManager = playerManager;
         this.gameWinnerHandler = gameWinnerHandler;
         this.gameStateManager = gameStateManager;

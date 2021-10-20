@@ -23,7 +23,7 @@ public class GameCleanupService {
     private final Provider<GameConfig> gameConfigProvider;
     private final Schedule schedule;
     private final PlayerManager playerManager;
-    private final GameStateManager gameStateManager;
+    private final me.bristermitten.warzone.game.state.GameStateManager gameStateManager;
     private final ArenaManager arenaManager;
     private final MutableGameRepository gameRepository;
 
@@ -31,7 +31,7 @@ public class GameCleanupService {
     public GameCleanupService(Provider<GameConfig> gameConfigProvider,
                               Schedule schedule,
                               PlayerManager playerManager,
-                              GameStateManager gameStateManager,
+                              me.bristermitten.warzone.game.state.GameStateManager gameStateManager,
                               ArenaManager arenaManager,
                               MutableGameRepository gameRepository) {
         this.gameConfigProvider = gameConfigProvider;

@@ -13,12 +13,14 @@ public class GameStateChangeEvent extends StateChangeEvent<GameState, Game> {
     }
 
 
+    @SuppressWarnings("unused") // dumb bukkit
     public static HandlerList getHandlerList() {
         return handlerList;
     }
 
     @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlerList;
+    @NotNull
+    public HandlerList getHandlers() {
+        return getHandlerList();
     }
 }
