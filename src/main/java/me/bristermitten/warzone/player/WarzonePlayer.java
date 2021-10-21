@@ -28,6 +28,7 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
     private int losses;
     private long xp;
     private @NotNull PlayerState currentState = NullState.INSTANCE;
+
     public WarzonePlayer(UUID playerId, int kills, int deaths, int level, int wins, int losses, long xp) {
         this.playerId = playerId;
         this.kills = kills;
@@ -60,8 +61,16 @@ public class WarzonePlayer implements Stateful<WarzonePlayer, PlayerState> {
         return wins;
     }
 
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
     public int getLosses() {
         return losses;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
     }
 
     public UUID getPlayerId() {

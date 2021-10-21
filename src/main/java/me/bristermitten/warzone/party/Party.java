@@ -56,6 +56,10 @@ public class Party {
         return otherPlayers;
     }
 
+    public boolean contains(UUID uuid) {
+        return uuid.equals(owner) || otherPlayers.contains(uuid);
+    }
+
     public UUID getOwner() {
         return owner;
     }

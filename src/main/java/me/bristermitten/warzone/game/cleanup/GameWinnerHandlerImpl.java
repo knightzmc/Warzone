@@ -87,10 +87,18 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
 
 
     private void giveWinnerXP(Game game, Seq<WarzonePlayer> players, Party winningParty) {
-        var winners = players.filter(p -> partyManager.getParty(p).equals(winningParty));
+        var winnersLosers = players.partition(p -> partyManager.getParty(p).equals(winningParty));
+        var winners = winnersLosers._1;
+        var losers = winnersLosers._2;
 
-        winners.forEach(winner -> xpHandler.addXP(winner, XPConfig::win));
+        winners.forEach(winner -> {
+            winner.setWins(winner.getWins() + 1);
+            xpHandler.addXP(winner, XPConfig::win);
+        });
         LOGGER.debug("Giving winner xp to players {}", winners);
+
+        losers.forEach(loser -> loser.setLosses(loser.getLosses() + 1));
+        LOGGER.debug("Incrementing losers by 1 for {}", losers);
 
         var top3 = players.toList()
                 .sorted(Comparator.comparingInt(player ->
