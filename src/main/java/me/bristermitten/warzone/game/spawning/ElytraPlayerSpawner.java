@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.game.spawning;
 
 import me.bristermitten.warzone.Warzone;
+import me.bristermitten.warzone.data.Point;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
@@ -20,7 +21,7 @@ import javax.inject.Inject;
 public class ElytraPlayerSpawner implements PlayerSpawner {
     public static final ItemStack ELYTRA_ITEM = new ItemStack(Material.ELYTRA);
     public static final NamespacedKey ELYTRA_KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "elytra_drop_in");
-    private static final int ELYTRA_Y = 100;
+    public static final int ELYTRA_Y = 100;
 
     static {
         ELYTRA_ITEM.editMeta(meta -> meta.getPersistentDataContainer().set(ELYTRA_KEY, PersistentDataType.BYTE, (byte) 1));
@@ -61,10 +62,14 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
     public void spawn(Game game, WarzonePlayer player) {
         var playableArea = game.getArena().playableArea();
         var center = playableArea.center().setY(ELYTRA_Y);
-        var world = game.getArena().getWorldOrThrow(); // empty case should have been handled by now
-        var bukkitPlayer = player.getPlayer().get();
 
+        spawn(game, player, center);
+    }
+
+    public void spawn(Game game, WarzonePlayer player, Point spawnAt) {
+        var bukkitPlayer = player.getPlayer().get();
+        var world = game.getArena().getWorldOrThrow(); // empty case should have been handled by now
         giveElytra(bukkitPlayer);
-        bukkitPlayer.teleport(center.toLocation(world));
+        bukkitPlayer.teleport(spawnAt.toLocation(world));
     }
 }

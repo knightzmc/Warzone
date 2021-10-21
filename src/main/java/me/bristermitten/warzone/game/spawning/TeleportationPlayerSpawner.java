@@ -10,7 +10,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.inject.Inject;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
