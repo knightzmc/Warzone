@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface GameJoinLeaveService {
 
     /**
-     * Makes the entire party leave the game
+     * Makes the entire party leave a game
      *
      * @return A future completed once the leave request is completed. This is a future because blocking calls
      * like {@link me.bristermitten.warzone.player.PlayerManager#lookupPlayer(UUID)} may be needed
@@ -20,7 +20,9 @@ public interface GameJoinLeaveService {
     Future<Unit> leave(Game game, Party party);
 
     /**
-     * Makes a single player leave the game. If the player is in a party, they will leave their party
+     * Makes a single player leave the game.
+     * If the player is in a party, they will <b>NOT</b> leave their party. It is the caller's responsibility
+     * to make sure they leave.
      *
      * @return A future completed once the leave request is completed. This is a future because blocking calls
      * like {@link me.bristermitten.warzone.player.PlayerManager#lookupPlayer(UUID)} may be needed

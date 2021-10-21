@@ -5,6 +5,7 @@ import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.game.cleanup.GameEndingService;
 import me.bristermitten.warzone.game.state.*;
 import me.bristermitten.warzone.game.statistic.PlayerInformation;
+import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
@@ -19,22 +20,30 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
     private final GameEndingService gameEndingService;
     private final GameStateManager gameStateManager;
     private final Schedule schedule;
+    private final MatchmakingService matchmakingService;
 
     @Inject
     public GameJoinLeaveServiceImpl(PlayerManager playerManager,
                                     GameEndingService gameEndingService,
                                     GameStateManager gameStateManager,
-                                    Schedule schedule) {
+                                    Schedule schedule,
+                                    MatchmakingService matchmakingService) {
         this.playerManager = playerManager;
         this.gameEndingService = gameEndingService;
         this.gameStateManager = gameStateManager;
         this.schedule = schedule;
+        this.matchmakingService = matchmakingService;
     }
 
     @Override
     public Future<Unit> leave(Game game, Party party) {
+        matchmakingService.unqueue(party);
+
         if (game.getState() instanceof IdlingState) {
             // This shouldn't happen, just fail silently
+            return Future.successful(Unit.INSTANCE);
+        }
+        if (!game.getParties().contains(party)) {
             return Future.successful(Unit.INSTANCE);
         }
         var leavers = List.ofAll(party.getAllMembers());

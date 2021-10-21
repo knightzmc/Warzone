@@ -149,6 +149,7 @@ public class PartyManager {
                     langService.send(player, langConfig -> langConfig.partyLang().noParty()));
             return;
         }
+
         Option.of(leaver.getPlayer()).peek(player ->
                 langService.send(player, config -> config.partyLang().partyYouLeft()));
 

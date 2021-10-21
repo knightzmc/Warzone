@@ -63,7 +63,6 @@ public class WarzoneCommand extends BaseCommand {
                 (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onFailure(Throwable::printStackTrace),
                 "Leave Game");
     }
-
     private Future<Unit> leave(Player sender, Game game, Boolean isPartyOwner) {
         if (isPartyOwner) { //NOSONAR shush
             var party = partyManager.getParty(sender);
