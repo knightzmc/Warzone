@@ -51,9 +51,9 @@ public class Game implements Stateful<Game, GameState> {
         this.gameBorder = new GameBorder(arena);
         this.gameBossBar = new GameBossBar(this);
 
-        players.stream()
-                .map(Party::getAllMembers)
-                .flatMap(Collection::stream)
+
+        io.vavr.collection.HashSet.ofAll(players)
+                .flatMap(Party::getAllMembers)
                 .forEach(playerUUID -> playerInformationMap.put(playerUUID, new PlayerInformation(playerUUID)));
     }
 

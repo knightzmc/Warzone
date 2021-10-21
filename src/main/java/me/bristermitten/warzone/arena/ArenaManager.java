@@ -33,10 +33,10 @@ public class ArenaManager {
         if (arena.permission() == null) {
             return true;
         }
-        return party.getAllMembers().stream()
+        return party.getAllMembers()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
-                .allMatch(p -> p.hasPermission(arena.permission()));
+                .forAll(p -> p.hasPermission(arena.permission()));
     }
 
     public Predicate<Arena> arenaIsInUse() {

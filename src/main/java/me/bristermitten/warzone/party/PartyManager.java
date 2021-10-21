@@ -127,7 +127,7 @@ public class PartyManager {
                     Map.of(PLAYER_PLACEHOLDER, Null.get(Bukkit.getOfflinePlayer(party.getOwner()).getName(), UNKNOWN_NAME)));
             return;
         }
-        party.getAllMembers().stream()
+        party.getAllMembers()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(player -> langService.send(player, config -> config.partyLang().partyJoinedBroadcast(),

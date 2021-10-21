@@ -42,7 +42,6 @@ public class PartyMembersPlaceholder implements WarzonePlaceholder {
 
         return partyManager.getParty(player)
                 .getAllMembers()
-                .stream()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .map(HumanEntity::getName)

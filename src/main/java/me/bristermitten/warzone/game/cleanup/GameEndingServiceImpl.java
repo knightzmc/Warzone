@@ -64,7 +64,7 @@ public class GameEndingServiceImpl implements GameEndingService {
                 Instant.ofEpochMilli(game.getTimer().getStartTimeMillis()),
                 Instant.now(),
                 game.getPartiesInGame().flatMap(Party::getAllMembers).toJavaSet(),
-                winningParty.map(Party::getAllMembers).map(Set::copyOf).getOrElse(Set.of()),
+                winningParty.map(Party::getAllMembers).map(io.vavr.collection.Set::toJavaSet).getOrElse(Set.of()),
                 game.getDeaths(),
                 game.getPlayerInformation().mapValues(PlayerInformation::createStatistics).toJavaMap()
         );

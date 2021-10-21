@@ -28,7 +28,7 @@ public class TeleportationPlayerSpawner implements PlayerSpawner {
         run(game, party.getAllMembers());
     }
 
-    private void run(Game game, Collection<UUID> party) {
+    private void run(Game game, Iterable<UUID> party) {
         var playableArea = game.getArena().playableArea();
         var randomPoint = playableArea.random();
         var randomX = randomPoint.x();
