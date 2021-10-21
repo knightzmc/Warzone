@@ -5,8 +5,20 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
+
+import javax.inject.Inject;
 
 public class BattleBusFactory {
+    public static final String META_KEY = "WarzoneBattleBus";
+
+    private final Plugin plugin;
+
+    @Inject
+    public BattleBusFactory(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Creates a new battle bus, spawning a new entity for it
@@ -22,6 +34,7 @@ public class BattleBusFactory {
         var entity = world.spawn(startPoint.toLocation(world).setDirection(direction), ArmorStand.class, item -> {
             item.setInvisible(true);
             item.setInvulnerable(true);
+            item.setMetadata(META_KEY, new FixedMetadataValue(plugin, true));
             var busItem = new ItemStack(Material.RABBIT_HIDE, 1);
             busItem.editMeta(meta -> meta.setCustomModelData(15));
             item.getEquipment().setHelmet(busItem);

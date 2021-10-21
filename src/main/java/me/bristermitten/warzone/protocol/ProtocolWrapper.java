@@ -4,6 +4,8 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
+import me.bristermitten.warzone.party.Party;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,6 +22,25 @@ public class ProtocolWrapper {
 
     public void makePlayerGlowing(@NotNull Player target, @NotNull Player viewer) {
         sendMetadataPacket(target, viewer, mask -> (byte) (mask | 0x40)); // add glowing
+    }
+
+    public void makePartyMembersGlow(Party party) {
+        party.getAllMembers().forEach(uuid -> {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player == null) {
+                return;
+            }
+            party.getAllMembers().forEach(otherUUID -> {
+                if (otherUUID.equals(uuid)) {
+                    return;
+                }
+                var otherPlayer = Bukkit.getPlayer(otherUUID);
+                if (otherPlayer == null) {
+                    return;
+                }
+                makePlayerGlowing(otherPlayer, player);
+            });
+        });
     }
 
     private void sendMetadataPacket(@NotNull Player target, @NotNull Player viewer, @NotNull ByteUnaryOperator maskOp) {

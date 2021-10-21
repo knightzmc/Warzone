@@ -19,8 +19,8 @@ import javax.inject.Inject;
 
 public class ElytraPlayerSpawner implements PlayerSpawner {
     public static final ItemStack ELYTRA_ITEM = new ItemStack(Material.ELYTRA);
-    private static final int ELYTRA_Y = 100;
     public static final NamespacedKey ELYTRA_KEY = new NamespacedKey(JavaPlugin.getPlugin(Warzone.class), "elytra_drop_in");
+    private static final int ELYTRA_Y = 100;
 
     static {
         ELYTRA_ITEM.editMeta(meta -> meta.getPersistentDataContainer().set(ELYTRA_KEY, PersistentDataType.BYTE, (byte) 1));
@@ -37,24 +37,21 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
         this.schedule = schedule;
     }
 
+    public static void giveElytra(Player player) {
+        player.getInventory().setChestplate(ELYTRA_ITEM);
+        player.setInvulnerable(true);
+    }
+
+
     @Override
     public void spawn(Game game, Party party) {
+        protocolWrapper.makePartyMembersGlow(party);
+
         party.getAllMembers().forEach(uuid -> {
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) {
                 return;
             }
-
-            party.getAllMembers().forEach(otherUUID -> {
-                if (otherUUID.equals(uuid)) {
-                    return;
-                }
-                var otherPlayer = Bukkit.getPlayer(otherUUID);
-                if (otherPlayer == null) {
-                    return;
-                }
-                protocolWrapper.makePlayerGlowing(otherPlayer, player);
-            });
 
             playerManager.loadPlayer(uuid).flatMap(schedule.runSync(warzonePlayer -> spawn(game, warzonePlayer)));
         });
@@ -67,8 +64,7 @@ public class ElytraPlayerSpawner implements PlayerSpawner {
         var world = game.getArena().getWorldOrThrow(); // empty case should have been handled by now
         var bukkitPlayer = player.getPlayer().get();
 
-        bukkitPlayer.getInventory().setChestplate(ELYTRA_ITEM);
+        giveElytra(bukkitPlayer);
         bukkitPlayer.teleport(center.toLocation(world));
-        bukkitPlayer.setInvulnerable(true);
     }
 }

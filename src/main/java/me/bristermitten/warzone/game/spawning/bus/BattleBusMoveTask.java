@@ -37,8 +37,7 @@ public class BattleBusMoveTask extends Task {
         if (data.paused == paused) {
             return; // nothing to change so there's no need to make a new object
         }
-        buses.put(battleBus,
-                new BattleBusMovement(data.bus(), data.startTime(), data.timeRemaining(), paused));
+        buses.put(battleBus, new BattleBusMovement(data.bus(), data.startTime(), data.timeRemaining(), paused));
     }
 
     public void remove(BattleBus bus) {
