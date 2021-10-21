@@ -28,6 +28,7 @@ public class BusDismountListener implements EventListener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
+        player.setInvisible(false);
 
         protocolWrapper.makePartyMembersGlow(partyManager.getParty(player));
         ElytraPlayerSpawner.giveElytra(player);

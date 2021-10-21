@@ -36,6 +36,7 @@ public class BattleBusSpawner implements PlayerSpawner {
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(player -> {
+                    player.setInvisible(true);
                     player.teleport(battleBus.busEntity());
                     battleBus.busEntity().addPassenger(player);
                 });
