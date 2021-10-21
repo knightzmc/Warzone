@@ -1,12 +1,13 @@
 package me.bristermitten.warzone.player.state.game;
 
 import com.google.inject.Inject;
+import io.vavr.control.Option;
 import me.bristermitten.warzone.game.config.GameConfig;
 import me.bristermitten.warzone.listener.EventListener;
 import me.bristermitten.warzone.player.PlayerManager;
-import me.bristermitten.warzone.util.Schedule;
+import me.bristermitten.warzone.player.WarzonePlayer;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.Action;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import javax.inject.Provider;
@@ -14,20 +15,29 @@ import javax.inject.Provider;
 public class SpectatingStateHotbarItemListener implements EventListener {
     private final Provider<GameConfig> gameConfigProvider;
     private final PlayerManager playerManager;
-    private final Schedule schedule;
 
     @Inject
-    public SpectatingStateHotbarItemListener(Provider<GameConfig> gameConfigProvider, PlayerManager playerManager, Schedule schedule) {
+    public SpectatingStateHotbarItemListener(Provider<GameConfig> gameConfigProvider, PlayerManager playerManager) {
         this.gameConfigProvider = gameConfigProvider;
         this.playerManager = playerManager;
-        this.schedule = schedule;
     }
 
-    @EventHandler
+    /**
+     * Cancels ALL interactions when a player is spectating
+     */
+    @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
-        if (event.getAction() == Action.PHYSICAL) {
+        final Option<WarzonePlayer> warzonePlayers = playerManager.lookupPlayer(event.getPlayer().getUniqueId());
+        if (warzonePlayers.isEmpty()) {
             return;
         }
+        var warzonePlayer = warzonePlayers.get();
+        if (!(warzonePlayer.getCurrentState() instanceof SpectatingState)) {
+            return;
+        }
+
+        event.setCancelled(true); // cancel all interactions
+
         var item = event.getItem();
         if (item == null) {
             return;
@@ -40,16 +50,10 @@ public class SpectatingStateHotbarItemListener implements EventListener {
         if (!item.equals(clickedItem.item())) {
             return;
         }
-        event.setCancelled(true);
-
-        playerManager.loadPlayer(event.getPlayer().getUniqueId())
-                .filter(warzonePlayer -> warzonePlayer.getCurrentState() instanceof SpectatingState)
-                .onSuccess(warzonePlayer -> {
-                    var command = switch (clickedItem.action()) {
-                        case LEAVE_GAME -> "warzone leave";
-                        case REQUEUE -> "warzone requeue";
-                    };
-                    schedule.runSync(() -> event.getPlayer().performCommand(command));
-                });
+        var command = switch (clickedItem.action()) {
+            case LEAVE_GAME -> "warzone leave";
+            case REQUEUE -> "warzone requeue";
+        };
+        event.getPlayer().performCommand(command);
     }
 }
