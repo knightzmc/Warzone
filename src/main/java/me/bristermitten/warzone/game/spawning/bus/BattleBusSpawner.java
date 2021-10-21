@@ -35,7 +35,9 @@ public class BattleBusSpawner implements PlayerSpawner {
         parties.flatMap(Party::getAllMembers)
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
+                .peek(player -> player.teleport(battleBus.busEntity()))
                 .forEach(battleBus.busEntity()::addPassenger);
+
         battleBusManager.start(battleBus);
     }
 

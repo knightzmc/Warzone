@@ -13,6 +13,7 @@ public class BattleBusManager {
     public void start(BattleBus battleBus) {
         battleBusMoveTask.add(battleBus);
         battleBusMoveTask.setPaused(battleBus, false);
+        battleBusMoveTask.start();
     }
 
     public void stop(BattleBus battleBus) {

@@ -6,15 +6,7 @@ import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
-import javax.inject.Inject;
-
 public class BattleBusFactory {
-    private final BattleBusMoveTask battleBusMoveTask;
-
-    @Inject
-    public BattleBusFactory(BattleBusMoveTask battleBusMoveTask) {
-        this.battleBusMoveTask = battleBusMoveTask;
-    }
 
     /**
      * Creates a new battle bus, spawning a new entity for it
@@ -25,7 +17,7 @@ public class BattleBusFactory {
      * @return a new BattleBus
      */
     public BattleBus createBus(World world, Point startPoint, Point endPoint, long speed) {
-        var direction = startPoint.toLocation(world).toVector().subtract(endPoint.toLocation(world).toVector());
+        var direction = endPoint.toLocation(world).toVector().subtract(startPoint.toLocation(world).toVector());
 
         var entity = world.spawn(startPoint.toLocation(world).setDirection(direction), ArmorStand.class, item -> {
             item.setInvisible(true);
@@ -35,8 +27,6 @@ public class BattleBusFactory {
             item.getEquipment().setHelmet(busItem);
         });
 
-        var bus = new BattleBus(startPoint, endPoint, speed, entity);
-        battleBusMoveTask.add(bus);
-        return bus;
+        return new BattleBus(startPoint, endPoint, speed, entity);
     }
 }

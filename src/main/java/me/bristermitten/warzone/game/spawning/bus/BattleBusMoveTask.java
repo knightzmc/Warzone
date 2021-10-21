@@ -1,6 +1,7 @@
 package me.bristermitten.warzone.game.spawning.bus;
 
 import me.bristermitten.warzone.task.Task;
+import net.kyori.adventure.util.Ticks;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -58,13 +59,15 @@ public class BattleBusMoveTask extends Task {
             battleBus.busEntity().remove();
             return true;
         }
-        // How far through its journey the bus is
-        double proportion = (double) millisRemaining / currentPosition.timeRemaining();
 
-        // Then use the proportion to generate a new vector
-        var vectorDistance = battleBus.endPoint().toVector().subtract(battleBus.startPoint().toVector());
-        var newVector = vectorDistance.clone().multiply(proportion);
-        battleBus.busEntity().setVelocity(newVector);
+        final var startPoint = battleBus.startPoint().toVector();
+        final var endPoint = battleBus.endPoint().toVector();
+        final long speed = currentPosition.bus().speed();
+
+        double magnitudeInTicks = speed / (double) Ticks.SINGLE_TICK_DURATION_MS;
+        var direction = endPoint.subtract(startPoint).multiply(1 / magnitudeInTicks);
+
+        battleBus.busEntity().setVelocity(direction);
 
         buses.put(battleBus, new BattleBusMovement(battleBus, currentPosition.startTime(), millisRemaining, false));
         return false;
