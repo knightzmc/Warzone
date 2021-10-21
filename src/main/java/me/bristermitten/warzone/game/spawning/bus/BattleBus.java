@@ -1,13 +1,13 @@
 package me.bristermitten.warzone.game.spawning.bus;
 
 import me.bristermitten.warzone.data.Point;
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.ArmorStand;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public record BattleBus(@NotNull Point startPoint, @NotNull Point endPoint, long speed,
-                        @NotNull Entity busEntity) {
+                        @NotNull ArmorStand busEntity) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

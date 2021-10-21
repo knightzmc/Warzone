@@ -15,13 +15,16 @@ public class BattleBusMoveTask extends Task {
     private final Map<BattleBus, BattleBusMovement> buses = new HashMap<>();
 
     private final Plugin plugin;
+    private final BusRendering busRendering;
 
     @Inject
-    public BattleBusMoveTask(Plugin plugin) {
+    public BattleBusMoveTask(Plugin plugin, BusRendering busRendering) {
         this.plugin = plugin;
+        this.busRendering = busRendering;
     }
 
     public void moveAll() {
+        busRendering.renderAll();
         buses.keySet().removeIf(this::move);
     }
 
@@ -55,6 +58,7 @@ public class BattleBusMoveTask extends Task {
         // This lets us calculate the distance from the start point that it needs to move to
         long millisRemaining = currentPosition.startTime() + battleBus.speed() - System.currentTimeMillis();
         if (millisRemaining <= 0) {
+            battleBus.busEntity().getPassengers().forEach(battleBus.busEntity()::removePassenger);
             battleBus.busEntity().remove();
             return true;
         }

@@ -57,6 +57,7 @@ public class GameConfigLoader implements Provider<GameConfig> {
         return new GameConfig(spectator,
                 Null.get(dao.playerSpawningMethod(), PlayerSpawningMethod.ELYTRA)
                 , startTimer,
+                dao.battleBusConfig(),
                 Null.get(dao.gameEndTimer(), DEFAULT_GAME_END_TIMER));
     }
 }

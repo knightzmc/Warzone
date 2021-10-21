@@ -2,6 +2,7 @@ package me.bristermitten.warzone.game.config;
 
 import me.bristermitten.warzone.bossbar.BossBarConfig;
 import me.bristermitten.warzone.game.spawning.PlayerSpawningMethod;
+import me.bristermitten.warzone.game.spawning.bus.BattleBusConfig;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
@@ -12,6 +13,7 @@ public record GameConfig(
         SpectatorConfig spectatorConfig,
         PlayerSpawningMethod spawningMethod,
         GameStartTimerConfig gameStartTimerConfig,
+        BattleBusConfig battleBusConfig,
         int gameEndTimer
 ) {
     public record GameStartTimerConfig(

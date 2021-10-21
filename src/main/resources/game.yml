@@ -27,6 +27,13 @@ spectator-mode:
 # defaults to BATTLE_BUS
 drop-in-method: BATTLE_BUS
 
+# config for the battle bus model
+# you can ignore this if you're using a different drop in method
+battle-bus:
+  type: RABBIT_HIDE
+  model-data: 15
+
+
 # How many seconds players stay in a game after a winner is declared until the game actually ends and players are sent back to spawn
 game-end-timer: 10
 

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import me.bristermitten.warzone.bossbar.BossBarConfigDAO;
 import me.bristermitten.warzone.config.Configuration;
 import me.bristermitten.warzone.game.spawning.PlayerSpawningMethod;
+import me.bristermitten.warzone.game.spawning.bus.BattleBusConfig;
 import me.bristermitten.warzone.item.ItemConfig;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 public record GameConfigDAO(@SerializedName("spectator-mode") SpectatorConfigDAO spectatorMode,
                             @SerializedName("drop-in-method") @Nullable PlayerSpawningMethod playerSpawningMethod,
+                            @SerializedName("battle-bus") BattleBusConfig battleBusConfig,
                             @SerializedName("game-start-timer") GameStartTimerConfigDAO gameStartTimerConfigDAO,
                             @SerializedName("game-end-timer") @Nullable Integer gameEndTimer) {
     public static final Configuration<GameConfigDAO> CONFIG = new Configuration<>(GameConfigDAO.class, "game.yml");
