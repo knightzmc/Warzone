@@ -41,7 +41,7 @@ public class PlayerManagerImpl implements PlayerManager {
     }
 
     public void loadPlayerAsync(@NotNull UUID id, @NotNull Consumer<WarzonePlayer> onSuccess) {
-        playerStorage.load(id).onSuccess(onSuccess);
+        playerStorage.load(id).onSuccess(onSuccess).onFailure(Throwable::printStackTrace);
     }
 
     @Override
