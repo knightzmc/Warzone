@@ -86,7 +86,7 @@ public class WarzoneCommand extends BaseCommand {
         var game = gameOption.get();
         var party = partyManager.getParty(sender);
         if (party.getSize() == PartySize.SINGLES) {
-            onComplete.accept(game, false);
+            onComplete.accept(game, true);
             return;
         }
         if (!party.getOwner().equals(sender.getUniqueId())) {
