@@ -9,7 +9,7 @@ public abstract class StateChangeEvent<S extends State<T>, T> extends Event impl
     private final T subject;
     private boolean cancelled = false;
 
-    public StateChangeEvent(S oldState, S newState, T subject) {
+    protected StateChangeEvent(S oldState, S newState, T subject) {
         this.oldState = oldState;
         this.newState = newState;
         this.subject = subject;
