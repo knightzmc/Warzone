@@ -46,11 +46,13 @@ public class GameEndingServiceImpl implements GameEndingService {
         game.getGameBossBar().setPaused(true);
 
         var winningParty = gameWinnerHandler.getWinner(game);
+        LOGGER.debug("winningParty = {}", winningParty);
         saveGameStats(game, winningParty);
 
         var rewardOp = winningParty
                 .map(p -> gameWinnerHandler.giveWinnerRewards(game, p))
-                        .getOrElse(Future.successful(Unit.INSTANCE));
+                .getOrElse(Future.successful(Unit.INSTANCE));
+        LOGGER.debug("rewardOp = {}", rewardOp);
 
         return rewardOp.flatMap(unit -> gameCleanupService.scheduleCleanup(game));
     }

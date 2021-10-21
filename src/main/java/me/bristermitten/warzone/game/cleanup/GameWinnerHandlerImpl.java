@@ -53,9 +53,12 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
     @Override
     public @NotNull Option<Party> getWinner(@NotNull Game game) {
         var players = gameRepository.getPlayers(game);
+        LOGGER.debug("players = {}", players);
 
         var stillAlive = players.filter(player -> player.getCurrentState() instanceof AliveState);
+        LOGGER.debug("stillAlive = {}", stillAlive);
         var remainingParties = stillAlive.groupBy(partyManager::getParty);
+        LOGGER.debug("remainingParties = {}", remainingParties);
         if (remainingParties.size() != 1) {
             return Option.none();
         }
@@ -64,18 +67,20 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
 
     @Override
     public @NotNull Future<Unit> giveWinnerRewards(@NotNull Game game, @NotNull Party winners) {
+        LOGGER.debug("giving winner rewards for {} to {}", game, winners);
         winners.getAllMembers().forEach(winnerId -> {
             var player = Bukkit.getPlayer(winnerId);
             Objects.requireNonNull(player); // if they're offline they should've been removed from the party by now
             langService.send(player, config -> config.gameLang().winner());
         });
 
+        //noinspection ConstantConditions
         game.getPlayersInGame()
                 .map(Bukkit::getPlayer)
                 .filter(Objects::nonNull)
                 .forEach(player -> langService.send(player,
                         config -> config.gameLang().winnerBroadcast(),
-                        Map.of("{winner}", Objects.requireNonNull(Bukkit.getPlayer(winners.getOwner())).getName())));
+                        Map.of("{winner}", Bukkit.getPlayer(winners.getOwner()).getName())));
 
         var allPlayers = Future.sequence(game.getPlayersInGame()
                 .map(playerManager::loadPlayer));
@@ -87,7 +92,8 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
 
 
     private void giveWinnerXP(Game game, Seq<WarzonePlayer> players, Party winningParty) {
-        var winnersLosers = players.partition(p -> partyManager.getParty(p).equals(winningParty));
+        var winnersLosers = players
+                .partition(p -> partyManager.getParty(p).equals(winningParty));
         var winners = winnersLosers._1;
         var losers = winnersLosers._2;
 

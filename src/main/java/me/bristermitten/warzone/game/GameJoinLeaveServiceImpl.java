@@ -8,6 +8,7 @@ import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
+import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 
 import javax.inject.Inject;
@@ -17,14 +18,17 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
     private final PlayerManager playerManager;
     private final GameEndingService gameEndingService;
     private final GameStateManager gameStateManager;
+    private final Schedule schedule;
 
     @Inject
     public GameJoinLeaveServiceImpl(PlayerManager playerManager,
                                     GameEndingService gameEndingService,
-                                    GameStateManager gameStateManager) {
+                                    GameStateManager gameStateManager,
+                                    Schedule schedule) {
         this.playerManager = playerManager;
         this.gameEndingService = gameEndingService;
         this.gameStateManager = gameStateManager;
+        this.schedule = schedule;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
 
                     game.getParties().remove(party); // remove the party from the game if necessary
                     return game;
-                }).flatMap(gameEndingService::endIfShould);
+                }).flatMap(schedule.runSync(gameEndingService::endIfShould));
     }
 
     @Override
@@ -54,13 +58,16 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
             // This shouldn't happen, just fail silently
             return Future.successful(Unit.INSTANCE);
         }
-
-        return playerManager.loadPlayer(leaver)
+        var future = playerManager.loadPlayer(leaver)
                 .map(player -> {
                     playerManager.setState(player, PlayerStates::inLobbyState); // change player state
                     return game;
-                })
-                .flatMap(gameEndingService::endIfShould);
+                });
+        if (game.getState() instanceof InLobbyState) {
+            return future.flatMap(schedule.runSync(gameEndingService::end));
+        } else {
+            return future.flatMap(schedule.runSync(gameEndingService::endIfShould));
+        }
     }
 
     @Override

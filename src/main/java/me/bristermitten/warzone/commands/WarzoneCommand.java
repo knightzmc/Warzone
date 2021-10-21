@@ -60,7 +60,7 @@ public class WarzoneCommand extends BaseCommand {
     @Description("Leave your current game")
     public void leave(Player sender) {
         processGameLeave(sender,
-                (game, isPartyOwner) -> leave(sender, game, isPartyOwner),
+                (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onFailure(Throwable::printStackTrace),
                 "Leave Game");
     }
 
@@ -104,7 +104,8 @@ public class WarzoneCommand extends BaseCommand {
     @Description("Leave your current game and queue for a new one")
     public void requeue(Player sender) {
         processGameLeave(sender,
-                (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onSuccess(Consumers.run(() -> join(sender))),
+                (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onSuccess(Consumers.run(() -> join(sender)))
+                        .onFailure(Throwable::printStackTrace),
                 "Requeue");
     }
 
