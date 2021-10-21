@@ -3,11 +3,8 @@ package me.bristermitten.warzone.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import me.bristermitten.warzone.arena.Arena;
-import me.bristermitten.warzone.data.WorldAngledPoint;
 import me.bristermitten.warzone.game.cleanup.GameEndingService;
 import me.bristermitten.warzone.game.repository.GameRepository;
-import me.bristermitten.warzone.game.spawning.bus.BattleBusFactory;
-import me.bristermitten.warzone.game.spawning.bus.BattleBusMoveTask;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.game.state.InProgressState;
 import me.bristermitten.warzone.lang.LangService;
@@ -16,7 +13,6 @@ import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.Null;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -34,33 +30,20 @@ public class WarzoneAdminCommand extends BaseCommand {
     private final XPHandler xpHandler;
     private final GameRepository gameRepository;
     private final GameEndingService gameEndingService;
-    private final BattleBusFactory battleBusFactory;
-    private final BattleBusMoveTask battleBusMoveTask;
 
     @Inject
-    public WarzoneAdminCommand(LangService langService, PlayerManager playerManager, XPHandler xpHandler, GameRepository gameRepository, GameEndingService gameEndingService, BattleBusFactory battleBusFactory, BattleBusMoveTask battleBusMoveTask) {
+    public WarzoneAdminCommand(LangService langService,
+                               PlayerManager playerManager,
+                               XPHandler xpHandler,
+                               GameRepository gameRepository,
+                               GameEndingService gameEndingService) {
         this.langService = langService;
         this.playerManager = playerManager;
         this.xpHandler = xpHandler;
         this.gameRepository = gameRepository;
         this.gameEndingService = gameEndingService;
-        this.battleBusFactory = battleBusFactory;
-        this.battleBusMoveTask = battleBusMoveTask;
     }
 
-    @Subcommand("test")
-    public void test(Player player) {
-        var direction = player.getLocation().getDirection().multiply(2).setY(0);
-        var endPoint = WorldAngledPoint.fromLocation(player.getLocation().add(direction));
-
-        var bus = battleBusFactory.createBus(
-                WorldAngledPoint.fromLocation(player.getLocation()),
-                endPoint,
-                10000
-        );
-        battleBusMoveTask.start();
-        bus.busEntity().addPassenger(player);
-    }
 
     @Subcommand("reset")
     @CommandPermission("warzone.admin.reset")
