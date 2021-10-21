@@ -352,3 +352,4 @@ exactly 1 hour spent today
 - 15:00 - resume
 - 18:00 - pause
 - 19:50 - resume
+- 23:25 - pause
