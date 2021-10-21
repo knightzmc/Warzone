@@ -16,6 +16,7 @@ import me.bristermitten.warzone.player.state.game.AliveState;
 import me.bristermitten.warzone.player.xp.XPConfig;
 import me.bristermitten.warzone.player.xp.XPHandler;
 import me.bristermitten.warzone.util.Functions;
+import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -35,20 +36,22 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
     private final PartyManager partyManager;
     private final LangService langService;
     private final PlayerManager playerManager;
+    private final Schedule schedule;
+
 
     @Inject
     public GameWinnerHandlerImpl(GameRepository gameRepository,
                                  PartyManager partyManager,
                                  XPHandler xpHandler,
                                  LangService langService,
-                                 PlayerManager playerManager) {
+                                 PlayerManager playerManager, Schedule schedule) {
         this.gameRepository = gameRepository;
         this.partyManager = partyManager;
         this.xpHandler = xpHandler;
         this.langService = langService;
         this.playerManager = playerManager;
+        this.schedule = schedule;
     }
-
 
     @Override
     public @NotNull Option<Party> getWinner(@NotNull Game game) {
@@ -86,10 +89,9 @@ class GameWinnerHandlerImpl implements GameWinnerHandler {
                 .map(playerManager::loadPlayer));
 
         return allPlayers
-                .onSuccess(players -> giveWinnerXP(game, players, winners))
+                .flatMap(schedule.runSync(players -> giveWinnerXP(game, players, winners)))
                 .map(Functions.constant(Unit.INSTANCE));
     }
-
 
     private void giveWinnerXP(Game game, Seq<WarzonePlayer> players, Party winningParty) {
         var winnersLosers = players
