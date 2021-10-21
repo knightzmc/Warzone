@@ -25,11 +25,11 @@ public class BattleBusSpawner implements PlayerSpawner {
 
     @Override
     public void spawn(Game game, Set<Party> parties) {
-        //TODO
+        var y = game.getArena().playableArea().center().y();
         var battleBus = battleBusFactory.createBus(
                 game.getArena().getWorldOrThrow(),
-                game.getArena().playableArea().min(),
-                game.getArena().playableArea().max(),
+                game.getArena().playableArea().min().setY(y),
+                game.getArena().playableArea().max().setY(y),
                 game.getArena().gameConfig().battleBusSpeed());
 
         parties.flatMap(Party::getAllMembers)
