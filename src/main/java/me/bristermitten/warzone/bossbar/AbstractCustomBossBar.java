@@ -8,13 +8,14 @@ public abstract class AbstractCustomBossBar implements CustomBossBar {
 
     @Override
     public BossBarConfig getBossBar() {
-        if (paused && previous != null) {
+        if (isPaused() && previous != null) {
             return previous;
         }
         previous = getNewConfig();
         return previous;
     }
 
+    @Override
     public boolean isPaused() {
         return paused;
     }

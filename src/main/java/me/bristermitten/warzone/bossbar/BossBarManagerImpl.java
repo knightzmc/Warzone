@@ -54,6 +54,9 @@ public class BossBarManagerImpl implements BossBarManager {
 
     @Override
     public void update(CustomBossBar bossBar) {
+        if (bossBar.isPaused()) {
+            return;
+        }
         var viewers = this.bars.get(bossBar);
         viewers.removeIf(uuid -> Bukkit.getPlayer(uuid) == null);
 
