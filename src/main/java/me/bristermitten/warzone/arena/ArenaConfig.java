@@ -21,7 +21,8 @@ public interface ArenaConfig {
             float chestRate,
             int maxGulagEntries,
             BossBarConfig bossBarConfig,
-            int maxChestY
+            int maxChestY,
+            long battleBusSpeed
     ) {
 
     }

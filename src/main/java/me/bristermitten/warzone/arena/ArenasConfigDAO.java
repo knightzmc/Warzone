@@ -34,7 +34,8 @@ public record ArenasConfigDAO(
                 @SerializedName("chest-rate") float chestRate,
                 @SerializedName("max-gulag-entries") @Nullable Integer maxGulagEntries,
                 @SerializedName("boss-bar") BossBarConfigDAO bossBarConfigDAO,
-                @SerializedName("max-chest-y") @Nullable Integer maxChestY
+                @SerializedName("max-chest-y") @Nullable Integer maxChestY,
+                @SerializedName("battle-bus-speed") @Nullable Long battleBusSpeed
         ) {
 
         }

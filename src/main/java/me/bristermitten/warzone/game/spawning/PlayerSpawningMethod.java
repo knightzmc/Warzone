@@ -2,5 +2,6 @@ package me.bristermitten.warzone.game.spawning;
 
 public enum PlayerSpawningMethod {
     ELYTRA,
-    TELEPORT
+    TELEPORT,
+    BATTLE_BUS
 }

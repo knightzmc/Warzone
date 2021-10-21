@@ -1,13 +1,12 @@
 package me.bristermitten.warzone.game.spawning.bus;
 
-import me.bristermitten.warzone.data.WorldAngledPoint;
-import org.bukkit.Bukkit;
+import me.bristermitten.warzone.data.Point;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 
 import javax.inject.Inject;
-import java.util.Objects;
 
 public class BattleBusFactory {
     private final BattleBusMoveTask battleBusMoveTask;
@@ -25,15 +24,10 @@ public class BattleBusFactory {
      * @param speed      How many milliseconds it should take for the bus to move from its start point to its end point
      * @return a new BattleBus
      */
-    public BattleBus createBus(WorldAngledPoint startPoint, WorldAngledPoint endPoint, long speed) {
-        if (!startPoint.world().equals(endPoint.world())) {
-            throw new IllegalArgumentException("Points must be in the same world");
-        }
+    public BattleBus createBus(World world, Point startPoint, Point endPoint, long speed) {
+        var direction = startPoint.toLocation(world).toVector().subtract(endPoint.toLocation(world).toVector());
 
-        var world = Bukkit.getWorld(startPoint.world());
-        Objects.requireNonNull(world, "World not present");
-
-        var entity = world.spawn(startPoint.toLocation(), ArmorStand.class, item -> {
+        var entity = world.spawn(startPoint.toLocation(world).setDirection(direction), ArmorStand.class, item -> {
             item.setInvisible(true);
             item.setInvulnerable(true);
             var busItem = new ItemStack(Material.RABBIT_HIDE, 1);

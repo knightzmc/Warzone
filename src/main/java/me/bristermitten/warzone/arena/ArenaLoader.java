@@ -6,6 +6,7 @@ import me.bristermitten.warzone.util.Null;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class ArenaLoader {
     public static final double DEFAULT_MINIMUM_BORDER_SIZE = 15;
@@ -50,7 +51,8 @@ public class ArenaLoader {
                 configuration.chestRate(),
                 Null.get(configuration.maxGulagEntries(), 1),
                 configuration.bossBarConfigDAO().loadBossBarConfig(),
-                Null.get(configuration.maxChestY(), Integer.MAX_VALUE)
+                Null.get(configuration.maxChestY(), Integer.MAX_VALUE),
+                Null.get(configuration.battleBusSpeed(), TimeUnit.SECONDS.toMillis(10))
         );
     }
 

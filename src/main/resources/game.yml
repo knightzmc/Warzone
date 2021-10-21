@@ -23,8 +23,9 @@ spectator-mode:
 # How players should drop in to a game
 # "ELYTRA": spawn in the center of the map in the sky with elytras
 # "TELEPORT": spawn in a random location in the map, close to their party
-# defaults to ELYTRA
-drop-in-method: ELYTRA
+# "BATTLE_BUS": i don't think i need to explain this one
+# defaults to BATTLE_BUS
+drop-in-method: BATTLE_BUS
 
 # How many seconds players stay in a game after a winner is declared until the game actually ends and players are sent back to spawn
 game-end-timer: 10
