@@ -11,10 +11,7 @@ import me.bristermitten.warzone.game.timer.GameTimer;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.PlayerManager;
-import me.bristermitten.warzone.player.state.game.AliveState;
-import me.bristermitten.warzone.player.state.game.InGameState;
-import me.bristermitten.warzone.player.state.game.InGulagState;
-import me.bristermitten.warzone.player.state.game.SpectatingState;
+import me.bristermitten.warzone.player.state.game.*;
 import me.bristermitten.warzone.timer.TimerRenderer;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -31,6 +28,7 @@ public class GameStatusPlaceholder implements WarzonePlaceholder {
     public static final String NOT_IN_GAME = "Not in game";
     private static final Map<Class<? extends InGameState>, String> PREFIXES = HashMap.of(
             AliveState.class, ChatColor.GREEN.toString(),
+            InGameSpawningState.class, ChatColor.GREEN.toString(),
             InGulagState.class, ChatColor.YELLOW.toString(),
             SpectatingState.class, ChatColor.RED.toString()
     );
