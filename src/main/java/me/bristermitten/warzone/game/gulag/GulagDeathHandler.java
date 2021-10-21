@@ -46,8 +46,12 @@ public class GulagDeathHandler implements GameDeathHandler {
         event.setCancelled(true);
         playerManager.loadPlayer(event.getEntity().getUniqueId(), warzonePlayer -> {
             var gameOpt = gameRepository.getGameContaining(event.getEntity().getUniqueId());
-            if (gulagManager.gulagIsAvailableFor(warzonePlayer) && gameOpt.isDefined()) {
-                gulagManager.addToGulag(gameOpt.get().getGulag(), warzonePlayer);
+            if (!gameOpt.isDefined()) {
+                return;
+            }
+            var game = gameOpt.get();
+            if (gulagManager.gulagIsAvailableFor(warzonePlayer)) {
+                gulagManager.addToGulag(game.getGulag(), warzonePlayer);
                 return;
             }
             if (warzonePlayer.getCurrentState() instanceof InGameState) {

@@ -33,6 +33,7 @@ public class Schedule {
         }, plugin);
     }
 
+
     public Future<Unit> runLater(long durationMillis, Runnable runnable) {
         var future = new CompletableFuture<Unit>();
         var asTicks = durationMillis / Ticks.SINGLE_TICK_DURATION_MS;

@@ -10,6 +10,7 @@ import me.bristermitten.warzone.game.statistic.PlayerInformation;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.player.state.game.AliveState;
+import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -26,35 +27,40 @@ public class GameEndingServiceImpl implements GameEndingService {
     private final GameWinnerHandler gameWinnerHandler;
     private final GamePersistence gamePersistence;
     private final GameCleanupService gameCleanupService;
+    private final Schedule schedule;
 
     @Inject
     public GameEndingServiceImpl(GameRepository gameRepository,
                                  PartyManager partyManager,
                                  GameWinnerHandler gameWinnerHandler,
                                  GamePersistence gamePersistence,
-                                 GameCleanupService gameCleanupService) {
+                                 GameCleanupService gameCleanupService, Schedule schedule) {
         this.gameRepository = gameRepository;
         this.partyManager = partyManager;
         this.gameWinnerHandler = gameWinnerHandler;
         this.gamePersistence = gamePersistence;
         this.gameCleanupService = gameCleanupService;
+        this.schedule = schedule;
     }
 
     @Override
     public @NotNull Future<Unit> end(@NotNull Game game) {
-        game.getGameBorder().pause();
-        game.getGameBossBar().setPaused(true);
+        return schedule.runSync(() -> {
+            game.getGameBorder().pause();
+            game.getGameBossBar().setPaused(true);
+        }).flatMap(unit -> {
+            var winningParty = gameWinnerHandler.getWinner(game);
+            LOGGER.debug("winningParty = {}", winningParty);
+            saveGameStats(game, winningParty);
 
-        var winningParty = gameWinnerHandler.getWinner(game);
-        LOGGER.debug("winningParty = {}", winningParty);
-        saveGameStats(game, winningParty);
+            var rewardOp = winningParty
+                    .map(p -> gameWinnerHandler.giveWinnerRewards(game, p))
+                    .getOrElse(Future.successful(Unit.INSTANCE));
+            LOGGER.debug("rewardOp = {}", rewardOp);
 
-        var rewardOp = winningParty
-                .map(p -> gameWinnerHandler.giveWinnerRewards(game, p))
-                .getOrElse(Future.successful(Unit.INSTANCE));
-        LOGGER.debug("rewardOp = {}", rewardOp);
+            return rewardOp.flatMap(unit2 -> gameCleanupService.scheduleCleanup(game));
+        });
 
-        return rewardOp.flatMap(unit -> gameCleanupService.scheduleCleanup(game));
     }
 
     private void saveGameStats(Game game, Option<Party> winningParty) {

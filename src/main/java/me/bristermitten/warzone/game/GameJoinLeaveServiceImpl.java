@@ -9,7 +9,6 @@ import me.bristermitten.warzone.matchmaking.MatchmakingService;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
-import me.bristermitten.warzone.util.Schedule;
 import me.bristermitten.warzone.util.Unit;
 
 import javax.inject.Inject;
@@ -19,19 +18,16 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
     private final PlayerManager playerManager;
     private final GameEndingService gameEndingService;
     private final GameStateManager gameStateManager;
-    private final Schedule schedule;
     private final MatchmakingService matchmakingService;
 
     @Inject
     public GameJoinLeaveServiceImpl(PlayerManager playerManager,
                                     GameEndingService gameEndingService,
                                     GameStateManager gameStateManager,
-                                    Schedule schedule,
                                     MatchmakingService matchmakingService) {
         this.playerManager = playerManager;
         this.gameEndingService = gameEndingService;
         this.gameStateManager = gameStateManager;
-        this.schedule = schedule;
         this.matchmakingService = matchmakingService;
     }
 
@@ -55,7 +51,7 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
 
                     game.getParties().remove(party); // remove the party from the game if necessary
                     return game;
-                }).flatMap(schedule.runSync(gameEndingService::endIfShould));
+                }).flatMap(gameEndingService::endIfShould);
     }
 
     @Override
@@ -73,9 +69,9 @@ public class GameJoinLeaveServiceImpl implements GameJoinLeaveService {
                     return game;
                 });
         if (game.getState() instanceof InLobbyState) {
-            return future.flatMap(schedule.runSync(gameEndingService::end));
+            return future.flatMap(gameEndingService::end);
         } else {
-            return future.flatMap(schedule.runSync(gameEndingService::endIfShould));
+            return future.flatMap(gameEndingService::endIfShould);
         }
     }
 
