@@ -25,7 +25,19 @@ public class BattleBusMoveTask extends Task {
     }
 
     public void add(BattleBus bus) {
-        buses.put(bus, new BattleBusMovement(bus, System.currentTimeMillis(), bus.speed()));
+        buses.put(bus, new BattleBusMovement(bus, System.currentTimeMillis(), bus.speed(), false));
+    }
+
+    public void setPaused(BattleBus battleBus, boolean paused) {
+        var data = buses.get(battleBus);
+        if (data == null) {
+            return;
+        }
+        if (data.paused == paused) {
+            return; // nothing to change so there's no need to make a new object
+        }
+        buses.put(battleBus,
+                new BattleBusMovement(data.bus(), data.startTime(), data.timeRemaining(), paused));
     }
 
     public void remove(BattleBus bus) {
@@ -34,7 +46,10 @@ public class BattleBusMoveTask extends Task {
 
     public boolean move(BattleBus battleBus) {
         var currentPosition = buses.computeIfAbsent(battleBus, bus ->
-                new BattleBusMovement(bus, System.currentTimeMillis(), bus.speed()));
+                new BattleBusMovement(bus, System.currentTimeMillis(), bus.speed(), false));
+        if (currentPosition.paused()) {
+            return false;
+        }
 
         // How long there is left until the bus has completely moved to its destination
         // This lets us calculate the distance from the start point that it needs to move to
@@ -51,7 +66,7 @@ public class BattleBusMoveTask extends Task {
         var newVector = vectorDistance.clone().multiply(proportion);
         battleBus.busEntity().setVelocity(newVector);
 
-        buses.put(battleBus, new BattleBusMovement(battleBus, currentPosition.startTime(), millisRemaining));
+        buses.put(battleBus, new BattleBusMovement(battleBus, currentPosition.startTime(), millisRemaining, false));
         return false;
     }
 
@@ -68,7 +83,8 @@ public class BattleBusMoveTask extends Task {
     private record BattleBusMovement(
             BattleBus bus,
             long startTime,
-            long timeRemaining
+            long timeRemaining,
+            boolean paused
     ) {
     }
 }

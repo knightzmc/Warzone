@@ -1,5 +1,6 @@
 package me.bristermitten.warzone.game.spawning;
 
+import io.vavr.collection.Set;
 import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.WarzonePlayer;
@@ -15,7 +16,11 @@ import me.bristermitten.warzone.player.WarzonePlayer;
  * </ul>
  */
 public interface PlayerSpawner {
-    void spawn(Game game, Party party);
+    void spawn(Game game, Party party) throws UnsupportedOperationException;
+
+    default void spawn(Game game, Set<Party> parties) {
+        parties.forEach(party -> spawn(game, party));
+    }
 
     /**
      * Spawn a single player

@@ -4,6 +4,7 @@ import me.bristermitten.warzone.game.Game;
 import me.bristermitten.warzone.game.init.ArenaChestFiller;
 import me.bristermitten.warzone.game.spawning.PlayerSpawner;
 import me.bristermitten.warzone.game.world.GameWorldUpdateTask;
+import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.player.PlayerManager;
 import me.bristermitten.warzone.player.state.PlayerStates;
 
@@ -25,11 +26,13 @@ public class InProgressState implements GameState {
 
     @Override
     public void onEnter(Game game) {
-        game.getPartiesInGame().forEach(party -> {
-            party.getAllMembers().forEach(uuid ->
-                    playerManager.loadPlayer(uuid, warzonePlayer -> playerManager.setState(warzonePlayer, PlayerStates::inGameSpawningState)));
-            playerSpawner.spawn(game, party);
-        });
+        game.getPartiesInGame()
+                .flatMap(Party::getAllMembers)
+                .forEach(uuid ->
+                        playerManager.loadPlayer(uuid, warzonePlayer
+                                -> playerManager.setState(warzonePlayer, PlayerStates::inGameSpawningState)));
+
+        playerSpawner.spawn(game, game.getPartiesInGame());
         game.getTimer().start();
         game.getGameBorder().begin();
         gameWorldUpdateTask.submit(game);

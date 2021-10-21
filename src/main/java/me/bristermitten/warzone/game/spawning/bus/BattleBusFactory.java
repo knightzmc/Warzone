@@ -18,7 +18,7 @@ public class BattleBusFactory {
     }
 
     /**
-     * Creates and registers a new battle bus. The bus will immediately start moving after being spawned
+     * Creates a new battle bus, spawning a new entity for it
      *
      * @param startPoint Where the bus starts
      * @param endPoint   Where the bus will end
