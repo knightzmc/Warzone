@@ -132,7 +132,7 @@ public class Warzone extends JavaPlugin {
 
         ConsoleAppender consoleAppender = ConsoleAppender.newBuilder()
                 .setName("WarzoneConsole")
-                .setLayout(PatternLayout.newBuilder().withPattern("%highlightError{[%level]: [%logger] %paperMinecraftFormatting{%msg}%n%xEx{full}}").build())
+                .setLayout(PatternLayout.newBuilder().withPattern("%highlightError{[%level] %c{1}: %paperMinecraftFormatting{%msg}%n%xEx{full}}").build())
                 .build();
         consoleAppender.start(); //Create a new appender that roughly matches the paper one
 
