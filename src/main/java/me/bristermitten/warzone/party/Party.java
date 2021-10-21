@@ -1,9 +1,11 @@
 package me.bristermitten.warzone.party;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -68,10 +70,8 @@ public class Party {
         this.owner = owner;
     }
 
-    public @Unmodifiable @NotNull Collection<UUID> getAllMembers() {
-        var set = new HashSet<>(otherPlayers);
-        set.add(owner);
-        return set;
+    public io.vavr.collection.Set<UUID> getAllMembers() {
+        return io.vavr.collection.HashSet.ofAll(otherPlayers).add(owner);
     }
 
     public PartySize getSize() {

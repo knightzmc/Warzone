@@ -9,14 +9,17 @@ import me.bristermitten.warzone.game.repository.GameRepository;
 import me.bristermitten.warzone.lang.LangService;
 import me.bristermitten.warzone.leavemenu.LeaveRequeueMenuFactory;
 import me.bristermitten.warzone.matchmaking.MatchmakingService;
+import me.bristermitten.warzone.party.Party;
 import me.bristermitten.warzone.party.PartyManager;
 import me.bristermitten.warzone.party.PartySize;
 import me.bristermitten.warzone.util.Consumers;
 import me.bristermitten.warzone.util.Unit;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 
 @CommandAlias("warzone")
@@ -51,8 +54,15 @@ public class WarzoneCommand extends BaseCommand {
             langService.send(sender, langConfig -> langConfig.gameLang().alreadyInGame());
             return;
         }
-        matchmakingService.queue(partyManager.getParty(sender));
-        sender.sendMessage("You've been placed in a queue"); // TODO make this properly localized
+        final Party party = partyManager.getParty(sender);
+        matchmakingService.queue(party);
+
+        party.getAllMembers()
+                .map(Bukkit::getPlayer)
+                .filter(Objects::nonNull)
+                .forEach(player -> langService.send(player,
+                        langConfig -> party.isSingle() ? langConfig.partyLang().queuedForGame() : langConfig.partyLang().partyQueuedForGame()));
+
     }
 
     @Subcommand("leave")
@@ -63,6 +73,7 @@ public class WarzoneCommand extends BaseCommand {
                 (game, isPartyOwner) -> leave(sender, game, isPartyOwner).onFailure(Throwable::printStackTrace),
                 "Leave Game");
     }
+
     private Future<Unit> leave(Player sender, Game game, Boolean isPartyOwner) {
         if (isPartyOwner) { //NOSONAR shush
             var party = partyManager.getParty(sender);

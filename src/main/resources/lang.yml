@@ -32,6 +32,8 @@ party:
   party-full: '<red>Your party is full!'
   party-full-join: '<red>You can''t accept this invite as {player}''s party is full'
   party-is-in-game: '<red>You can''t accept this invite as {player}''s party is in a game'
+  party-queued-for-game: '<gold>Your party has been placed in a queue for a game'
+  queued-for-game: '<gold>You have been placed in a queue for a game'
 game:
   already-in-game: '<red>You can''t queue for a game when you''re already in a game!'
   not-in-game: '<red>You''re not in a game'

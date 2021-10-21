@@ -27,10 +27,11 @@ public record LangConfig(
     ) {
     }
 
-    public record TagsLang (
+    public record TagsLang(
             @SerializedName("tag-gained") LangElement tagGained
             , @SerializedName("no-more-tags") LangElement noMoreTags
-    ){}
+    ) {
+    }
 
     public record GameLang(
             @SerializedName("player-out") LangElement playerOut
@@ -68,6 +69,8 @@ public record LangConfig(
             , @SerializedName("party-full") LangElement partyFull
             , @SerializedName("party-full-join") LangElement partyFullJoin
             , @SerializedName("party-is-in-game") LangElement partyIsInGame
-    ) {
+            , @SerializedName("queued-for-game") LangElement queuedForGame
+            , @SerializedName("party-queued-for-game") LangElement partyQueuedForGame
+            ) {
     }
 }
