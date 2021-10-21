@@ -3,11 +3,16 @@ package me.bristermitten.warzone.data;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 public record Point(int x, int y, int z) {
 
     public static Point fromLocation(Location location) {
         return new Point(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+    }
+
+    public Vector toVector() {
+        return new Vector(x, y, z);
     }
 
     public Location toLocation(World world) {

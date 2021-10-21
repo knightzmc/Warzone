@@ -62,7 +62,7 @@ public class BattleBusMoveTask extends Task {
         double proportion = (double) millisRemaining / currentPosition.timeRemaining();
 
         // Then use the proportion to generate a new vector
-        var vectorDistance = battleBus.endPoint().toLocation().toVector().subtract(battleBus.startPoint().toLocation().toVector());
+        var vectorDistance = battleBus.endPoint().toVector().subtract(battleBus.startPoint().toVector());
         var newVector = vectorDistance.clone().multiply(proportion);
         battleBus.busEntity().setVelocity(newVector);
 
