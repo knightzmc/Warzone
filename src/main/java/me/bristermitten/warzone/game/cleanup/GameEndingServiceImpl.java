@@ -48,9 +48,11 @@ public class GameEndingServiceImpl implements GameEndingService {
         var winningParty = gameWinnerHandler.getWinner(game);
         saveGameStats(game, winningParty);
 
-        winningParty.peek(p -> gameWinnerHandler.giveWinnerRewards(game, p));
+        var rewardOp = winningParty
+                .map(p -> gameWinnerHandler.giveWinnerRewards(game, p))
+                        .getOrElse(Future.successful(Unit.INSTANCE));
 
-        return gameCleanupService.scheduleCleanup(game);
+        return rewardOp.flatMap(unit -> gameCleanupService.scheduleCleanup(game));
     }
 
     private void saveGameStats(Game game, Option<Party> winningParty) {
