@@ -317,14 +317,17 @@ exactly 1 hour spent today
 
 1 hour 20 minutes spent today
 
+**Fifth Payment Sent on 2021-09-07**
+
 ## 2021-09-09
 
 - 19:40 - start bugfixing
 - 20:15 - pause
-- 20:22 - resume
+- 20:20 - resume
 - 20:50 - pause
 - 21:30 - resume
 - 22:50 - finish for today
+2 hours 25 minutes
 
 ## 2021-09-11
 
@@ -332,16 +335,19 @@ exactly 1 hour spent today
 - 14:50 - pause
 - 15:00 - resume on debug messages
 - 17:20 - debugging done, pause
+2 hours 30 minutes
 
 ## 2021-09-25
 
 - 13:35 - start bugfixing #3
 - 14:15 - pause
+40 minutes
 
 ## 2021-10-20
 
 - 20:30 - Start work
 - 00:30 - pause
+4 hours
 
 ## 2021-10-21
 
@@ -353,3 +359,5 @@ exactly 1 hour spent today
 - 18:00 - pause
 - 19:50 - resume
 - 23:25 - pause
+
+8:05
