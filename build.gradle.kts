@@ -4,10 +4,19 @@ plugins {
     java
     id("com.github.johnrengelman.shadow") version "7.1.0"
     id("maven-publish")
+    id ("org.sonarqube") version "3.3"
 }
 
 val rootVersion = "1.0"
 var buildNumber = ""
+
+sonarqube {
+  properties {
+    property("sonar.projectKey", "knightzmc_Warzone")
+    property("sonar.organization", "bristermitten")
+    property("sonar.host.url", "https://sonarcloud.io")
+  }
+}
 
 ext {
     val git: Grgit = Grgit.open {
