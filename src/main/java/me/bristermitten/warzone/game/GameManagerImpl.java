@@ -28,7 +28,6 @@ public class GameManagerImpl implements GameManager {
     private final GameFactory gameFactory;
     private final MutableGameRepository gameStorage;
     private final GameStateManager gameStateManager;
-    private final GameCleanupService gameCleanupService;
 
     @Inject
     public GameManagerImpl(
@@ -36,15 +35,13 @@ public class GameManagerImpl implements GameManager {
             GameWorldUpdateTask gameWorldUpdateTask,
             GameFactory gameFactory,
             MutableGameRepository gameStorage,
-            GameStateManager gameStateManager,
-            GameCleanupService gameCleanupService) {
+            GameStateManager gameStateManager) {
 
         this.arenaManager = arenaManager;
         this.gameWorldUpdateTask = gameWorldUpdateTask;
         this.gameFactory = gameFactory;
         this.gameStorage = gameStorage;
         this.gameStateManager = gameStateManager;
-        this.gameCleanupService = gameCleanupService;
     }
 
 
@@ -64,12 +61,6 @@ public class GameManagerImpl implements GameManager {
          *   that it could just be started when the plugin loads up. but this seems like a kinda logical place to put it, for now */
 
         return game;
-    }
-
-    @Override
-    @NotNull
-    public Future<Unit> unload(@NotNull final Game game) {
-        return gameCleanupService.scheduleCleanup(game);
     }
 
 

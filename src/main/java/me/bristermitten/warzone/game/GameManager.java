@@ -1,10 +1,8 @@
 package me.bristermitten.warzone.game;
 
-import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
 import me.bristermitten.warzone.party.PartySize;
-import me.bristermitten.warzone.util.Unit;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,22 +24,4 @@ public interface GameManager {
      */
     @Contract("_, _ -> new")
     @NotNull Game createNewGame(@NotNull final Arena arena, @NotNull final PartySize acceptedSize);
-
-    /**
-     * Unloads and completely cleans up a Game. This includes:
-     * <ul>
-     *     <li>Removing world chests</li>
-     *     <li>Clearing up world borders</li>
-     *     <li>Removing any players still in the game</li>
-     *     <li>Freeing up the Arena for more use</li>
-     * </ul>
-     * <p>
-     * However, note that this is not guaranteed to complete immediately.
-     * By default, this runs a 10 second timer before players are ejected to make the process look more smooth
-     * The returned Future will be completed once all cleanup operations have actually finished
-     *
-     * @param game The game to unload
-     */
-    Future<Unit> unload(@NotNull final Game game);
-
 }
