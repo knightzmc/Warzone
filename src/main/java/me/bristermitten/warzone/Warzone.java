@@ -17,6 +17,7 @@ import me.bristermitten.warzone.database.StorageException;
 import me.bristermitten.warzone.file.FileWatcherService;
 import me.bristermitten.warzone.game.GameModule;
 import me.bristermitten.warzone.game.config.GameConfigDAO;
+import me.bristermitten.warzone.game.statistic.GamePersistence;
 import me.bristermitten.warzone.hooks.HookModule;
 import me.bristermitten.warzone.lang.LangConfig;
 import me.bristermitten.warzone.leaderboard.LeaderboardModule;
@@ -101,6 +102,7 @@ public class Warzone extends JavaPlugin {
 
             persistences = List.of(
                     injector.getInstance(PlayerPersistence.class),
+                    injector.getInstance(GamePersistence.class),
                     injector.getInstance(PlayerDatabaseHook.class),
                     injector.getInstance(PlayerStorage.class)
             );

@@ -1,19 +1,21 @@
 package me.bristermitten.warzone.player.storage;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.inject.Inject;
+
 import io.vavr.collection.Seq;
 import io.vavr.concurrent.Future;
 import me.bristermitten.warzone.database.Database;
 import me.bristermitten.warzone.player.WarzonePlayer;
 import me.bristermitten.warzone.player.WarzonePlayerBuilder;
 import me.bristermitten.warzone.util.NoOp;
-import org.jetbrains.annotations.NotNull;
-
-import javax.inject.Inject;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
 
 public record PlayerDatabaseHook(Database database) implements PlayerPersistence {
     @Inject
@@ -23,7 +25,16 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     @Override
     public Future<WarzonePlayer> load(@NotNull UUID id) {
         return database.query(
-                "SELECT * FROM players WHERE uuid = ?",
+                """
+                        SELECT
+                            players.*,
+                            (SELECT COUNT(*) FROM game_deaths d WHERE d.killer = players.uuid) AS kills,
+                            (SELECT COUNT(*) FROM game_deaths d WHERE d.died = players.uuid) AS deaths,
+                            (SELECT COUNT(*) FROM game_participants p WHERE p.player_id = players.uuid AND p.was_winner = 1) AS wins,
+                            (SELECT COUNT(*) FROM game_participants p WHERE p.player_id = players.uuid AND p.was_winner = 0) AS losses
+                        FROM
+                            players WHERE players.uuid = ?
+                        """,
                 statement -> statement.setString(1, id.toString()),
                 resultSet -> {
                     if (!resultSet.next()) {
@@ -61,17 +72,13 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
     @Override
     public Future<Void> flush(Iterable<WarzonePlayer> players) {
         return database.runTransactionally("""
-                        insert or replace into players (uuid, kills, deaths, level, xp, wins, losses) values (?, ?, ?, ?, ?, ?, ?)
+                        insert or replace into players (uuid, level, xp) values (?, ?, ?)
                 """, statement -> {
             int i = 0;
             for (WarzonePlayer player : players) {
                 statement.setString(1, player.getPlayerId().toString());
-                statement.setInt(2, player.getKills());
-                statement.setInt(3, player.getDeaths());
-                statement.setInt(4, player.getLevel());
-                statement.setLong(5, player.getXp());
-                statement.setLong(6, player.getWins());
-                statement.setLong(7, player.getLosses());
+                statement.setInt(2, player.getLevel());
+                statement.setLong(3, player.getXp());
                 statement.addBatch();
                 i++;
                 if (i % 50 == 0) {
@@ -84,7 +91,16 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
 
     @Override
     public Future<Seq<WarzonePlayer>> getAll() {
-        return database.query("SELECT * FROM players", NoOp.consumer(),
+        return database.query("""
+                        SELECT
+                            players.*,
+                            (SELECT COUNT(*) FROM game_deaths d WHERE d.killer = players.uuid) AS kills,
+                            (SELECT COUNT(*) FROM game_deaths d WHERE d.died = players.uuid) AS deaths,
+                            (SELECT COUNT(*) FROM game_participants p WHERE p.player_id = players.uuid AND p.was_winner = 1) AS wins,
+                            (SELECT COUNT(*) FROM game_participants p WHERE p.player_id = players.uuid AND p.was_winner = 0) AS losses
+                        FROM
+                            players
+                        """, NoOp.consumer(),
                 resultSet -> {
                     var players = new LinkedList<WarzonePlayer>();
                     while (resultSet.next()) {
@@ -100,12 +116,8 @@ public record PlayerDatabaseHook(Database database) implements PlayerPersistence
                 CREATE TABLE IF NOT EXISTS players
                 (
                     uuid   TEXT(36) PRIMARY KEY,
-                    kills  INT,
-                    deaths INT,
                     level  INT,
-                    xp     BIGINT,
-                    wins   INT,
-                    losses INT
+                    xp     BIGINT
                 );
                 """.stripIndent());
     }

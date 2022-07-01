@@ -1,6 +1,20 @@
 package me.bristermitten.warzone.matchmaking;
 
 import com.google.inject.Singleton;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayDeque;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.function.Predicate;
+
+import javax.inject.Inject;
+
 import io.vavr.control.Option;
 import me.bristermitten.warzone.arena.Arena;
 import me.bristermitten.warzone.arena.ArenaManager;
@@ -12,17 +26,6 @@ import me.bristermitten.warzone.game.state.GameStateChangeEvent;
 import me.bristermitten.warzone.game.state.IdlingState;
 import me.bristermitten.warzone.game.state.InLobbyState;
 import me.bristermitten.warzone.party.Party;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
-
-import javax.inject.Inject;
-import java.util.ArrayDeque;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.function.Predicate;
 
 @Singleton
 public class SimpleMatchmakingService implements MatchmakingService, Listener {
